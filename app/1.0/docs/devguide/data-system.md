@@ -1,5 +1,5 @@
 ---
-title: Data system concepts
+title: 数据系统原理
 ---
 
 <!-- toc -->
@@ -16,23 +16,18 @@ table.config-summary td {
 }
 </style>
 
-Polymer lets you observe changes to an element's properties and take various actions based on data
-changes. These actions, or *property effects*, include:
+Polymer能够观察组件属性的更改然后根据更改采取各种行动.这些行动, 或 *属性效果*, 包括了:
 
 
-*   Observers. Callbacks invoked when data changes.
+*   观察器. 当数据更改时调用回调.
 
-*   Computed properties. Virtual properties computed based on other properties, and recomputed when
-    the input data changes.
+*   计算属性. 基于其它属性计算出的虚拟属性并在其输入数据更改被重新计算.
 
-*   Data bindings. Annotations that update the properties, attributes, or text content of a DOM node
-    when data changes.
+*   数据绑定. 使用批注来使得数据更改时更新属性、标记或DOM结点上的文本内容.
 
-Each Polymer element manages  its own data model and local DOM elements. The *model* for an element
-is the element's properties. Data bindings link an element's model with the elements in its local
-DOM.
+每个Polymer组件管理各自的数据模型和local DOM组件. 组件的属性构成组件 *模型*. 数据绑定可以连接一个组件的模型到它的local DOM的元素上.
 
-Consider a very simple element:
+下面一个简单的组件:
 
 
 ```html
@@ -49,14 +44,12 @@ a JavaScript object. An arrow labeled 2 connects the element to a box labeled lo
 which contains a single element, div. An arrow labeled 3 connects the JavaScript object to the
 div element.](/images/1.0/data-system/data-binding-overview-new.png)
 
-1.  The `<name-card>` element has a `name` property that _refers_ to a JavaScript object.
-2.  The `<name-card>` element _hosts_ a local DOM tree, that contains a single `<div>` element.
-3.  Data bindings in the template link the JavaScript object to the `<div>` element.
+1.  `<name-card>`组件有一个`name`属性 _引用_ 到一个JavaScript对象.
+2.  `<name-card>`组件 _拥有_ 一个local DOM树, 它含有一个 `<div>` 组件.
+3.  模板中的数据绑定连接了JavaScript对象和 `<div>` 组件.
 
-The data system is based on *paths*, not objects, where a path represents a property or subproperty
-*relative to an element*. For example, the `<name-card>` element has data bindings for the paths
-`"name.first"` and `"name.last"`. If a `<name-card>` has the following object for its `name`
-property:
+数据系统基于 *路径*,而不是对象,其表示一个属性或子属性 *相对于组件* 的路径. 例如`<name-card>`组件对路径`"name.first"` 和 `"name.last"`做了数据绑定.
+如果`<name-card>`的`name`属性有以下对象:
 
 
 ```js
@@ -66,86 +59,76 @@ property:
 }
 ```
 
-The path "`name`" refers to the element's `name` property (an object).The paths "`name.first`" and
-`"name.last"` refer to properties of that object.
+"`name`"路径引用到了组件的 `name` 属性 (一个对象)."`name.first`"路径和
+`"name.last"`也引用到了同一个属性对象.
 
 ![The name-card element from the previous figure. An arrow labeled 1 connects the name property
 to a JavaScript object that contains two properties, first: 'Lizzy' and last: 'Bennet'. Two arrows
 labeled 2 connect the paths name and name.first with the object itself and the subproperty,
 first, respectively.](/images/1.0/data-system/paths-overview-new.png)
 
-1.  The `name` property refers to the JavaScript object.
-2.  The path "name" refers to the object itself. The path "name.first" refers to its subproperty,
-    `first` (the string, `Lizzy`).
+1.  `name`属性引用到JavaScript对象.
+2.  "name"路径引用对象自身. "name.first"路径引用它了子属性`first` (字符串`Lizzy`).
 
-Polymer doesn't automatically detect all data changes. Property effects occur when there is
-an [_observable change_](#observable-changes) to a property or subproperty.
+Polymer不自动检测所有数据更改.属性效果只在属性或子属性上发生了一个[_可观察更改_](#observable-changes)时.
 
-**Why use paths?** Paths and observable changes might seem a little strange at first. But this
-results in a very high-performance data binding system. When an observable change occurs, Polymer
-can make a change to just those points in the DOM that are affected by that change.
+**为什么使用路径?** 初看起来路径和可观察的更改有点奇怪. 但这样却成就了一个高性能的数据绑定系统.
+当发生一个可观察的更改时,Polymer就只需要影响与更改相关的DOM结点.
 { .alert .alert-info }
 
-In summary:
+综上所述:
 
-*   While a single JavaScript object or array can be referenced by multiple elements, a path is
-    **always relative to an element**.
-*   An **observable change** to a path can produce **property effects**, like updating bindings or
-    calling observers.
-*   Data bindings establish connections between paths on different elements.
+*   单个JavaScript对象或组件可被多个组件引用,路径 **总是相对于组件的**.
+*   一个路径上的 **可观察更改** 产生了 **属性效果**, 例如更新绑定或调用观察器.
+*   数据绑定在不同组件上的路径之间建立链接.
 
-## Observable changes {#observable-changes}
+## 可观察更改 {#observable-changes}
 
-An *observable change* is **a data change that Polymer can associate with a path**. Certain changes
-are automatically *observable*:
+*可观察更改* 是 **一种Polymer可以关联到一个路径上的数据更改**. 某些更改是自动 *可以观察的*:
 
-*   Setting a *direct property *of the element.
+*   设置一个组件的 *直接属性*.
 
    `this.owner = 'Jane';`
 
-   If a property has any associated property effects (such as observers, computed properties, or
-   data bindings), Polymer creates a setter for the property, which automatically invokes the
-   property effects.
+   如果一个属性关联了任意的属性效果(如观察器、计算属性或数据绑定), Polymer会为属性创建一个设置方法用来在属性效果中自动调用.
 
-*   Setting a subproperty of the element using a two-way data binding.
+*   使用双向数据绑定设置一个子属性.
 
     ```
     <local-dom-child name="{{hostProperty.subProperty}}"></local-dom-child>
     ```
 
-    Changes made by the data binding system are automatically propagated. In this example, if
-    `<local-dom-child>` makes a change to its `name` property, the change propagates up to the host,
-    as a change to the path `"hostProperty.subProperty"`.
+    由数据绑定系统产生的更改会自动传播.此例中,如果
+    `<local-dom-child>`对`name`属性进行了更改,更改以`"hostProperty.subProperty"`的路径更改向下传播到宿主.
 
 
-### Unobservable changes
+### 不可观察的更改
 
-Changes that **imperatively mutate an object or array are *not* observable**. This includes:
+**对象或数组必然会有变化 *不可* 观察**. 包括了:
 
-*   Setting a subproperty of an object:
+*   为子属性赋值一个对象:
 
     ```js
     // unobservable subproperty change
     this.address.street = 'Elm Street';
     ```
 
-    Changing the subproperty `address.street` here *doesn't* invoke the setter on `address`, so it
-    isn't automatically observable.
+    这里改变子属性`address.street` *不会* 调用`address`上的设置方法,所以不会被自动观察到.
 
-*   Mutating an array:
+*   数组变换:
 
     ```js
     // unobservable change using native Array.push
-    this.users.push({ name: 'Maturin});
+    this.users.push({ name: 'Maturin'});
     ```
 
-    Mutating the array doesn't invoke the setter on `users`, so it isn't automatically observable.
+    进行数组变换不会调用 `users`上的设置方法, 所以不会被自动观察到.
 
-In both cases, you need to use Polymer methods to ensure that the changes are observable.
+在这两种情况下,就需要使用Polymer方法来确保更改可以被观察到.
 
-### Mutating objects and arrays observably {#make-observable-changes}
+### 进行可被观察的数组变换 {#make-observable-changes}
 
-Polymer provides methods for making observable changes to subproperties and arrays:
+Polymer提供方法来让子属性和数组上的更改可观察到:
 
 ```js
 // mutate an object observably
@@ -155,27 +138,19 @@ this.set('address.street', 'Half Moon Street');
 this.push('users', { name: 'Maturin'});
 ```
 
-In some cases, you can't use the Polymer methods to mutate objects and arrays (for example, if
-you're using a third-party library). In this case, you can use  the `notifyPath` and `notifySplices`
-methods to *notify* the element about changes that have **already taken place.**
+一些情况下,不能使用Polymer方法来变换对象和数组(如在使用一个第三方库时).此时,可以使用`notifyPath` 和 `notifySplices`
+方法来 *通知* 组件注意变化 **已经产生.**
 
 ```js
 // Notify Polymer that the value has changed
 this.notifyPath('address.street');
 ```
 
-When you call `notifyPath` or `notifySplices`, the element applies the appropriate property effects,
-as if the changes had just taken place.
+当调用 `notifyPath` 或 `notifySplices`, 组件应用了合适的属性效果如同刚刚发生的变化.
 
-When calling `set` or `notifyPath`, you need to use the **exact path** that changed. For example,
-calling `this.notifyPath('address')` doesn't pick up a change to `address.street` if the `address`
-object itself remains unchanged. This is because Polymer performs dirty checking and doesn't produce
-any property effects if the value at the specified path hasn't changed.
+当调用 `set` 或 `notifyPath`时, 需要使用发生更改的 **准确路径**. 例如调用`this.notifyPath('address')`不会接受`address.street`的更改,如果`address`对象自身保持不变. 这是因为Polymer执行脏检测并且当指定的路径没有变化时不会产生任何属性效果.
 
-In most cases, if one or more properties of an
-object have changed, or one or more items in an array have changed, you can force Polymer to skip
-the dirty check by setting the property to an empty object or array, then back to the original
-object or array.
+大多数情况下, 如果对象的一个或多个属性发生了更改, 或数组中的一个或多个元素发生了更改, 就可以通过先设置对象或数组的属性为空然后再将恢复原始值的方法来强制Polymer跳过脏检查.
 
 ```js
 var address = this.address;
@@ -184,40 +159,35 @@ this.address = address;
 ```
 
 
-Related tasks:
+相关任务:
 
-*   [Set object subproperties](model-data#set-path).
-*   [Mutate an array](model-data#array-mutation).
-*   [Notify Polymer of subproperty changes](model-data#notify-path).
-*   [Notify Polymer of array mutations](model-data#notifysplices).
+*   [设置对象的子属性](model-data#set-path).
+*   [数组变换Mutate an array](model-data#array-mutation).
+*   [子属性更改通知给Polymer](model-data#notify-path).
+*   [数组变换通知给Polymer](model-data#notifysplices).
 
-## Data paths {#paths}
+## 数据路径 {#paths}
 
-In the data system, a _path_ is a string that identifies a property or subproperty *relative to a
-scope*. In most cases, the scope is a host element. For example, consider the following
-relationships:
+在数据系统中, _路径_ 是一个标识了属性或子属性相对于一个范围的字符串. 大多数情况下范围是一个宿主组件.例如下边的关系:
 
 ![Two elements, user-profile and address card. The user-profile element has a primaryAddress
 property. An arrow labeled 1 connects the property to a JavaScript object. The address-card
 element has an address property. An arrow labeled 2 connects the property to the same JavaScript
 object.](/images/1.0/data-system/data-binding-paths.png)
 
-1.  The `<user-profile>` element has a property `primaryAddress` that refers to a JavaScript object.
-2.  The `<address-card>` element has a property `address` that refers to the same object.
+1.  `<user-profile>`组件有一个 `primaryAddress` 属性来引用一个JavaScript对象.
+2.  `<address-card>`组件有一个 `address` 属性来引用到相同的对象 .
 
-Importantly, **Polymer doesn't automatically know that these properties refer to the same object**.
-If `<address-card>` makes a change to the object, no property effects are invoked on `<user-profile>`.
+重要的是, **Polymer不能自动知道这些属性引用到了相同的对象**.
+如果 `<address-card>`更改了对象, 在`<user-profile>`上就不会有任何属性效果的调用.
 
-**For data changes to flow from one element to another, the elements must be connected with a data
-binding.**
+**对于跨组件间的数据更改,数组必须使用数据绑定来连接.**
 
 
-### Linking paths with data bindings
+### 使用数据绑定连接路径
 
-Data bindings can create links between paths on different elements. In fact, **data binding is the
-only way to link paths on different elements**. For example, consider the `<user-profile>` example
-in the previous section. If `<address-card>` is in the local DOM of the `<user-profile>` element,
-the two paths can be connected with a data binding:
+数据绑定在不同组件的路径间创建连接. 事实上, **数据绑定是连接不同组件间路径的唯一方法**. 例如上节中的`<user-profile>`示例. 如果 `<address-card>`位于`<user-profile>`组件的local DOM中,
+两个路径就可以使用一个数据绑定来连接:
 
 
 ```
@@ -231,184 +201,155 @@ the two paths can be connected with a data binding:
 </dom-module>
 ```
 
-Now the paths are connected by data binding.
+现在路径通过数据绑定进行了连接.
 
 ![Two elements, user-profile and address-card, both referring to a shared JavaScript object. An arrow labeled 1 connects the primaryAddress property on the user-profile element to the object. An arrow labeled 2 connects the address property on the address-card element to the same object. An double-headed arrow labeled 3 connects the path primaryAddress on user-profile to the path address on address-card.](/images/1.0/data-system/data-bound-paths-new.png)
 
-1.  The `<user-profile>` element has a property `primaryAddress` that refers to a JavaScript object.
-2.  The `<address-card>` element has a property `address` that refers to the same object.
-3.  The data binding connects the path `"primaryAddress"` on `<user-profile>` to the path `"address"`
-    on `<address-card>`
+1.  `<user-profile>`组件有一个 `primaryAddress`属性来引用一个JavaScript对象.
+2.  `<address-card>`组件有一个 `address` 属性引用到了相同的对象.
+3.  数组绑定连接了`<user-profile>`上的 `"primaryAddress"`和`<address-card>`上的`"address"`.
 
-If `<address-card>` makes an observable change to the object, property effects are invoked on
-`<user-profile>` as well.
+如果 `<address-card>` 使对象有了一个可观察的更改, 属性效果同样在
+`<user-profile>`上被调用.
 
-### Data binding scope {#data-binding-scope}
+### 数据绑定范围 {#data-binding-scope}
 
-Paths are relative to the current data binding *scope*.
+路径都相对于当前数据绑定 *范围*.
 
-The topmost scope for any element is the element's properties. Certain data binding helper elements
-(like [template repeaters](/1.0/docs/devguide/templates#dom-repeat)) introduce new, nested scopes.
+对于任意组件的最高层范围都是组件的属性. 某些数据绑定助手组件
+(如 [模板重复器](/1.0/docs/devguide/templates#dom-repeat)) 会产生新的嵌套范围.
 
-For observers and computed properties, the scope is always the element's properties.
+对于观察器和计算属性,范围都是组件的属性.
 
-### Special paths
+### 特殊路径
 
-A path is a series of path segments. *In most cases*, each path segment is a property name.
+路径是一系列路径段组成. *大多数情况下*, 每个路径段是一个属性名.
 
-There are a few special types of path segments.
+路径段有一些特殊类型.
 
 
-*   The wildcard character, `*`, can be used as the last segment in a path (like `foo.*`).
-    This wildcard path represents _all changes to a given path and its subproperties_, including
-    array mutations.
-*   The string `splices` can be used as the last segment in a path (like `foo.splices`) to represent
-    all array mutations to a given array.
-*   Array item paths (like `foo.11`) represent an item in an array.
+*   通配符 `*`可被用于最后一个路径段(如 `foo.*`).
+    这个通配路径表示 _在给定路径和其子属性上的所有变化_,包括数组变换.
+*   字符串 `splices`可被用于最后一个路径段如 (如 `foo.splices`) 来表示在给定数组上的所有数组变换.
+*   数组元素路径 (如 `foo.11`) 表示数组中的一个元素.
 
 
 
-#### Wildcard paths {#wildcard-paths}
+#### 通配路径 {#wildcard-paths}
 
-When used as the last segment in a path, the wildcard character (`*`) represents any change to the
-previous property or its subproperties. For example, if `users` is an array, `users.*` indicates an
-interest in any changes to the `users` array or its subproperties.
+通配符(`*`)被用到路径的最后一个路径段时表示对其上一个属性或其子属性的任意更改.假如 `users` 是一个数组, `users.*`表示关心`users`数组上或其子属性上的任何更改.
 
-Wildcard paths are only used in observers, computed properties and computed bindings. You can't use
-a wildcard path in a data binding.
+通配路径只在观察器、计算属性和计算绑定中使用.不能在数据绑定中使用通配符.
 
-#### Array mutation paths
+#### 数组变换路径
 
-When used as the last segment in a path, `splices` represents any array *mutations* to the
-identified array (additions or deletions). For example, if `users` is an array, the path
-`users.splices` identifies any additions to or deletions from the array.
+在路径的最后一个路径段中使用`splices`表示对其标识的数组进行数组*变换*(添加或删除). 假如`users` 是一个数组, 路径
+`users.splices` 表示了该数组上的任意添加或删除.
 
-A `.splices` path can be used in an observer, computed property or computed binding to identify
-*interest* in array mutations. Observing a `.splices` path gives you a  **subset** of the changes
-registered by a wildcard path (for example, you won't see changes to subproperties of objects
-*inside* the array). **In most cases, it's more useful to use a wildcard observer for arrays.**
+`.splices`路径只在观察器、计算属性和计算绑定中用来表示*关心*数组变换. 观察一个`.splices`路径就可以以得到所注册通配路径上的一个变化**子集** (例如不想看到数组*内部*对象的子属性更改). **大多数情况下,对数组使用一个通配符观察器非常有用.**
 
-#### Paths to array items
+#### 数组元素路径
 
-Polymer supports two ways of identifying an array item in a path: by index or by an opaque,
-immutable key.
+Polymer支持两种方式来通过路径定位一个数组元素: 使用索引或使用一个不透明的不可变键.
 
-*   An index, for example, `"myArray.1"` indicates the array item at position 1.
+*   索引,例如`"myArray.1"`来表示处于第一个位置的数组元素.
 
-*   An opaque key, prefixed with the pound sign (`#`), for example, `"myArray.#1"` indicates the
-    array item with the *key* "1".
+*   不透明键以(`#`)开始, 例如`"myArray.#1"`表示 *键*为"1"的数组元素.
 
-**Why use keys?** Polymer uses keys internally to provide a stable path to a specific array item,
-regardless of its current position in the array. This allows an element that manages a list, for
-example, to create a stable association between an array item and the DOM that it generates. Keys
-are generated by Polymer and last as long as the item is in the array.
+**为什么使用键?** Polymer内部使用键来为特定数组元素提供一个稳定的路径,
+不论元素的当前位置是什么. 这样就可以让管理列表的组件来创建一个数组元素和其所生成DOM组成的稳定关联. 键由Polymer生成并且存在于整个数组元素的生命周期.
 {.alert .alert-info }
 
-When **you notify Polymer of a change to an array path**, you can use either the index or the key.
+当**向Polymer通知数组路径上的一个变更时**, 可以使用索引或键.
 
-When **Polymer generates a notification for an array item**, it identifies the item by *key*,
-because it requires extra work to retrieve the index. Polymer provides methods to retrieve the
-original array item given the item's key.
+当**Polymer为数组元素生成一个通知时**, 它用*键*来进行标识,
+原因是它为获取索引还要做额外的工作. Polymer提供了通过键来访问原始数组元素的方法.
 
-**In most cases, you don't need to deal with array keys directly**. Polymer provides helper
-elements, such as the [template repeater element](/1.0/docs/devguide/templates#dom-repeat) that
-abstract away many of the complexities of working with arrays.
+**大多数情况下不需要直接操作键**. Polymer提供了如 [template repeater element](/1.0/docs/devguide/templates#dom-repeat)这样的助手组件将很多复杂的数组操作进行了抽象.
 
-Related tasks:
+相关任务:
 
-*   [Look up an array item by key](model-data#get-array-item).
-*   [Look up an array index by key](model-data#get-array-index).
+*   [通过键查找数组元素](model-data#get-array-item).
+*   [通过键查找数组索引](model-data#get-array-index).
 
-### Two paths referencing the same object {#two-paths}
+### 两个路径引用相同的对象 {#two-paths}
 
-Sometimes an element has two paths that point to the same object.
+有时一个组件中两个路径会指向同一个对象S.
 
-For example, an element has two properties, `users` (an array) and `selectedUser` (an object). When
-a user is selected, `selectedUser` refers one of the objects in the array.
+例如一个组件有两个属性, `users` (数组) 和 `selectedUser` (对象). 当选择一个用户时, `selectedUser`指向数组中的一个对象.
 
 
 ![A user-list element and an array with four items labeled \[0\] through \[3\]. The user-list has two properties, users and selectedUser. The users property is connected to the array by an arrow labeled 1. The selectedUser property is connected to the array item, \[1\] by an arrow labeled 2.](/images/1.0/data-system/linked-paths-new.png)
 
-1.  The `users` property references the array itself.
-2.  The `selectedUser` property references an item in the array.
+1.  `users`属性引用到数组自身.
+2.  `selectedUser`属性引用数组中的一个元素.
 
-In this example, the element has several paths that refer to the second item in the array:
+示例中, 组件有一上结路径都引用到了数组的第二个元素上:
 
 
 *   `"selectedUser"`
-*   `"users.1"` (where 1 is the item's index in the `users` array)
-*   `"users.#5"` (where 5 is the item's immutable key)
+*   `"users.1"` (1是`users`数组中的元素索引)
+*   `"users.#5"` (5是元素的不可变键)
 
-By default, Polymer has no way to associate the array paths (like `users.1`) with `selectedUser`.
+默认情况下Polymer不能能数组路径(如`users.1`)关联到`selectedUsers`.
 
-For this exact use case, Polymer provides a data binding helper element, `<array-selector>`, that
-maintains path linkages between an array and a selected item from that array. (`<array-selector>`
-also works when selecting multiple items from an array.)
+在这个用例中Polymer提供了一个`<array-selector>`数组绑定助手组件 用来维护数据和其被选元素之间的路径连接.
+(`<array-selector>`对选择多个数组元素同样适用.)
 
-For other use cases, there's an imperative method,
-[`linkPaths`](/1.0/docs/api/Polymer.Base#method-linkPaths) to associate two paths. When two paths
-are *linked*, an [observable change](#observable-changes) to one path is observable on the other
-path, as well.
+在其它用例中有一个命令式方法F[`linkPaths`](/1.0/docs/api/Polymer.Base#method-linkPaths)可用来关联两个路径.
+当两个路径*关联*后,在一个路径上的[可观察更改](#observable-changes)也可被另一个观察到 .
 
 
-Related task:
+相关任务:
 
-*   [Link two paths to the same object](model-data#linkpaths)
+*   [连接两个路径到同一个对象](model-data#linkpaths)
 
-*   [Data bind an array selection](templates#array-selector)
+*   [数组的数据绑定](templates#array-selector)
 
 
 
-## Data flow {#data-flow}
+## 数据流动 {#data-flow}
 
-Polymer implements the mediator pattern, where a host element manages data flow between itself and
-its local DOM nodes.
+Polymer实现了中间人模式, 允许宿主组件管理它和在其内部的local DOM结点之间的数据流动.
 
-When two elements are connected with a data binding, data changes can flow _downward_, from
-host to target, _upward_, from target to host, or both ways.
+当两个组件用一个数组绑定连接后, 数据更改可以向 _下_ 从宿主流动到目标也可以向 _上_ 从目标流动到宿主,还可以双向流动.
 
-When two elements in the local DOM are bound to the same property data appears to flow from one
-element to the other, but this flow is _mediated_ by the host. A change made by one element
-propagates **up** to the host, then the host propagates the change **down** to the second element.
+当local DOM中的两个组件绑定到相同的属性后数据看起来是从一个组件流动到了另一个组件,但是这个流动是由宿主做为 _中间人的_ .
+一个组件的更改 **向上** 传播给宿主,然后宿主再 **向下** 把更改传播给第二个组件.
 
-### Data flow is synchronous
+### 数据流动是同步的
 
-Data flow is **synchronous**. When your code makes an [observable change](#observable-changes),
-all of the data flow and property effects from that change occur before the next line of your
-JavaScript is executed, unless an element explicitly defers action (for example, by calling an
-asynchronous method).
+数据流动是 **同步**. 在代码中产生一个[可观察更改](#observable-changes)后,
+所有都数据流动和属性效果都会在下一行JavaScript代码执行前发生,除非组件显式推迟了动作(例如调用了一个异步方法).
 
-### How data flow is controlled {#data-flow-control}
+### 如何控制数据流动 {#data-flow-control}
 
-The type of data flow supported by an individual binding depends on:
+绑定所支持的数据流动类型依赖于:
 
-*   The type of binding annotation used.
-*   The configuration of the target property.
+*   使用的绑定批注类型.
+*   目标属性的配置.
 
-The two types of data binding annotations are:
+有两种数据绑定批注类型:
 
-*   **Automatic**, which allows upward (target to host) and downwards (host to target) data flow.
-    Automatic bindings use double curly brackets (`{{ }}`):
+*   **自动**, 允许向上(目标到宿主)和向下(宿主到目标)的数据流动.
+    自动绑定使用双花括号(`{{ }}`):
 
     ```
     <my-input value="{{name}}"></my-input>
     ```
 
-*   **One-way**, which only allows downwards data flow. Upward data flow is disabled. One-way bindings
-    use double square brackets (`[[ ]]`).
+*   **单向**, 只允许向下的数据流动. 向上的数据流动是禁止的. 单向绑定使用两个中括号(`[[ ]]`).
 
     ```
     <name-tag name="[[name]]"></name-tag>
     ```
 
-The following configuration flags affect data flow to and from target properties:
+以下配置参数影响数据流动的来源和目标属性:
 
-*   `notify`. A notifying property **supports upward data flow**. By default, properties are
-    non-notifying, and don't support upward data flow.
-*   `readOnly`. A read-only property **prevents downward data flow**. By default, properties are
-    read/write, and support downward data flow.
+*   `notify`. **支持向上数据流动**的通知属性. 默认时属性是不通知的也就是不支持向上数据流动.
+*   `readOnly`. **阻止向下数据流动**的只读属性. 默认时属性可读写并支持向下数据流动B.
 
-Example property definitions {.caption}
+属性定义示例 {.caption}
 
 ```js
 properties: {
@@ -427,58 +368,56 @@ properties: {
 }
 ```
 
-This table shows what kind of data flow is supported by automatic bindings based on the
-configuration of the target property:
+下表列出了基于目标属性配置的自动绑定数据流动类型:
 
 <table class="config-summary">
   <tr>
     <th>
-      Configuration
+      配置
     </th>
     <th>
-      Result
+      结果
     </th>
   </tr>
   <tr>
     <td><pre><code>notify: false,
 readOnly: false</code></pre></td>
     <td>
-      One-way, downward
+      单向,向下
     </td>
   </tr>
   <tr><td><pre><code>notify: false,
 readOnly: true</code></pre></td>
     <td>
-      No data flow
+      无数据流动
     </td>
   </tr>
   <tr>
     <td><pre><code>notify: true,
 readOnly: false</code></pre></td>
     <td>
-      Two-way
+      双向
     </td>
   </tr>
   <tr>
     <td><pre><code>notify: true,
 readOnly: true</code></pre></td>
     <td>
-      One-way, upward
+      单向,向上
     </td>
   </tr>
 </table>
 
-By contrast, one-way bindings only allow one-way, downward data flow, so the `notify` flag doesn't
-affect the outcome:
+相比之下,单向绑定只允许单向且向下的数据流动,所以`notify`标志不影响结果:
 
 
 <table class="config-summary">
   <tr>
     <th>
-      Configuration
+      配置
     </th>
     <th>
-      Result
+      结果
     </th>
   </tr>
   <tr>
@@ -487,7 +426,7 @@ affect the outcome:
       <pre><code>readOnly: false</code></pre>
     </td>
     <td>
-      One-way, downward
+      单向,向下
     </td>
   </tr>
   <tr>
@@ -495,25 +434,22 @@ affect the outcome:
       <pre><code>readOnly: true</code></pre>
     </td>
     <td>
-      No data flow
+      无数据流动
     </td>
   </tr>
 </table>
 
 
- **Property configuration _only affects the property itself_, not
-subproperties**. In particular, binding a property that's an object or array creates shared data
-between the host and target element. There's no way to prevent either element from mutating a shared
-object or array. For more information, see [Data flow for objects and
-arrays](#data-flow-objects-arrays)
+ **属性配置 _只影响属性自身_, 不会影响子属性**. 尤其是当绑定的对象或数组属性创建了同宿主和目标组件共享的数据,不能阻止任一组件来操作共享的对象或数组.
+查看[对象和数组的数据流动](#data-flow-objects-arrays)获取更多信息
 {.alert .alert-warning}
 
-### Data flow examples
+### 数据流动示例
 
-The following examples show the various data flow scenarios described above.
+下例展示了上节中提到的多种数据流动场景.
 
 
-Example 1: Two-way binding { .caption }
+示例1: 双向绑定 { .caption }
 
 ```
 <script>
@@ -534,7 +470,7 @@ Example 1: Two-way binding { .caption }
 <custom-element some-prop="{{value}}"></custom-element>
 ```
 
-Example 2: One-way binding (downward) { .caption }
+示例2: 单向绑定 (向下) { .caption }
 
 ```
 <script>
@@ -556,7 +492,7 @@ Example 2: One-way binding (downward) { .caption }
 <custom-element some-prop="[[value]]"></custom-element>
 ```
 
-Example 3: One-way binding (downward) { .caption }
+示例3: 单向绑定 (向下) { .caption }
 
 ```
 <script>
@@ -576,7 +512,7 @@ Example 3: One-way binding (downward) { .caption }
 <custom-element some-prop="{{value}}"></custom-element>
 ```
 
-Example 4: One-way binding (upward, child-to-host) { .caption }
+示例4: 单向绑定 (向上,子元素到宿主) { .caption }
 
 ```
 <script>
@@ -599,7 +535,7 @@ Example 4: One-way binding (upward, child-to-host) { .caption }
 <custom-element some-prop="{{value}}"></custom-element>
 ```
 
-Example 5: Error / non-sensical state { .caption }
+示例5: 错误 / 无感觉状态 { .caption }
 
 ```
 <script>
@@ -623,89 +559,70 @@ Example 5: Error / non-sensical state { .caption }
 
 
 
-### Upward and downward data flow
+### 向上和向下数据流动
 
-Since the host element manages data flow, it can directly interact with the target element. The host
-propagates data downward by setting the target element’s properties or invoking its methods.
+由于是宿主组件管理数据流动,它可以直接操作目标组件.宿主通过设置目标组件的属性或调用其方法来向下传播数据.
 
 
 ![An element, host-element connected to an element, target-element by an arrow labeled 1.](/images/1.0/data-system/data-flow-down-new.png)
 
-1.  When a property changes on the host element, it sets the corresponding property on the target
-    element, triggering the associated property effects.
+1.  当宿主组件上的属性更改后, 它设置了目标组件上相应的属性, 触发了关联的属性效果.
 
-Polymer elements use events to propagate data upward. The target element fires a non-bubbling event
-when an observable change occurs. (Change events are described in more detail in [Change
-notification events](#change-events).)
+Polymer组件使用事件来向上传播数据. 当可观察更改发生后目标组件触发一个不冒泡的事件. (更改事件详情参考[更改通知事件](#change-events).)
 
-For **two-way bindings**, the host element listens for these change events and propagates the
-changes—for example, setting a property and invoking any related property effects. The property
-effects may include:
+对于**双向绑定**, 宿主组件监听这些更改事件并传播.例如, 设置一个属性并调用任意相关的属性效果.属性效果可以包括:
 
 
-*   Updating data bindings to propagate changes to sibling elements.
-*   Generating another change event to propagate the change upward.
+*   更新数据绑定将改进传播给兄弟组件.
+*   生成另外的更改事件来向上传播更改.
 
 
 ![An element, target-element connected to an element, host-element by an arrow labeled 1. An arrow labeled 2 connects from the host element back to itself.](/images/1.0/data-system/data-flow-up-new.png)
 
-1.  A property change on the target element causes a property change event to fire.
-2.  The host element receives the event and sets the corresponding property, invoking the related
-    property effects.
+1.  目标组件上的一个属性更改触发了一个属性更改事件.
+2.  目标组件指接收事件并设置相应属性以及调用相关属性效果.
 
-For **one-way binding** annotations, the host doesn't create a change listener, so upward data changes
-aren't propagated.
+对于**单向绑定**批注, 宿主不创建更改监听器所以不会向上传播数据更改.
 
-### Data flow for objects and arrays {#data-flow-objects-arrays}
+### 对象和数组的数据流动 {#data-flow-objects-arrays}
 
-For object and array properties, data flow is a little more complicated. An object or array can be
-referenced by multiple elements, and there's no way to prevent one element from mutating a shared
-array or changing a subproperty of an object.
+对于对象和数组属性,数据流动有一些复杂.一个对象或数组可被多个组件引用并且没有办法来阻止某个组件来转换一个共享数组或修改对象上的子属性.
 
-As a result, Polymer treats the contents of arrays and objects as always being **available** for two-
-way binding. That is:
+结果就是Polymer**以**双向绑定来对待数组和对象的内容.也就是:
 
 
-*   Data updates always flow downwards, even if the target property is marked read-only.
-*   Change events for upward data flow are always fired, even if the target property is not marked
-    as notifying.
+*   数据更新总是向下流动, 即使目标属性被标记为只读.
+*   总是触发向上的更改事件流动,即使目标属性没有被标记为通知.
 
-Since one-way binding annotations don't create an event listener, they prevent these change
-notifications from being propagated to the host element.
+由于单向绑定批注不创建事件监听器,它阻止了这个更改通知传播给宿主组件.
 
 
-### Change notification events {#change-events}
+### 更改通知事件 {#change-events}
 
-An element fires a change notification event when one of the following
-[observable changes](#observable-changes) occurs:
+当下列[可观察事件](#observable-changes)发生时组件触发一个更改通知事件:
 
-*   A change to a notifying property.
+*   通知属性的更改.
 
-*   A subproperty change.
+*   子属性更改.
 
-*   An array mutation.
+*   数组变换.
 
-The event's type property indicates which property changed: it follows a naming convention of
-<code><var>property</var>-changed</code>, where <code><var>property</var></code> is the property
-name, in dash case (so changing `this.firstName` fires `first-name-changed`).
+事件类型属性表示了哪种属性发生了更改:遵循以下命名转换
+<code><var>property</var>-changed</code>, <code><var>property</var></code>是属性名以中划线连接(所以`this.firstName`触发了`first-name-changed`).
 
-You can manually attach a <code><var>property</var>-changed</code> listener to an element to
-notify external elements, frameworks, or libraries of property changes.
+可以手动附加一个<code><var>property</var>-changed</code>监听器到组件来通知外部组件,框架或属性更改的库.
 
-The contents of the event vary depending on the change.
+事件的内容根据更改而有所不同.
 
-*   For a property change, the new value of the property is included in the `detail.value` field.
-*   For a subproperty change, the _path_ to the subproperty is included in the `detail.path` field,
-    and the new value is included in the `detail.value` field.
-*   For an array mutation, the `detail.path` field is an array mutation path, such as
-    "myArray.splices", and the `detail.value`
+*   对于属性更改,属性的新值位于`detail.value`字段.
+*   对于子属性更改,子属性的 _路径_ 位于`detail.path`字段,
+    其新值位于`detail.value`字段.
+*   对于数组变换, `detail.path`字段是一个数组变换路径如"myArray.splices",`detail.value`也是一样.
 
-### Custom change notification events
+### 自定义更改通知事件
 
-Native elements like `<input>` don't provide the change notification events that Polymer uses for
-upward data flow. To support two-way data binding of native input elements, Polymer lets you
-associate a **custom change notification event** with a data binding. For example, when binding to a
-text input, you could specify the `input` or `change` event:
+原生组件如`<input>`不提供Polymer用来向上数据流动的更改通知事件.为了支持原生输入组件上的双向绑定, Polymer可以关联一个**自定义更改通知事件**到数据绑定.
+例如,绑定到文件输入时可以指定`input` 或 `change`事件:
 
 
 ```
@@ -713,76 +630,59 @@ text input, you could specify the `input` or `change` event:
 ```
 
 
-In this example, the `firstName` property is bound to the input's `value` property. Whenever the
-input element fires its `change` event, Polymer updates the `firstName` property to match the input
-value, and invokes any associated property effects. **The contents of the event aren't important.**
+此例中`firstName`属性绑定到了输入的`value`属性. 每当输入组件触发它的`change`事件时, Polymer更新`firstName`属性来匹配输入的值并调用任意关联的属性效果. **事件的内容不重要了.**
 
-This technique is especially useful for native input elements, but can be used to provide two-way
-binding for any non-Polymer component that exposes a property and fires an event when the property
-changes.
+这个技术对于原生输入组件特别有用,也可用于为非Polymer组件提供双向绑定,只要组件暴露一个属性并且当属性更改时触发一个事件.
 
-Related tasks:
+相关任务:
 
-*   [Two-way bind to a non-Polymer element](data-binding#two-way-native)
+*   [双向绑定到非Polymer组件](data-binding#two-way-native)
 
-### Element initialization
+### 组件初始化
 
-When an element initializes its local DOM, it configures the properties of its local DOM children and
-initializes data bindings.
+当组件初始化它的local DOM时,它配置自己的local DOM子元素的属性并初始化数据绑定.
 
-The host’s values take priority during initialization. For example, when a host property is bound to
-a target property, if both host and target elements specify default values, the parent's default
-value is used.
+宿主值在初始化时优先使用.例如当宿主属性绑定到了目标属性,如果宿主和目标组件都指定了默认值那么会使用宿主的默认值.
 
-## Property effects {#property-effects}
+## 属性效果 {#property-effects}
 
-Property effects are actions triggered by [observable changes](#observable-changes) to a given
-property (or path). Property effects include:
+属性效果由给定属性(或路径)上的[可观察更改o](#observable-changes)触发:
 
-*   Recomputing computed properties.
-*   Updating data bindings.
-*   Reflecting a property value to an attribute on the host element.
-*   Firing change notification events.
-*   Invoking observers.
+*   重新计算属性.
+*   更新数据绑定.
+*   将属性值映射到宿主组件上的标记.
+*   触发更改通知事件.
+*   调用观察器.
 
-### Data bindings
+### 数据绑定
 
-A *data binding* establishes a connection between data on the host
-element and a property or attribute of a `target node` in the host's local DOM. You create data
-bindings by adding _annotations_ to an element's local DOM template.
+*数据绑定*建立了连接用来连接一个宿主组件上的数据和它local DOM中的属性或`target node`中的标记.通过添加 _批注_ 到组件的local DOM模板来创建数据绑定.
 
-Annotations are attribute values set on a target element that include the data binding delimiters
-`{{ }}` or `[[ ]]`.
+批注是设置在目标组件上的标记值,包括了数据绑定分隔符
+`{{ }}` 或 `[[ ]]`.
 
-Two-way property binding:
+双向属性绑定:
 
 <code><var>target-property</var>="{{<var>hostProperty</var>}}"</code>
 
-One-way property binding:
+单向属性绑定:
 
 <code><var>target-property</var>="[[<var>hostProperty</var>]]"</code>
 
-Attribute binding:
+标记绑定:
 
 <code><var>target-attribute</var>$="[[<var>hostProperty</var>]]"</code>
 
-You can also use a data binding annotation in the body of an element, which is equivalent to binding
-to the element's `textContent` property.
+可以在组件的html文本内使用数据绑定批注, 等效于绑定组件的`textContent`属性.
 
 ```html
 <div>{{hostProperty}}</div>
 ```
 
-The text inside the delimiters can be one of the following:
+分隔符中的文本可以为下列一种:
 
-*   A property or subproperty path (`users`, `address.street`).
-*   A computed binding (`_computeName(firstName, lastName, locale)`)
-*   Any of the above, preceded by the negation operator (`!`).
+*   属性或子属性路径 (`users`, `address.street`).
+*   计算绑定 (`_computeName(firstName, lastName, locale)`)
+*   上面的任意一种使用了否定运算符(`!`).
 
-For more information, see [Data binding](data-binding).
-
-
-
-
-
-
+查看[Data binding](data-binding)获取更多信息.

@@ -1,50 +1,41 @@
 ---
-title: Gesture events
----
+title: 动作事件
 
-Polymer fires custom "gesture" events for certain user
-interactions automatically when a declarative listener is added for the event
-type.  These events fire consistently on both touch and mouse environments,
-so we recommend using these events instead of their mouse- or
-touch-specific event counterparts. This provides better interoperability with both touch and
-mouse devices.  For example, `tap` should be used instead of
-`click` for the most reliable cross-platform results.
+当声明式监听器添加了类型事件后,Polymer自动为某些用户动作触发自定义"gesture"事件. 这些事件在触摸和鼠标环境下同样被触发,所以我们推荐使用这些事件而不是它们的鼠标或触摸的特定对应事件. 这样为触摸和鼠标设备提供了更好的互操作性.例如 应使用`tap`而不是
+`click`来获得更稳定的跨平台结果.
 
-Listening for certain gestures controls the scrolling direction for touch input.
-For example, nodes with a listener for the `track` event will prevent scrolling
-by default. Elements can override scroll direction with
-`this.setScrollDirection(direction, node)`, where `direction` is one of `'x'`,
-`'y'`, `'none'`, or `'all'`, and `node` defaults to `this`.
+监听触摸输入中控制滚动方向的特定手势.
+例如, 结点上有一个监听器用来监听`track`事件可以默认阻止滚动. 组件可以使用`this.setScrollDirection(direction, node)`来覆盖滚动方向,`direction`是`'x'`,
+`'y'`, `'none'`,或`'all'`中的一样, `node`默认为`this`.
 
-The following are the gesture event types supported, with a short description
-and list of detail properties available on `event.detail` for each type:
+支持以下手势事件类型, 以及每种类型的简单描述和`event.detail`中的可用属性详情:
 
-* **down**—finger/button went down
-  * `x`—clientX coordinate for event
-  * `y`—clientY coordinate for event
-  * `sourceEvent`—the original DOM event that caused the `down` action
-* **up**—finger/button went up
-  * `x`—clientX coordinate for event
-  * `y`—clientY coordinate for event
-  * `sourceEvent`—the original DOM event that caused the `up` action
-* **tap**—down & up occurred
-  * `x`—clientX coordinate for event
-  * `y`—clientY coordinate for event
-  * `sourceEvent`—the original DOM event that caused the `tap` action
-* **track**—moving while finger/button is down
-  * `state`—a string indicating the tracking state:
-      * `start`—fired when tracking is first detected (finger/button down and moved past a pre-set distance threshold)
-      * `track`—fired while tracking
-      * `end`—fired when tracking ends
-  * `x`—clientX coordinate for event
-  * `y`—clientY coordinate for event
-  * `dx`—change in pixels horizontally since the first track event
-  * `dy`—change in pixels vertically since the first track event
-  * `ddx`—change in pixels horizontally since last track event
-  * `ddy`—change in pixels vertically since last track event
-  * `hover()`—a function that may be called to determine the element currently being hovered
+* **down**—手指/按钮按下
+  * `x`—事件的clientX坐标
+  * `y`—事件的clientY坐标
+  * `sourceEvent`—引发`down`动作的原始DOM事件
+* **up**—手指/按钮放开
+  * `x`—事件的clientX坐标
+  * `y`—事件的clientY坐标
+  * `sourceEvent`—引发`up`动作的原始DOM事件
+* **tap**—按下并放开
+  * `x`—事件的clientX坐标
+  * `y`—事件的clientY坐标
+  * `sourceEvent`—引发`tap`动作的原始DOM事件
+* **track**—手指/按钮按下时移动
+  * `state`—指示跟踪状态的字符串:
+      * `start`—跟踪第一次被检测到时触发(手指/按钮并移动超过了预设距离阀值)
+      * `track`—跟踪时触发
+      * `end`—跟踪结束时触发
+  * `x`—事件的clientX坐标
+  * `y`—事件的clientY坐标
+  * `dx`—与上一个跟踪事件的水平像素更改
+  * `dy`—与上一个跟踪事件的垂直像素更改
+  * `ddx`—与最后一个跟踪事件的水平像素更改
+  * `ddy`—与最后一个跟踪事件的垂直像素更改
+  * `hover()`—用来获取可能被遮盖的组件函数
 
-Example { .caption }
+示例 { .caption }
 
 ```html
 <dom-module id="drag-me">

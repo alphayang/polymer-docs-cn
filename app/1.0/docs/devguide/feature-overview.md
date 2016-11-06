@@ -1,19 +1,18 @@
 ---
-subtitle: Feature Overview
-title: Polymer library
+subtitle: 功能概览
+title: Polymer库
 ---
 
-The Polymer library provides a set of features for creating custom elements. These features are designed
-to make it easier and faster to make custom elements that work like standard DOM elements. Similar to standard DOM elements, Polymer elements can be:
+Polymer库提供了用来创建自定义组件的一组功能.这些功能被设置用来让开发一个像标准DOM组件一样工作的自定义组件变得容易且快速. 与标准DOM组件类似, Polymer组件可以 :
 
-* Instantiated using a constructor or `document.createElement`.
-* Configured using attributes or properties.
-* Populated with internal DOM inside each instance.
-* Responsive to property and attribute changes (for example, by populating data into the DOM, or firing an event).
-* Styled with internal defaults or externally.
-* Responsive to methods that manipulate its internal state.
+* 使用一个构造器或`document.createElement`进行初始化.
+* 使用标记或属性进行配置.
+* 由各个实例内部的DOM进行填充.
+* 响应属性和标记的更改 (例如向DOM填充数据或触发一个事件).
+* 使用内部默认样式或外部样式.
+* 响应操作操作状态的方法.
 
-A basic Polymer element definition looks like this:
+一个基本的Polymer组件定义如下:
 
 ```
     <dom-module id="element-name">
@@ -49,34 +48,25 @@ A basic Polymer element definition looks like this:
 ```
 
 
-This guide divides the features into the following groups:
+本指南将功能分为如下几组:
 
-*   [Registration and lifecycle](registering-elements). Registering an
-    element associates a class (prototype) with a custom element name. The
-    element provides callbacks to manage its lifecycle. Use behaviors to
-    share code.
+*   [注册和生命周期](registering-elements). 注册组件将内(原型)和组件名称关联. 组件提供了回调来管理它的生命周期. 使用行为来共享代码.
 
-*   [Declared properties](properties). Declared properties can be
-    configured from markup using attributes. Declared properties can optionally
-    support change observers, two-way data binding, and reflection to attributes.
-    You can also declare computed properties and read-only properties.
+*   [声明式属性Declared properties](properties). 声明式属性可以使用标记来配置.声明式属性可选地支持更改观察器,双向绑定和标记映射.
+    同样可以声明计算属性和只读属性.
 
-*   [Local DOM](local-dom). Local DOM is the DOM created and managed by the element.
+*   [Local DOM](local-dom). Local DOM是由组件创建和管理的DOM.
 
-*   [Events](events). Attaching event listeners to the host object
-    and local DOM children. Event retargeting.
+*   [Events](events). 添加事件监听器到宿主对象和local DOM子结点. 事件重定向.
 
-*   [Data binding](data-binding). Property bindings. Binding to attributes.
+*   [Data binding](data-binding). 属性绑定. 绑定到标记.
 
-*   [Behaviors](behaviors). Behaviors are reusable modules of code that can be
-    mixed into Polymer elements.
+*   [Behaviors](behaviors). 行为是可重用的代码模块用来混入Polymer组件中.
 
-*   [Utility functions](instance-methods). Helper methods for common tasks.
+*   [Utility functions](instance-methods). 常用任务的辅助方法.
 
-*   [Experimental features and elements](experimental). Experimental template and styling features.
-    Feature layering.
+*   [Experimental features and elements](experimental). 试验性模板和样式功能.
 
-If you're migrating an existing 0.5 element to the new APIs, see the [Migration guide](/1.0/docs/migration)
-for advice.
+如果是从现有的0.5版本组件迁移到新的API上,查看[迁移指南](/1.0/docs/migration)来获取建议.
 
-If you're upgrading from the 0.8 release, see the [Release notes](/1.0/docs/release-notes).
+使用是从0.8版本升级,查看Release notes](/1.0/docs/release-notes).

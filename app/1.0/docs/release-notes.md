@@ -1,5 +1,5 @@
 ---
-title: Release notes
+title: 发布历史
 ---
 
 <!-- toc -->

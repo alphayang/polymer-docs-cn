@@ -1,96 +1,80 @@
 ---
-title: Experimental features & elements
+title: 试验性功能和组件
 ---
 
 <!-- toc -->
 
-## Feature layering {#feature-layering}
+## 功能分层 {#feature-layering}
 
-**EXPERIMENTAL: API MAY CHANGE.**
+**实验: API可能改变.**
 { .alert .alert-error }
 
-Polymer is currently layered into 3 sets of features provided as 3 discrete
-HTML imports, such that an individual element developer can depend on a version
-of Polymer whose feature set matches their tastes/needs.  For authors who opt
-out of the more opinionated local DOM or data-binding features, their element's
-dependencies would not be payload- or runtime-burdened by these higher-level
-features, to the extent that a user didn't depend on other elements using those
-features on that page.  That said, all features are designed to have low runtime
-cost when unused by a given element.
+Polymer当前分为三个功能层来提供3个相互分享的HTML引入,各个组件开发者就可以只使用所需功能的Polymer版本.开发者如果只用local DOM或数据绑定功能,组件就不会使用过度依赖,也就是说运行时用户不会为页面功能不需要的这些高级功能消耗资源.总之,所有的功能都被设计为不被组件使用时只使用最低限度的运行时资源.
 
-Higher layers depend on lower layers, and elements requiring lower layers will
-actually be imbued with features of the highest-level version of Polymer used on
-the page (those elements would simply not use/take advantage of those features).
-This provides a good tradeoff between element authors being able to avoid direct
-dependencies on unused features when their element is used standalone, while
-also allowing end users to mix-and-match elements created with different layers
-on the same page.
+高层依赖于低层,组件所需要的低层实际用页面中最高层的Polymer版本来填充(这些组件不使用/利用高级功能).
+这样就做了很好的妥协,组件开发者既可以避免组件使用时依赖无用的功能又以可以让终端用户可以在页面中混合使用不同层的组件.
 
-*   `polymer-micro.html`: [Polymer micro features](#polymer-micro) (bare-minimum
-    Custom Element sugaring)
+*   `polymer-micro.html`: [最小功能版的Polymer](#polymer-micro) (最小自定义组件)
 
-*   `polymer-mini.html`: [Polymer mini features](#polymer-mini) (template
-     stamped into "local DOM" and tree lifecycle)
+*   `polymer-mini.html`: [迷你功能版的Polymer](#polymer-mini) (模板中提供了"local DOM"和DOM树生命周期)
 
-*   `polymer.html`: [Polymer standard features](#polymer-standard) (all other
-    features: declarative data binding and event handlers, property nofication,
-    computed properties, and experimental features)
+*   `polymer.html`: [标准功能版的Polymer](#polymer-standard) (迷你功能版本外的所有功能: 声明式数据绑定和事件处理器,属性通知,
+    计算属性以及实验性功能)
 
-This layering is subject to change in the future and the number of layers may be reduced.
+这个分层在将来可能改变,层数可能减少.
 
-### Polymer micro features {#polymer-micro}
+### 最小功能的Polymer {#polymer-micro}
 
-The Polymer micro layer provides bare-minimum Custom Element sugaring.
+Polymer最小功能版提供了最小自定义组件.
 
 
 | Feature | Usage
 |---------|-------
-| [Custom element constructor](registering-elements#element-constructor) | Polymer.Class({ … });
-| [Custom element registration](registering-elements#register-element) | Polymer({ is: ‘...’,  … }};
-| [Custom constructor support](registering-elements#bespoke-constructor) | constructor: function() { … }
-| [Basic lifecycle callbacks](registering-elements#basic-callbacks) | created, attached, detached, attributeChanged
-| [Native HTML element extension](registering-elements#type-extension) | extends: ‘…’
-| [Declared properties](properties) | properties: { … }
-| [Attribute deserialization to property](properties#attribute-deserialization) | properties: { \<property>: \<Type> }
-| [Static attributes on host](registering-elements#host-attributes) | hostAttributes: { \<attribute>: \<value> }
-| [Behaviors](behaviors) | behaviors: [ … ]
+| [自定义组件构造器](registering-elements#element-constructor) | Polymer.Class({ … });
+| [自定义组件注册](registering-elements#register-element) | Polymer({ is: ‘...’,  … }};
+| [自定义构造器支持](registering-elements#bespoke-constructor) | constructor: function() { … }
+| [基本生命周期回调](registering-elements#basic-callbacks) | created, attached, detached, attributeChanged
+| [原生HTML组件扩展](registering-elements#type-extension) | extends: ‘…’
+| [声明的属性](properties) | properties: { … }
+| [标记反序列化为属性](properties#attribute-deserialization) | properties: { \<property>: \<Type> }
+| [宿主上的静态标记](registering-elements#host-attributes) | hostAttributes: { \<attribute>: \<value> }
+| [行为](behaviors) | behaviors: [ … ]
 
 
-### Polymer mini features {#polymer-mini}
+### 迷你功能版的Polyme {#polymer-mini}
 
-The Polymer mini layer provides features related to local DOM:
-Template contents cloned into the custom element's local DOM, DOM APIs and
-tree lifecycle.
+Polymer迷你功能版提供了与local DOM相关的功能:
+模板内容克隆到了自定义组件的local DOM,DOM API以及DOM树生命周期.
 
 | Feature | Usage
 |---------|-------
-| [Template stamping into local DOM](local-dom#template-stamping) | \<dom-module>\<template>...\</template>\</dom-module>
-| [DOM distribution](local-dom#dom-distribution) | \<content>
+| [模板内容克隆到local DOM](local-dom#template-stamping) | \<dom-module>\<template>...\</template>\</dom-module>
+| [DOM分布](local-dom#dom-distribution) | \<content>
 | [DOM API](local-dom#dom-api)  | Polymer.dom
-| [Configuring default values](properties#configure-values)  | properties: \<prop>: { value: \<primitive>\|\<function> }
-| [Bottom-up callback after configuration](registering-elements#ready-method) | ready: function() { … }
+| [配置默认值](properties#configure-values)  | properties: \<prop>: { value: \<primitive>\|\<function> }
+| [配置后向上传递回调](registering-elements#ready-method) | ready: function() { … }
 
 <a name="polymer-standard"></a>
 
-### Polymer standard features {#polymer-standard}
+### 标准功能版的Polymer {#polymer-standard}
 
-The Polymer standard layer adds declarative data binding, events, property notifications and utility methods.
+Polymer标准功能版添加了声明式数据绑定,事件,属性通知和实用方法.
 
 | Feature | Usage
 |---------|-------
-| [Automatic node finding](local-dom#node-finding) | this.$.\<id>
-| [Event listener setup](events#event-listeners)| listeners: { ‘\<node>.\<event>’: ‘function’, ... }
-| [Annotated event listener setup](events#annotated-listeners) | \<element on-[event]=”function”>
-| [Property change callbacks](properties#change-callbacks) | properties: \<prop>: { observer: ‘function’ }
-| [Annotated property binding](data-binding#property-binding) | \<element prop=”{{property\|path}}”>
-| [Property change notification](data-binding#property-notification) | properties: { \<prop>: { notify: true } }
-| [Binding to structured data](data-binding#path-binding) | \<element prop=”{{obj.sub.path}}”>
-| [Path change notification](data-binding#set-path) | set(\<path>, \<value>)
-| [Declarative attribute binding](data-binding#attribute-binding) | \<element attr$=”{{property\|path}}”>
-| [Reflecting properties to attributes](properties#attribute-reflection) | properties: { \<prop>: { reflectToAttribute: true } }
-| [Computed properties](properties#computed-properties) | computed: { \<property>: ‘computeFn(dep1, dep2)’ }
-| [Computed bindings](data-binding#annotated-computed) | \<span>{{computeFn(dep1, dep2)}}\</span>
-| [Read-only properties](properties#read-only) |  properties: { \<prop>: { readOnly: true } }
-| [Utility functions](instance-methods) | toggleClass, toggleAttribute, fire, async, …
-| [Scoped styling](styling) | \<style> in \<dom-module>, Shadow-DOM styling rules (:host, ...)
-| [General polymer settings](#settings) | \<script> Polymer = { ... }; \</script>
+| [自动结点查找](local-dom#node-finding) | this.$.\<id>
+| [配置事件监听器](events#event-listeners)| listeners: { ‘\<node>.\<event>’: ‘function’, ... }
+| [批注式配置事件监听器](events#annotated-listeners) | \<element on-[event]=”function”>
+| [属性更改回调](properties#change-callbacks) | properties: \<prop>: { observer: ‘function’ }
+| [批注式属性绑定](data-binding#property-binding) | \<element prop=”{{property\|path}}”>
+| [属性更改通知](data-binding#property-notification) | properties: { \<prop>: { notify: true } }
+| [绑定到结构化数据](data-binding#path-binding) | \<element prop=”{{obj.sub.path}}”>
+| [路径更改通知](data-binding#set-path) | set(\<path>, \<value>)
+| [声明式标记绑定](data-binding#attribute-binding) | \<element attr$=”{{property\|path}}”>
+| [属性映射到标记](properties#attribute-reflection) | properties: { \<prop>: { reflectToAttribute: true } }
+| [计算属性](properties#computed-properties) | computed: { \<property>: ‘computeFn(dep1, dep2)’ }
+| [计算绑定](data-binding#annotated-computed) | \<span>{{computeFn(dep1, dep2)}}\</span>
+| [只读属性](properties#read-only) |  properties: { \<prop>: { readOnly: true } }
+| [实用函数](instance-methods) | toggleClass, toggleAttribute, fire, async, …
+| [范围内样式](styling) | \<style> in \<dom-module>, Shadow-DOM styling rules (:host, ...)
+| [常用polymer配置](#settings) | \<script> Polymer = { ... }; \</script>

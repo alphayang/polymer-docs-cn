@@ -1,13 +1,10 @@
 ---
-title: Styling local DOM
+title: 设置Local DOM的样式
 ---
 
 <!-- toc -->
 
-Polymer uses [Shadow DOM styling
-rules](http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom-201/) for
-providing scoped styling of the element's local DOM.  Scoped styles should be
-provided via `<style>` tags placed inside the element's local DOM `<template>`.
+Polymer使用[Shadow DOM样式规则](http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom-201/)为组件的local DOM提供内部样式支持.内部样式应以  `<style>`标记位于组件的local DOM `<template>`中.
 
 ```html
 <dom-module id="my-element">
@@ -46,23 +43,20 @@ provided via `<style>` tags placed inside the element's local DOM `<template>`.
 </dom-module>
 ```
 
-To place styles outside of the element, or share styles between elements, you can create
-a [style module](#style-modules).
+想把样式放到组件外或在组件之间共享样式就需要创建一个[样式模块](#style-modules).
 
-**Note:**  Prior to Polymer 1.1, the recommendation was to place `<style>` tags
-inside the `<dom-module>` for an element (but _outside_ the `<template>`). This
- is still supported, but is no longer recommended.
+**注意:**  在Polymer 1.1之前,推荐将`<style>`标记放在组件的`<dom-module>`内(且在`<template>`之_外_).这个还是支持的但已经不推荐了.
 {.alert .alert-info}
 
 
-### Styling distributed children (::content)
+### 为分散的子结点设置样式 (::content)
 
-Under shady DOM, the `<content>` tag doesn't appear in the DOM tree. Styles are rewritten to remove the
-`::content` pseudo-element, **and any combinator immediately to the left of `::content`.**
+在shady DOM中, `<content>`标记不会出现在DOM tree里. 样式会被重写,去掉了
+`::content`伪组件, **所有组合器立即属于左边`::content`.**
 
-This implies:
+这意味着:
 
-*   You must have a selector to the left of the `::content` pseudo-element.
+*   必须在`:: content`伪元素的左侧有一个选择器.
 
     ```css
     :host ::content div
@@ -76,9 +70,7 @@ This implies:
 
     (Where `x-foo` is the name of the custom element.)
 
-*   To limit styles to elements inside the ::content tag, add a wrapper element around the
-    `<content>` element. This is especially important when using a child combinator (`>`) to
-    select top-level children.
+*   为了将样式限制在::content标记内部,需要在`<content>`组件旁添加一个包装组件. 这在使用子组合器（`>`）来选择顶级子级时尤其重要.
 
     ```html
     <dom-module id="my-element">
@@ -110,68 +102,46 @@ This implies:
     .content-wrapper > .special
     ```
 
-**Custom properties can't style distributed children.** The Polymer
-[custom properties](#xscope-styling-details) shim doesn't support styling
+**自定义属性不能设置分散子级的样式.** Polymer的
+[自定义属性](#xscope-styling-details)隔离不支持为分散子级设置样式 doesn't support styling
 distributed children.
 {.alert .alert-info}
 
 
-## Cross-scope styling {#xscope-styling}
+## 跨范围样式 {#xscope-styling}
 
 
-### Background
+### 背景
 
-Shadow DOM (and its approximation via Shady DOM) bring much needed benefits of
-scoping and style encapsulation to web development, making it safer and easier
-to reason about the effects of CSS on parts of your application.  Styles do not
-leak into the local DOM from above, and styles do not leak from one local DOM
-into the local DOM of other elements inside.
+Shadow DOM (和Shady DOM)带来的一大好处将样式封装和范围带到了web开发中,使得应用中CSS部分变得更安全易用.  这样组件local DOM内部和外部以及组件之间的样式就不会泄露了.
 
-This is great for *protecting* scopes from unwanted style leakage.  But what
-about when you intentionally want to *customize* the style of a custom element's
-local DOM, as the user of an element?  This often comes up under the umbrella of
-"theming".  For example a "custom-checkbox" element that may internally use a
-`.checked` class can protect itself from being affected by CSS from other
-components that may also happen to use a `.checked` class.  However, as the user
-of the checkbox you may wish to intentionally change the color of the check to
-match your product's branding, for example.  The same "protection" that Shadow
-DOM provides at the same time introduces a practical barrier to "theming" use
-cases.
+这样可以有效*保护*范围不被不需要的样式泄露影响.  当希望组件的用户希望*自定义* 组件
+local DOM的样式呢?就需要使用
+"主题"了.  例如一个"custom-checkbox"组件内部使用了
+`.checked`类来保护自己不被其它组件CSS中的`.checked`所影响.  然而其实做为使用checkbox的用户其实是想改变单选框的颜色来匹配自己的品牌的.  Shadow DOM中提供了同样的"保护"机制来解决这个"主题"问题.
 
-**Deprecated shadow DOM selectors.** One solution the Shadow DOM spec authors
-provided to address the theming problem was the `/deep/` combinator and `::shadow`
-pseudo-element, which allowed writing rules that pierce through the Shadow DOM
-encapsulation boundary. However, these proved problematic and have been deprecated.
+**已弃用的shadow DOM选择器.** Shadow DOM规范的作者通过使用`/deep/`选择器 and `::shadow`
+伪组件为这种主题问题提供了一种解决方案,这种方案允许编写跨越Shadow DOM封装边界的规则. 然而这种方案是有问题的所以被弃用了.
 {.alert .alert-info}
 
 <!-- retain legacy anchor -->
 <a id="xscope-styling-details"></a>
 
-### Custom CSS properties {#custom-css-properties}
+### 自定义CSS属性 {#custom-css-properties}
 
-Polymer includes a shim for custom CSS properties inspired by (and compatible with)
-the future W3C [CSS Custom Properties for Cascading Variables](http://dev.w3.org/csswg/css-variables/)
-specification (see
-[Using CSS Variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables)
-on the Mozilla Developer Network).
+Polymer为自定义CSS样式包含了一个隔离,这个是受到了(and compatible with)
+未来W3C[CSS Custom Properties for Cascading Variables](http://dev.w3.org/csswg/css-variables/)
+规范 (查看
+[使用CSS变量](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables)
+on the Mozilla Developer Network)的启发并与之兼容.
 
-Rather than exposing the details of an element's internal implementation for
-theming, instead an element author defines one or more custom CSS
-properties as part of the element's API.
+与其将组件内部的样式实现暴露出去,还不如由组件的作者在组件的API中定义一个或多个自定义CSS属性.
 
-These custom properties can be defined similarly to other standard CSS properties
-and will inherit from the point of definition down the composed DOM tree,
-similar to the effect of `color` and `font-family`.
+这些自定义属性可以像其它标准CSS属性属性一样将从所构造的DOM树的定义点继承,就像`color` 和 `font-family`的效果一样.
 
-In the simple example below, the author of `my-toolbar` identified the need for
-users of the toolbar to be able to change the color of the toolbar title.  The
-author exposed a custom property called `--my-toolbar-title-color` which is
-assigned to the `color` property of the selector for the title element.  Users
-of the toolbar may define this variable in a CSS rule anywhere up the tree, and
-the value of the property will inherit down to the toolbar where it is used if
-defined, similar to other standard inheriting CSS properties.
+在下边的简单示例中,`my-toolbar`的作者认识到了工具栏的用户希望可以改变工具栏标题的颜色.作者暴露了一个名为`--my-toolbar-title-color`的自定义属性通过主题组件的选择器来设置`color`属性.  工具栏的用户可以在任意的CSS规则中定义这个变量,变量值会继承给工具栏使用就像其它标准的CSS属性继续一样.
 
-Example: { .caption }
+示例: { .caption }
 
 ```html
 <dom-module id="my-toolbar">
@@ -204,7 +174,7 @@ Example: { .caption }
 </dom-module>
 ```
 
-Example usage of `my-toolbar`: { .caption }
+`my-toolbar`用法示例: { .caption }
 
 ```html
 <dom-module id="my-element">
@@ -239,46 +209,31 @@ Example usage of `my-toolbar`: { .caption }
 </dom-module>
 ```
 
-The `--my-toolbar-title-color` property only affects the color of the title
-element encapsulated in `my-toolbar`'s internal implementation.  In the
-future the `my-toolbar` author can rename the `title` class or
-restructure the internal details of `my-toolbar` without changing the custom
-property exposed to users.
+`--my-toolbar-title-color`属性只作用于`my-toolbar`封装的标题组件颜色的内部实现.将来`my-toolbar`的作者可以重命名`title`类或者重构`my-toolbar`的内部细节而不用改变暴露给用户的自定义属性.
 
-You can also include a default value in the `var()` function, to use in case the user
-doesn't set the custom property:
+同样也可以为`var()`函数赋默认值, 用于当用户没有设置自定义属性时:
 
 ```css
 color: var(--my-toolbar-title-color, blue);
 ```
 
-Thus, custom CSS properties introduce a powerful way for element authors to
-expose a theming API to their users in a way that naturally fits right alongside
-normal CSS styling. It is already on a standards track (currently in the candidate recommendation (CR) stage of the process) with support in Firefox, Safari, and [Chrome 49](https://www.chromestatus.com/features/6401356696911872).
+由此,自定义CSS属性提供了一种强大的能力可以让组件作者为用户提供像正常的CSS样式一样的主题API. 它已经做为一个标准(目前处理候选推荐阶段)被Firefox, Safari, 和 [Chrome 49](https://www.chromestatus.com/features/6401356696911872)所支持.
 
-### Custom CSS mixins
+### 自定义CSS混合
 
-It may be tedious (or impossible) for an element author to predict every
-CSS property that may be important for theming, let alone expose every
-property individually.
+这可能是乏味的（或不可能的）来让组件作者预测所有的重要CSS属性,更不用说单独提供每一个属性.
 
-The custom properties shim includes an extension that enables an element
-author to define a set of CSS properties as a single custom property and
-then allow all properties in the set to be applied to a specific CSS rule
-in an element's local DOM. The extension enables this with a mixin capability
-that is analogous to `var`, but which allows an entire set of properties
-to be mixed in. This extension adheres to the
+自定义属性隔离包含一个扩展可以让组件的作者定义一组CSS属性作为一个单独的自定义属性,并允许组中的属性作用于组件local DOM的特定CSS规则.扩展使用混合功能来提供这种类似于`var`的能力, 但是它允许全部属性可以被混合. 此扩展拥护
 [CSS @apply rule](http://tabatkins.github.io/specs/css-apply-rule/)
-proposal.
+提案.
 
-Use `@apply` to apply a mixin:
+使用`@apply`来应用一个混合:
 
 ```
 @apply(--<var>mixin-name</var>);
 ```
 
-Defining a mixin is just like defining a custom property, but the
-value is an object that defines one or more rules:
+定义一个混合就好象定义一个自定义属性, 只是它的值是一个定义了一个或多个规则的对象:
 
 ```
 selector {
@@ -316,7 +271,7 @@ Example: { .caption }
 </dom-module>
 ```
 
-Example usage of `my-toolbar`: { .caption }
+`my-toolbar`使用示例: { .caption }
 
 ```html
 <dom-module id="my-element">
@@ -359,26 +314,21 @@ Example usage of `my-toolbar`: { .caption }
 </dom-module>
 ```
 
-### Custom property API for Polymer elements {#style-api}
+### Polymer组件的自定义属性API {#style-api}
 
-Polymer's custom property shim evaluates and applies custom property values once
-at element creation time.  In order to have an element (and its subtree) re-
-evaluate custom property values due to dynamic changes such as application of
-CSS classes, etc., call the [`updateStyles`](/1.0/docs/api/Polymer.Base#method-updateStyles)
-method on the element. To update all elements on the page, you can also call
+Polymer自定义属性隔离在创建组件时计算和应用自定义属性.为了让组件(或子树)在诸如应用CSS类生更改时重新计算自定义属性值,需要调用组件的[`updateStyles`](/1.0/docs/api/Polymer.Base#method-updateStyles)
+. 需要更新页面上的所有组件时可以调用
 `Polymer.updateStyles`.
 
-You can  directly modify a Polymer element's custom property by setting
-key-value pairs in [`customStyle`](/1.0/docs/api/Polymer.Base#property-customStyle)
-on the element (analogous to setting `style`) and then calling `updateStyles`.
-Or you can pass a dictionary of property names and values as an argument to
+还可以通过设置键值对[`customStyle`](/1.0/docs/api/Polymer.Base#property-customStyle)的形式来修改一个Polymer组件(如同设置`style`)的自定义属性,然后调用`updateStyles`.
+或者传递一个属性名和值的字典作为参数给
 `updateStyles`.
 
-To get the value of a custom property on an element, use
+为了获取组件上的一个自定义属性值,可以使用
 [`getComputedStyleValue`](/1.0/docs/api/Polymer.Base#method-getComputedStyleValue).
 
 
-Example: { .caption }
+例如: { .caption }
 
 ```html
 <dom-module id="x-custom">
@@ -409,30 +359,21 @@ Example: { .caption }
 </dom-module>
 ```
 
-### Custom properties shim limitations
+### 自定义属性隔离的限制
 
-Cross-platform support for custom properties is provided in Polymer by a
-JavaScript library that **approximates** the capabilities of the CSS Variables
-specification  *for the specific use case of theming custom elements*, while
-also extending it to add the capability to mixin property sets to rules as
-described above. For performance reasons, Polymer **does
-not attempt to replicate all aspects of native custom properties.**
-The shim trades off aspects of the full dynamism possible in CSS in the
-interests of practicality and performance.
+在Polymer中跨平台的自定义属性支持由一个**近似**CSS变量规范的JavaScript库提供，规范不仅定*义了自定义组件样式的使用*同时还扩展到了使用混合属性来设置规则
+. 由于属性原因, Polymer **不试图实现所有原生自定义属性.**
+隔离在在CSS全面动态的可行性和实用性上做了权衡.
 
-Below are current limitations of the shim. Improvements to performance and
-dynamism will continue to be explored.
+以下是当前隔离的限制. 动态和性能会得到持续的改进.
 
-#### Dynamism limitations
+#### 动态限制
 
-Only property definitions which match the element at *creation time* are applied.
-Any dynamic changes that update property values are not applied automatically. You
-can force styles to be re-evaluated by calling the
-[`updateStyles`](/1.0/docs/api/Polymer.Base#method-updateStyles) method on a
-Polymer element, or `Polymer.updateStyles` to update all element
-styles.
+匹配组件的属性定义只在*创建时*被应用.
+任何动态更改属性值都不会自动应用.可以在Polymer组件上调用
+[`updateStyles`](/1.0/docs/api/Polymer.Base#method-updateStyles)方法来强制重新计算和更新, 或者使用`Polymer.updateStyles`来更新所有组件的样式.
 
-For example, given this markup inside an element:
+例如在组件中添加如下标记:
 
 HTML: { .caption }
 
@@ -459,13 +400,12 @@ x-foo.b {
 }
 ```
 
-After adding class `b` to `x-foo` above, the host element must call `this.updateStyles`
-to apply the new styling. This re-calculates and applies styles down the tree from this point.
+在`x-foo`上添加了`b`类后,宿主组件必须调用 `this.updateStyles`
+来应用这个新样式. 这个重新计算和应用将从这个入口处向DOM树传播.
 
-Dynamic effects **are** reflected at the point of a property's application.
+动态效果**将**影响这个属性中的全部内容.
 
-For the following example, adding/removing the `highlighted` class on the `#title` element will
-have the desired effect, since the dynamism is related to *application* of a custom property.
+在下例中, 在`#title`组件上添加/删除`highlighted`类会得到预想的效果, 由于动态作用于自定义属性的全部内容.
 
 ```css
 #title {
@@ -477,15 +417,9 @@ have the desired effect, since the dynamism is related to *application* of a cus
 }
 ```
 
-#### Inheritance limitations
+#### 继承限制
 
-Unlike normal CSS inheritance which flows from parent to child, custom
-properties in Polymer's shim can only change when inherited by a custom element
-from rules that set properties in scope(s) above it, or in a `:host` rule for
-that scope.  **Within a given element's local DOM scope, a custom property can
-only have a single value.**  Calculating property changes within a scope would be
-prohibitively expensive for the shim and is not required to achieve cross-scope
-styling for custom elements, which is the primary goal of the shim.
+不同于正常的CSS从上往下的继承顺序, Polymer隔离中的自定义属性只在所继承的自定义组件设置了所属范围或`:host`范围的规则时可以被改变.  **在组件的local DOM范围内,自定义属性只能有一个值.**  在隔离范围内计算属性的更改是一个耗资源的工作,所以隔离不需要实现跨范围自定义元素的样式,尽管这是隔离的主要功能.
 
 ```html
 <dom-module id="my-element">
@@ -521,9 +455,9 @@ styling for custom elements, which is the primary goal of the shim.
 </dom-module>
 ```
 
-#### Styling distributed elements not supported
+#### 不支持分离组件的样式Styling distributed elements not supported
 
-The custom properties shim doesn't support styling distributed elements.
+自定义属性隔离不支持对分离组件的样式The custom properties shim doesn't support styling distributed elements.
 
 ```css
 /* Not supported */
@@ -532,28 +466,21 @@ The custom properties shim doesn't support styling distributed elements.
 }
 ```
 
-## Custom element for document styling (custom-style) {#custom-style}
+## 文档样式的自定义组件 (custom-style) {#custom-style}
 
 
-Polymer provides a `<style is="custom-style">` custom element
-for defining styles **in the main document** that can take advantage of several
-special features of Polymer's styling system:
+Polymer提供了一个 `<style is="custom-style">`自定义组件用来定义**主文档的**的样式,它利用了Polymer样式系统的几个特性:
 
-*   Document styles defined in a `custom-style` are shimmed to ensure they do
-    not leak into local DOM when running on browsers without native Shadow
-    DOM.
+*   在一个`custom-style`中定义的文档样式是隔离的,确保它们不会泄漏到local DOM当浏览器不支持Shadow DOM时.
 
-*   Custom properties used by Polymer's
-    [shim for cross-scope styling](#xscope-styling-details) may be defined in an
-    `custom-style`. Use the `:root` selector to define custom properties that apply
-    to all custom elements.
+*   Polymer的自定义属性
+    [跨范围样式隔离](#xscope-styling-details)可以用一个
+    `custom-style`来定义.使用`:root`选择器来定义作用于所有自定义组件的自定义属性.
 
-*   For backwards compatibility, the deprecated `/deep/` combinator and `::shadow`
-    pseudo-element are shimmed on browsers without native Shadow DOM. You should avoid
-    using these in new code.
+*   为了向后兼容, 已弃用的`/deep/`组合和`::shadow`伪组件在不支持原生Shadow DOM的浏览器中做了隔离.在新的代码中应避免使用它们.
 
 
-Example: { .caption }
+示例: { .caption }
 
 ```html
 <!doctype html>
@@ -586,27 +513,21 @@ Example: { .caption }
 </html>
 ```
 
-All features of `custom-style` are available when defining styles as part of
-Polymer elements (for example, in `<style>` elements within a custom element's
-`<dom-module>`). The exception is the `:root` selector, which is only useful at
-the document level. **The `custom-style` extension should only be used for
-defining document styles, outside of a custom element's local DOM.**
+在定义Polymer组件的的样式时所有的`custom-style`特性都可用(例如 `<style>`组件中有一个
+`<dom-module>`自定义组件). 除了`:root`选择器, 只在文档级别有用. **`custom-style`扩展应当只被用于在一个自定义组件local DOM外定义文档样式.**
 
-## Shared styles and external stylesheets {#style-modules}
+## 共享的样式和外部样式表 {#style-modules}
 
-To share style declarations between elements, you can package a set
-of style declarations inside a `<dom-module>` element. In this section,
-a `<dom-module>` holding styles is called a _style module_ for convenience.
+为了在组件之间共享样式, 可以在一个`<dom-module>`组件内打包一个样式集合.在这一节里,
+用了一个名为_style module_的`<dom-module>`来控制样式.
 
-A style module declares a named set of style rules that can be imported into
-an element definition, or into a `custom-style` element.
+一个样式模块声明了一组样式规则可以被引入到一个组件的定义中, 或者引入到一个`custom-style`组件中.
 
-**Note:** Style modules were introduced in Polymer 1.1;
-they replace the experimental support for [external stylesheets](#external-stylesheets).
+**注意:** 样式模块在Polymer 1.1中被引入;
+它替换了对[外部样式表](#external-stylesheets)的实验性支持.
 {.alert .alert-info}
 
-Define a style module inside an HTML import using the `<dom-module>`
-element.
+使用`<dom-module>`组件在一个HTML引用中定义一个样式模块.
 
 ```html
 <!-- shared-styles.html -->
@@ -619,14 +540,12 @@ element.
 </dom-module>
 ```
 
-The `id` attribute specifies the name you'll use to reference
-your shared styles. Style module names use the same namespace as elements,
-so your style modules must have unique names.
+`id`属性可在共享样式中作为引用. 样式模块名称秘组件的命令空间相同,所以样式模块必须用唯一名称.
 
-Using the shared styles is a two-step process: you need to use a `<link>` tag
-to _import_ the module, and a `<style>` tag to _include_ the styles in the correct place.
+使用共享样式为分两步: 需要用一个`<link>`标记来
+_引入_ 模拟,再用一个`<style>`标记在合适的地方来_包含_ 样式.
 
-To use a style module in an element:
+在组件中使用样式模块:
 
 ```html
 <!-- import the module  -->
@@ -642,7 +561,7 @@ To use a style module in an element:
 </dom-module>
 ```
 
-You can also use a shared style module in a `custom-style` element.
+还可以在`custom-style`组件中使用共享样式模块.
 
 ```html
 <!-- import the shared styles  -->
@@ -651,8 +570,7 @@ You can also use a shared style module in a `custom-style` element.
 <style is="custom-style" include="shared-styles"></style>
 ```
 
-A single style tag can both `include` shared styles
-and define local rules:
+一个样式标记既可以`include`共享样式也可以定义本地规则:
 
 ```html
 <style include="shared-styles">
@@ -660,32 +578,20 @@ and define local rules:
 </style>
 ```
 
-(This works for both `custom-style` elements and `<style>` tags inside
-custom elements.) The shared styles are applied _before_ the styles defined
-inside the body of the `<style>` tag, so the shared styles can be overridden
-by the styles defined in the body.
+(对于`custom-style`组件和自定义组件内的`<style>`标记都有效.) 共享样式在内部定义了`<style>`标记的组件之前被应用,所以共享样式可以被内部样式覆盖.
 
-### External stylesheets (deprecated) {#external-stylesheets}
+### 外部样式表(已弃用) {#external-stylesheets}
 
-**Deprecated feature.** This experimental feature is now deprecated in favor of
-[style modules](#style-modules). It is still supported, but support will
-be removed in the future.
+**弃用功能.** 此实验性功能已被弃用请使用
+[样式模块](#style-modules). 虽然依然被支持但未来就不支持了.
 {.alert .alert-info}
 
-Polymer includes an experimental feature to support loading external stylesheets
-that will be applied to the local DOM of an element.  This is typically
-convenient for developers who like to separate styles, share common styles
-between elements, or use style pre-processing tools.  The syntax is slightly
-different from how stylesheets are typically loaded, as the feature leverages
-HTML Imports (or the HTML Imports polyfill, where appropriate) to load the
-stylesheet text such that it may be properly shimmed and/or injected as an
-inline style.
+Polymer包含了一个实验性功能来支持加载外部样式表并应用于组件的local DOM.开发者可以用来分离样式,组件间共享通用样式或使用样式预处理工具.由于功能使用了HTML Imports(或适当时使用HTML Import polyfill)来加载样式表内容所以语法有点不同于经典的样式加载,作为一个内联样式有可能被隔离或拒绝.
 
-To include a remote stylesheet that applies to your Polymer element's local DOM,
-place a special HTML import `<link>` tag with `type="css"` in your `<dom-
-module>` that refers to the external stylesheet to load.
+为了包含一个远程样式表并应用到Polymer组件的local DOM,添加一个特殊的带有`type="css"`的HTML引入`<link>`标记到要加载外部样式的`<dom-
+module>`中.
 
-Example: { .caption }
+示例: { .caption }
 
 ```html
 <dom-module id="my-awesome-button">
@@ -708,23 +614,17 @@ Example: { .caption }
 </dom-module>
 ```
 
-## Third-party libraries that modify local DOM {#scope-subtree}
+## 第三方库修改local DOM {#scope-subtree}
 
-If you are using a third-party library that adds local DOM nodes to your
-Polymer element, you may notice that styles on the element do not update
-properly.
+如果使用第三方库为Polymer组件添加local DOM结点, 需要注册组件的样式会更新不正确.
 
-The correct way to add DOM nodes to a Polymer element's local DOM is via
-the Polymer [DOM API](local-dom#dom-api). This API lets you manipulate
-nodes in a way that respects the local DOM and ensures that styles are
-updated properly.
+正确的做法是通过Polymer的DOM API](local-dom#dom-api)为Polymer组件的local DOM添加结点. 此API可以像local DOM一样操作结点并确保样式被正确更新.
 
-When using third-party libraries that **do not use** the Polymer DOM
-API, use the [`scopeSubtree`](/1.0/docs/api/Polymer.Base#method-scopeSubtree)
-method to apply proper CSS scoping to a node and all of its descendants.
+使用第三方库时**不要用**Polymer DOM
+API, 使用[`scopeSubtree`](/1.0/docs/api/Polymer.Base#method-scopeSubtree)
+方法来应用CSS范围到结点和它的所有子结点上.
 
-1.  Create a container node inside your element's local DOM, and have your
-    third-party library create DOM under that container node.
+1.  在组件的local DOM内创建一个容器结点, 让第三方库在容器结点内创建DOM.
 
     ```html
     <dom-module is="x-example">
@@ -735,7 +635,7 @@ method to apply proper CSS scoping to a node and all of its descendants.
     </dom-module>
     ```
 
-2.  Call `scopeSubtree` on the container node.
+2.  在容器结点上调用`scopeSubtree`.
 
     ```js
     ready: function() {
@@ -743,12 +643,8 @@ method to apply proper CSS scoping to a node and all of its descendants.
     }
     ```
 
-    `containerNode` is the root node of the tree you wish to scope. Setting
-    the second argument to `false` scopes the specified node and descendants
-    **once.** Setting it to `true` enables a mutation observer that applies CSS
-    scoping whenever `containerNode` or any of its descendants are modified.
+    `containerNode`是要覆盖DOM树的根结点. 第二个参数设置为`false`来覆盖特定的结点和它的子结点**一次**.
+     设置为`true`表示当范围内的任何结点更改时都被持续应用.
 
-**Not for use on Polymer elements.** If the subtree that you scope
-contains any Polymer elements with local DOM, `scopeSubtree` will
-cause the descendants' local DOM to be styled incorrectly.
+**不适用于Polymer组件.** 如果子树包含有带local DOM的Polymer组件, `scopeSubtree`将导致所结点的local DOM样式错误.
 {.alert .alert-error}

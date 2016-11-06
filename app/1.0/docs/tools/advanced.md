@@ -1,152 +1,147 @@
 ---
-title: Advanced tools
+title: 高级工具
 ---
 
 <!-- toc -->
 
-The [Polymer CLI](polymer-cli) is the recommended starting point for tools
-related to developing Polymer elements. If for some reason it does not
-meet your needs, here is a list of the underlying tools that it is composed
-of. You can use a build tool like Gulp or Grunt in combination with these
-tools to create your own workflow.
+[Polymer CLI](polymer-cli)是开发Polymer组件的官方推荐工具.如果它还满足不了你的需求，可以查看下面的这些工具。可以将它们与Gulp或Grunt相结合来创建属于自己的工作流程.
 
-## Development
+## 开发
 
-### <b>polyserve</b>—web server for developing elements {#polyserve}
+### <b>polyserve</b>—针对组件开发的web服务器 {#polyserve}
 
-*Equivalent to Polymer CLI command `polymer serve`.*
+*等同于Polymer CLI命令`polymer serve`.*
 
-[polyserve](https://github.com/PolymerLabs/polyserve) is simple web server for serving `bower_components`, locally. It's useful when developing your own elements.
+[polyserve](https://github.com/PolymerLabs/polyserve)是一个简单的web服务器可以用来提供`bower_components`的本地访问. 对于组件开发很有用.
 
-polyserve serves the component from the current directory as `/components/{element-name}/`, where `element-name` is defined as the name in `bower.json`. All other dependencies are served from `./bower_components/`.
+polyserve提供的组件访问基于当前目录`/components/{element-name}/`,`element-name`在`bower.json`中定义. 其它的依赖资源位于`./bower_components/`.
 
-Install:
+安装:
 
     npm install -g polyserve
 
-Usage:
+使用:
 
     cd my-element/
     polyserve -p 8080
 
-Source: [github.com/PolymerLabs/polyserve](https://github.com/PolymerLabs/polyserve)
+源码: [github.com/PolymerLabs/polyserve](https://github.com/PolymerLabs/polyserve)
 
-### <b>polylint</b>—lint projects for errors and common mistakes {#polylint}
+### <b>polylint</b>—静态检查工具用来发现错误和常见问题{#polylint}
 
-*Equivalent to Polymer CLI command `polymer lint`.*
+*等同于Polymer CLI命令`polymer lint`.*
 
-[polylint](https://github.com/PolymerLabs/polylint) is a linting tool to detect
-common mistakes and errors in your projects.
+[polylint](https://github.com/PolymerLabs/polylint)静态检查工作用来检测项目中的错误和常见问题.
 
-Install:
+安装:
 
     npm install -g polylint
 
-Usage:
+使用:
 
     polylint --root my-project/ \
         --input elements.html my-element.html
 
-**Source:** [github.com/PolymerLabs/polylint](https://github.com/PolymerLabs/polylint)
+**源码:** [github.com/PolymerLabs/polylint](https://github.com/PolymerLabs/polylint)
 
-### Web component tester—unit-testing tool for elements {#wct}
+### Web component tester—组件单元测试工具 {#wct}
 
-*Equivalent to Polymer CLI command `polymer test`.*
+*等同于Polymer CLI命令`polymer test`.*
 
-[Web component tester](https://github.com/Polymer/web-component-tester) is a tool providing a browser-based testing environment for web components. Out of the box it includes support for Mocha, Chai, Async and Sinon. See [Test your elements](tests) for detailed usage.
+[Web component tester](https://github.com/Polymer/web-component-tester)工具提供了一个基于浏览器的组件测试环境. 原生支持Mocha, Chai, Async和Sinon. 查看[测试组件](tests)获取更多详情.
 
-Install:
+安装:
 
     npm install -g web-component-tester
 
-Usage:
+使用:
 
     wct
-    wct -l chrome (runs tests in chrome only)
+    wct -l chrome (只在Chrome中运行测试)
 
-By default, any tests under `test/` will be run. You can override this by specifying particular files (or globs of files) via `wct path/to/files`.
+默认情况下, 所有位于`test/`都会运动. 但也可以通过指定部分（或全部），例如`wct path/to/files`.
 
-If you prefer not to use WCT's command line tool, you can also [run WCT tests directly in a browser](https://github.com/Polymer/web-component-tester#web-server) via a web server of your choosing.
+如果你不喜欢使用WCT'的命令行工具, 你也可以[在浏览器中直接运行WCT测试](https://github.com/Polymer/web-component-tester#web-server)使用你选用的web服务器.
 
-For details on using WCT, see [Test your elements](tests).
+WCT更多详情, 查看[组件测试](tests).
 
-Source: [github.com/Polymer/web-component-tester](https://github.com/Polymer/web-component-tester)
+源码: [github.com/Polymer/web-component-tester](https://github.com/Polymer/web-component-tester)
 
-## Build and optimization {#build}
+## 构建和优化B {#build}
 
-This section lists commands used by the Polymer CLI command `polymer build`.
-You can use them directly if you need to customize your build process.
+这一部分的命令被用于Polymer CLI命令`polymer build`.
+在自己的构建流程中可以直接使用它们.
 
-### <b>vulcanize</b>—optimize HTML Imports {#vulcanize}
+### <b>vulcanize</b>—优化HTML Imports {#vulcanize}
 
-[vulcanize](https://github.com/polymer/vulcanize) is a tool for crushing an HTML Import file and its dependent HTML Imports into one file. Think of it as a build step for web components. Vulcanize reduces the number of requests made by your application by concatenating imports into a single file.
+[vulcanize](https://github.com/polymer/vulcanize)是一个用来将一个HTML Import文件和它的所有HTML Imports依赖合并成一个文件的工具.构建web组件的一个步骤.Vulcanizesk可以减少应用的资源请求数据通过合并imports到一个文件中.
 
-Install:
+安装:
 
     npm install -g vulcanize
 
-Usage (CLI):
+使用 (CLI):
 
     vulcanize --inline-scripts --inline-css --strip-comments \
         elements.html > elements.build.html
 
-Vulcanize can be used from the CLI or ran programmatically from Node, `gulp-vulcanize`, or `grunt-vulcanize`. Read more about vulcanize in [Optimize for production](optimize-for-production).
+Vulcanize可以在CLI中使用也可以在Node中用代码调用, `gulp-vulcanize`,或`grunt-vulcanize`.vulcanize的更多信息[为线上版本优化](optimize-for-production).
 
-Source: [github.com/Polymer/vulcanize](https://github.com/Polymer/vulcanize)
+源码: [github.com/Polymer/vulcanize](https://github.com/Polymer/vulcanize)
 
-Related tools
+相关工具
 
 - [gulp-vulcanize](https://www.npmjs.com/package/gulp-vulcanize)
 - [grunt-vulcanize](https://www.npmjs.com/package/grunt-vulcanize)
 - [broccoli-vulcanize](https://www.npmjs.com/package/broccoli-vulcanize)
 
-### <b>crisper</b>—extract inline script from an HTML Import {#crisper}
+### <b>crisper</b>—从一个HTML Import中提取内联脚本 {#crisper}
 
-[crisper](https://github.com/PolymerLabs/crisper) is a tool for extracting inline scripts from an HTML file and splitting them into a separate file. This is useful for cases where you need CSP compliance.
+[crisper](https://github.com/PolymerLabs/crisper)工具用于从HTML文件中提取内联脚本然后放到一个单独的文件中. 可以让你的应用符合CSP（内容安全政策）的.
 
-Install:
+安装:
 
     npm install -g crisper
 
-Usage:
+使用:
 
     crisper --html build.html --js build.js index.html
 
-Source: [github.com/PolymerLabs/crisper](https://github.com/PolymerLabs/crisper)
+源码: [github.com/PolymerLabs/crisper](https://github.com/PolymerLabs/crisper)
 
-Related tools
+相关工具
 
 - [gulp-crisper](https://www.npmjs.com/package/gulp-crisper)
 - [grunt-crisper](https://www.npmjs.com/package/grunt-crisper)
 
-### <b>polyclean</b>—minify JS/CSS/HTML {#polyclean}
+### <b>polyclean</b>—压缩JS/CSS/HTML {#polyclean}
 
-[polyclean](https://github.com/PolymerLabs/polyclean) provides basic Gulp plugins for minifying and cleaning JS, CSS, and HTML.
+[polyclean](https://github.com/PolymerLabs/polyclean)是一个Gulp插件,用来用来压缩和清理JS, CSS, and HTML.
 
-Install:
+安装:
 
     npm install -g polyclean
 
-Usage:
+使用:
 
     vulcanize --inline-css --inline-scripts index.html | polyclean
 
-Source: [github.com/PolymerLabs/polyclean](https://github.com/PolymerLabs/polyclean)
+源码: [github.com/PolymerLabs/polyclean](https://github.com/PolymerLabs/polyclean)
 
-### <b>polybuild</b>—all-in-one build tool for optimizing apps {#polybuild}
+### <b>polybuild</b>—是优化应用的全套工具{#polybuild}
 
-*Equivalent to Polymer CLI command `polymer build`.*
+*等同于Polymer CLI命令`polymer build`.*
 
-[polybuild](https://github.com/PolymerLabs/polybuild) is an all-in-one build tool that combines vulcanize, crisper, and polyclean. Although less flexible than using the tools individually, polybuild is an easy solution if you want quick defaults.
+[polybuild](https://github.com/PolymerLabs/polybuild)工具组合了vulcanize, crisper和polyclean. 尽管没有单独使用这些工具那么灵活, polybuild适用于快速上手来做一些简单的应用.
 
-Install:
+安装:
 
     npm install -g polybuild
 
-Usage:
+使用:
 
     polybuild index.html --maximum-crush
 
-Source: [github.com/PolymerLabs/polybuild](https://github.com/PolymerLabs/polybuild)
+源码: [github.com/PolymerLabs/polybuild](https://github.com/PolymerLabs/polybuild)
 
 

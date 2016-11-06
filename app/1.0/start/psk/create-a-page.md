@@ -1,37 +1,33 @@
 ---
-title: Create a new page
-subtitle: "Build your first Polymer application"
+title: 新建一个页面
+subtitle: "创建第一个Polymer应用"
 ---
 
 <!-- toc -->
 
-This Polymer Starter Kit tutorial teaches you how to:
+Polymer Starter Kit教程包括 :
 
-*   Create a new menu item in the navigation menu.
-*   Create content for a new page.
-*   Route traffic to your new page.
+*   导航菜单中创建一个菜单项.
+*   创建一个新内容页面Create content for a new page.
+*   路由访问新页面.
 
-This tutorial assumes you have already completed the
-[Set up tutorial](set-up).
+这个教程需要你完成[配置](set-up).
 
-## Serve the app locally
+## 本地运行应用
 
-1.  `cd` to the base directory of your project.
+1.  `cd` 到项目根目录.
 
-1.  Start the local development server.
+1.  启动本地开发服务器.
 
         gulp serve
 
-The local development server opens the application in your default
-web browser. As you modify your application, the server detects the
-modifications, re-builds the application, and reloads your browser
-automatically. There is no need to re-load the browser or the application.
+自动启动默认浏览器并打开应用. 服务器会自动检测应用文件的更改并自动生成和更新，不需要手动生成和刷新浏览器.
 
-## Create a navigation menu item
+## 创建一个导航目录项
 
-1.  Open `app/index.html` in a text editor.
+1.  编辑`app/index.html`.
 
-1.  Find the navigation menu.
+1.  查找到导航目录.
 
 ```
 ...
@@ -44,13 +40,12 @@ automatically. There is no need to re-load the browser or the application.
 ...
 ```
 
-Each navigation menu item consists of an anchor element (`<a>`) with two
-children: `<iron-icon>` and `<span>`.
+第一个导航目录荐包含一个anchor组件 (`<a>`) 和2个子组件: `<iron-icon>` 和 `<span>`.
 
-*   `<iron-icon>` displays a single icon.
-*   `<span>` displays the text next to the icon.
+*   `<iron-icon>` 显示图标.
+*   `<span>` 显示图标后的文字.
 
-1.  Add the following new navigation item to the bottom of the menu.
+1.  添加新的导航目录项到菜单的底部.
 
 ```
 <a data-route="books" href="{{baseUrl}}books">
@@ -59,7 +54,7 @@ children: `<iron-icon>` and `<span>`.
 </a>
 ```
 
-Your menu should now look like the following:
+新的菜单部分:
 
 ```
 ...
@@ -82,15 +77,13 @@ Your menu should now look like the following:
 ...
 ```
 
-If you view the app now, you should see your new item in the navigation
-menu, but the link does not point to a valid page yet.
+查看应用, 可以在导航目录中看到新内容, 但链接还没有指定到内容.
 
-## Add content
+## 添加内容
 
-In the previous section you added a navigation menu item to enable the
-user to navigate to a new page. Now, you add the content for that new page.
+上一步添加一个导航目录项来让用户导航到新页面. 现在,为新页面添加内容.
 
-1.  Open `app/index.html` in a text editor and find the main content.
+1.  编辑`app/index.html`并找到main content.
 
 ```
 <div class="content">
@@ -119,20 +112,13 @@ user to navigate to a new page. Now, you add the content for that new page.
     ...
 ```
 
-*   The PSK's design pattern for structuring pages is to make each page a
-    `<section>` element. The `<iron-pages>` element controls which page is
-    displayed at any given time.
-*   The `data-route` attribute is an identifier for the routing system.
-    You'll set that up for your new page in the next section.
-*   The `<paper-material>` element creates a card which floats on top of the
-    main content area. If you want to follow the Material Design
-    specification, all main content should be displayed on top of one of these
-    cards.
-*   The `elevation` attribute determines how high a `<paper-material>` element
-    appears to visually float above the main content area. Experiment by
-    setting it to values between `0` and `5`.
+*   PSK的设计模式是让`<section>`组件表示一个页面. `<iron-pages>`组件来控制哪个页面会显示给用户.
+*   `data-route`属性来用定义路由系统.下面会为新页面设置路由.
+*   `<paper-material>`组件创建一个卡片悬浮在主内容区域上方. 如果遵照Material Design规范
+    , 所有的主内容应该显示在这个浮层上方.
+*   `elevation`属性决定了`<paper-material>`组件在主内容上的高度. 一般设置在`0` 和 `5`之间.
 
-1.  Add the following content to the bottom of the main section area.
+1.  添加以下内容到main section区域底部.
 
 ```
 <section data-route="books">
@@ -142,7 +128,7 @@ user to navigate to a new page. Now, you add the content for that new page.
 </section>
 ```
 
-Your code should now look like the following:
+添加后的代码:
 
 ```
 ...
@@ -168,18 +154,13 @@ Your code should now look like the following:
 ...
 ```
 
-You now have content to link your new navigation item to. In the
-next section you'll link your navigation item to your new content.
+现在已经有了新页面的内容. 下一步将导航目录连接到新内容.
 
-## Route traffic to the new content
+## 路由访问到新内容
 
-In this last tutorial, you make a minor modification to the routing system
-so that when a user clicks on the new "Books" navigation menu item, they
-get routed properly to your new page.
+在这一步骤里, 需要修改路由系统让用户在点击新"Books"导航时, 显示新页面.
 
-1.  Open `app/elements/routing.html` in a text editor and add the following
-    code near the bottom of the script, just below the page rule for
-    `/contact`.
+1.  编辑 `app/elements/routing.html`并添加下列代码到底部，也就是`/contact`的下方.
 
 ```
 page('/books', function () {
@@ -187,7 +168,7 @@ page('/books', function () {
 });
 ```
 
-Your script should now look like the following:
+更新后的代码:
 
 ```
 ...
@@ -209,7 +190,7 @@ page('/books', function () {
 ...
 ```
 
-Your new page is now ready! Open your web browser and view it at
+新的页面已经完成! 在浏览器中访问
 [http://localhost:5000/#!/books](http://localhost:5000/#!/books).
 
 ![Example of new page](/images/1.0/psk/psk-tutorial-books-page.png)

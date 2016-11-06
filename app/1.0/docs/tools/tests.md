@@ -1,111 +1,82 @@
 ---
-title: Test your elements
+title: 测试组件
 ---
 
 <!-- toc -->
 
-This guide shows you the basics of using Polymer CLI to run unit tests, and
-how to accomplish various tasks and scenarios using the Web Component Tester
-library (the underlying library that powers Polymer CLI's testing tools).
+这一节展示了使用Polymer CLI进行单元测试的基本用法以及如何利用Web Component Tester(Polymer CLI的测试工具也是基于它)完成测试更多任务和场景.
 
-## Overview
+## 概览
 
-Polymer CLI is an all-in-one command-line interface that covers the vast majority of
-Polymer development tasks, including unit testing. The underlying library
-that powers Polymer CLI's unit testing tools is called Web Component Tester.
+Polymer CLI是一个覆盖了包含单元测试等大多数Polymer开发任务的全功能命令行工具.Polymer CLI的单元测试工具底层使用了Web Component Tester来完成.
 
-Web Component Tester is an end-to-end testing environment built by the Polymer
-team. It enables you to test your elements locally, against all of your
-installed browsers, or remotely, via Sauce Labs. It is built on top of
-popular third-party tools, including:
+Web Component Tester是由Polymer团队创建的完整的测试环境.不仅可以用来做本地组件测试,也可以通过Sauce Labs进行远程测试.它基于一些流行的第三方工具,如:
 
-*   [Mocha](https://mochajs.org/) for a test framework, complete with support
-    for BDD and TDD.
-*   [Chai](http://chaijs.com/) for more assertion types that can be used with
-    your Mocha tests.
-*   [Sinon](http://sinonjs.org/) for spies, stubs, and mocks.
-*   [Selenium](http://www.seleniumhq.org/) for running tests against
-    multiple browsers.
+*   [Mocha](https://mochajs.org/)完整支持BDD和TDD的测试框架.
+*   [Chai](http://chaijs.com/)在Mocha测试中使用更多各类的assertion.
+*   [Sinon](http://sinonjs.org/)用于spies, stubs和mocks.
+*   [Selenium](http://www.seleniumhq.org/)用于浏览器中运行单元测试.
 *   [Accessibility Developer
     Tools](https://github.com/GoogleChrome/accessibility-developer-tools)
-    for accessibility audits.
+    用于辅助功能的审计.
 
-## Quick start {#quick-start}
+## 快速入门 {#quick-start}
 
-For demonstration purposes, this guide shows you how to install Polymer CLI
-and initialize an element project. You'll then use this project to learn how
-to add and run unit tests.
+基于演示目的,该节展示了如何安装Polymer CLI并初始化一个组件项目. 然后使用这个项目来学习如何添加和运行单元测试Y.
 
-1.  (OS X only) [Manually install][selenium] the latest SafariDriver
-    extension for Selenium [(`SafariDriver.safariextz`)][safaridriver] to ensure
-    that Web Component Tester can run properly. See the
-    [Web Component Tester Polycast][workaround-example] for
-    a demonstration. Note: the Polycast is somewhat outdated, but the section
-    that the URL links to is still relevant.
+1.  (仅限OS X) [手动安装][selenium]最新的SafariDriver
+    extension for Selenium [(`SafariDriver.safariextz`)][safaridriver]来确保Web Component Tester正常工作.查看
+    [Web Component Tester Polycast][workaround-example]中的一个演示
+    . 注意: Polycas可能有些过时了,但URL链接依然有效.
 
-1.  Install Polymer CLI. Follow the directions in
-    [Install Polymer CLI](polymer-cli#install) to get started.
+1.  安装Polymer CLI. 参考
+    [安装Polymer CLI](polymer-cli#install).
 
-1.  [Create an element project](polymer-cli#element). This guide assumes that
-    your element project directory and your element are both named `my-el`.
+1.  [创建一个组件项目](polymer-cli#element). 假设组件项目根目录名称和组件名称都为`my-el`.
 
-1.  `cd` to the base directory of your project.
+1.  `cd`到项目根目录.
 
-1.  Run `ls`.
+1.  运行`ls`.
 
-    You'll see that your element project contains a
-    directory called `test`. This is where all of your unit tests should be
-    stored.
+    可以看到组件项目包含一个`test`目录. 这里存放了所有的单元测试.
 
-    When you run `polymer test`, Web Component Tester automatically
-    searches for a `test` directory and runs any tests it finds in there. If
-    you use another directory name, you'll need to specify it when you run
-    `polymer test`.
+    运行`polymer test`后, Web Component Tester自动描述`test`目录并执行找到的所有测试.如果使用其它目录名称,需要在运行
+    `polymer test`时指定目录名.
     {.alert .alert-info}
 
-1.  Open up `test/my-el_test.html` to see an example of a basic unit test.
+1.  打开`test/my-el_test.html`可以看到一个基本单元测试的示例.
 
-1.  Run the test.
+1.  运行测试.
 
         polymer test
 
-    Web Component Tester automatically finds all of the browsers on your
-    system and runs your tests against each one. If you wanted to run your
-    tests against a single browser, say Google Chrome, you could
+    Web Component Tester自动查找系统里已安装的所有浏览器并逐一运行全部测试.如果想要针对单个浏览器比如Google Chrome运行测试则需要运行
     `polymer test -l chrome`.
     {.alert .alert-info}
 
-### Run tests interactively
+### 与测试进行交互
 
-You can also run your tests in the browser. This allows you to use the
-browser's DevTools to inspect or your debug your unit tests.
+还可以在浏览器中运行测试.这样就可以使用浏览器的DevTools来查看或调试单元测试.
 
-For example, using Polymer CLI and the example element project created
-in [Quick start](#quick-start) above, first you would start your server:
+例如, 使用Polymer CLI和刚在[快速入门](#quick-start)创建的示例组件项目, 启动服务器:
 
     polymer serve
 
-And then, to run the basic `my-el_test.html` unit test in the browser, you
-would open a web browser and go to the following URL:
+然后在浏览器中运行基本的`my-el_test.html`单元测试,打开浏览器输入以下URL:
 
     localhost:8080/components/my-el/test/my-el_test.html
 
-## Creating tests
+## 创建测试
 
-Now that you've got the basics down of using Polymer CLI to run tests, it's
-time to start creating them.
+已经了解了使用Polymer CLI来运行测试的基础,可以开始创建测试了.
 
-This section of the doc shows you how to accomplish various tasks or scenarios
-while implementing your unit tests.
+这一节中展示了如何通过创建单元测试来覆盖不同的任务或场景.
 
-### Asynchronous tests {#async}
+### 异步测试 {#async}
 
-To create an asynchronous test, pass `done` as an argument to the test function
-and then call `done()` when the test is complete. The `done` argument is a
-signal to Mocha that the test is asynchronous. When Mocha runs the test,
-it waits until the test code invokes the `done()` callback. If the `done()`
-callback isn't invoked, the test eventually times out and Mocha reports the test
-as a failure.
+为了创建异步测试需要传递一个参数`done`到测试方法中,测试完成后调用`done()`. `done`参数在Mocha中表示测试是异步的. 当Mocha运行测试时将一直等待测试代码调用
+`done()`. 如果`done()`没有被调用
+,测试会超时并在Mocha报告中显示测试失败.
 
 ```js
 test('fires lasers', function(done) {
@@ -117,17 +88,15 @@ test('fires lasers', function(done) {
 });
 ```
 
-### Prevent shared state with test fixtures {#test-fixtures}
+### 避免测试模板中的共享状态 {#test-fixtures}
 
-Test fixtures enable you to define a template of content and copy a clean,
-new instance of that content into each test suite. Use test fixtures to
-minimize the amount of shared state between test suites.
+测试模板可以定义一个模板以便在每一个测试套件中使用一个基于模板的全新的实例.测试模板可以最小化测试套件之间的共享状态.
 
-To use a test fixture:
+使用测试模板:
 
-*   Define the test fixture template and give it an ID.
-*   Define a variable in your test script to reference the template.
-*   Instantiate a new instance of the fixture in your `setup()` method.
+*   定义测试模板并添加一个ID.
+*   测试脚本中定义模板的引用变量.
+*   在`setup()`方法中实例化一模板.
 
 ```html
 <test-fixture id="seed-element-fixture">
@@ -151,10 +120,9 @@ To use a test fixture:
 </script>
 ```
 
-### Create stub methods
+### 创建存根方法Create stub methods
 
-Stubs enable you to replace default implementations with custom methods. This
-is useful for catching side effects.
+存根使您能够使用自定义方法替换默认实现。 这个对于捕获很有用。
 
 ```
 setup(function() {
@@ -166,18 +134,14 @@ setup(function() {
 });
 ```
 
-You don't have to use stubs directly on individual elements. You can override
-the implementation for all elements of a given type.
+不需要在单独的组件直接使用存根. 可以为一组同类型的组件重新实现.
 
-### Create stub elements
+### 创建组件存根
 
-Use [stub elements](http://stackoverflow.com/questions/463278/what-is-a-stub)
-to test elements in isolation. For example, if one of your tests
-depends on another element to return data, rather than importing the other
-(possibly unstable) element into your tests, you can implement a stub of the
-other element that always returns consistent data.
+使用[组件存根](http://stackoverflow.com/questions/463278/what-is-a-stub)
+来隔离组件测试. 例如一个测试需要另一个组件返回方法,可以实现这个组件存根来总是返回固定数据而不用将这个组件(可能不稳定)引入到测试中.
 
-Use `replace()` to create stub elements.
+使用`replace()`来创建组件存根.
 
 ```js
 setup(function() {
@@ -185,7 +149,7 @@ setup(function() {
 });
 ```
 
-For example, using the sample `replace()` above and the element below:
+例如使用上面的`replace()`和下边的组件:
 
 ```
 <dom-module id='x-el'>
@@ -195,7 +159,7 @@ For example, using the sample `replace()` above and the element below:
 </dom-module>
 ```
 
-At test runtime, the content template would be stamped out as:
+测试时模板内容会被替换如下:
 
 ```
 <dom-module id='x-el'>
@@ -205,23 +169,19 @@ At test runtime, the content template would be stamped out as:
 </dom-module>
 ```
 
-The attributes and content of the element are preserved, but the tag
-is replaced with the specified stub tag.
+组件属性和内容被保留但是标记被替换为特定的标记存根.
 
-Because the method is called within `setup()`, all of the changes are
-reverted at the end of each test.
+由于在`setup()`调用该方法, 所有的改变在测试结束时被还原.
 
 ### AJAX
 
 <google-youtube video-id="_9qARcdCAn4" autoplay="0"
                 rel="0" fluid></google-youtube>
 
-Web Component Tester includes [Sinon](http://sinonjs.org/), which enables you to mock XHR
-requests and create fake servers.
+Web Component Tester包含了[Sinon](http://sinonjs.org/)可以用来模仿XHR请求以及创建虚假服务器.
 
-Below is an example of a simple XHR unit test suite for
-[`<iron-ajax>`](https://elements.polymer-project.org/elements/iron-ajax).
-Check out Sinon's documentation for more in-depth examples.
+下面是一个针对[`<iron-ajax>`](https://elements.polymer-project.org/elements/iron-ajax)的简单XHR单元测试示例.
+查看Sinon的文档获取更多的示例.
 
 ```
 <!-- create test fixture template -->
@@ -273,15 +233,14 @@ Check out Sinon's documentation for more in-depth examples.
 </script>
 ```
 
-**Note:** The example above uses Chai's [`expect`](http://chaijs.com/api/bdd/)
-assertion style.
+**注意:** 上面的示例使用了Chai的[`expect`](http://chaijs.com/api/bdd/)
+断言风格.
 { .alert .alert-info }
 
-### Run a set of tests {#test-sets}
+### 运行一组测试 {#test-sets}
 
-To run a set of tests, create an HTML file and call `loadSuites()`. When
-running Web Component Tester, specify the path to the HTML file as the first argument
-(for example, `wct test/my-test-set.html`.
+为了运行一组测试需要创建一个文件名`loadSuites()`的HTML文件. 使用Web Component Tester时把这个HTML文件做为第一个参数传入, 
+(例如`wct test/my-test-set.html`.
 
 ```
 <!doctype html>
@@ -302,15 +261,12 @@ running Web Component Tester, specify the path to the HTML file as the first arg
 </html>
 ```
 
-The argument to `loadSuites()` should be an array of strings. Each string
-should be a relative URL to a test suite. You can configure your tests
-using query strings in the URLs. See [Test shadow DOM](#shadow-dom)
-for an example.
+`loadSuites()`参数应该是一个字符串数组.每个字符串是一个代表了测试套件的相对URL. 还可以在URL使用查询字符串来配置测试. 查看 [测试 shadow DOM](#shadow-dom)
+的示例.
 
-### Test local DOM
+### 测试local DOM
 
-Use Polymer's [DOM API](/1.0/docs/devguide/local-dom#dom-api) to access
-and modify local DOM children.
+使用Polymer的[DOM API](/1.0/docs/devguide/local-dom#dom-api)来访问来修改local DOM的内容.
 
 ```js
 test('click sets isWaiting to true', function() {
@@ -319,20 +275,13 @@ test('click sets isWaiting to true', function() {
 });
 ```
 
-**Note:** `myEl.$$('button')` returns the first `button` element encountered
-in the local DOM of `myEl`.
+**注意:** `myEl.$$('button')`返回`myEl`的local DOM中第一个`button`组件.
 { .alert .alert-info }
 
-#### Test DOM mutations
+#### 测试DOM更改
 
-Always wrap your test in `flush` if your element template contains a [template
-repeater (`dom-repeat`)](/1.0/docs/devguide/templates#dom-repeat) or
-[conditional template (`dom-if`)](/1.0/docs/devguide/templates#dom-if),
-or if your test involves a local DOM mutation. Polymer lazily performs these
-operations in some cases for performance. `flush` ensures that asynchronous
-changes have taken place. The test function should take one argument, `done`,
-to indicate that it is [asynchronous](#async), and it should call
-`done()` at the end of `flush`.
+如果组件模板包含一个[模板重复器
+ (`dom-repeat`)](/1.0/docs/devguide/templates#dom-repeat)或[条件模板 (`dom-if`)](/1.0/docs/devguide/templates#dom-if)或者测试涉及到一个local DOM更改，都需要把测试包装到`批处理`中.Polymer为了性能考虑会被执行这些操作. `批处理`确保这些异步更改已经生效.测试方法中接收一个 `done`参数来表示测试是[异步的](#async)并且在`批处理`的最后要调用`done()`.
 
 ```
 suite('my-list tests', function() {
@@ -357,11 +306,9 @@ suite('my-list tests', function() {
 )};
 ```
 
-#### Test with native shadow DOM {#shadow-dom}
+#### 测试本地shadow DOM {#shadow-dom}
 
-To test out how a test suite behaves when the browser runs native
-shadow DOM, create a [test set](#test-sets) and pass `dom=shadow` as
-a query string when Web Component Tester loads your test suites.
+为了查看测试套件在浏览器以native shadow DOM运行时的行为,创建一个[测试集合](#test-sets)并以查询字符串方式传递`dom=shadow` 给Web Component Tester.
 
 ```js
 WCT.loadSuites([
@@ -370,29 +317,23 @@ WCT.loadSuites([
 ]);
 ```
 
-This sample runs `basic-test.html` twice, once using shady DOM and once
-using native shadow DOM (if the browser supports it).
+示例运行`basic-test.html`两次分别使用shady DOM和native shadow DOM(浏览器支持时).
 
-### Automated testing in the cloud
+### 云端自动测试
 
-It's important to get a good testing setup in place for your project as
-early as possible. Using services like Travis for continuous integration,
-and Sauce Labs for cross-browser testing means you can be confident that
-changes you push to your project will work well on different platforms and
-devices. For guidance on setting up these tools check out the Polycast below.
+在项目开发时越早的引入测试越好.使用诸如Travis做为持续集成时可以配合Sauce Labs的跨浏览器测试来确保你的代码在不同的平台和设备上都能正常工作.可以查看下面的Polycast来获取配置这些工作的指南.
 
 <google-youtube video-id="afy_EEq_4Go" autoplay="0"
                 rel="0" fluid></google-youtube>
 
-## Learn more
+## 更多
 
-Polymer Summit 2015 video on testing:
+Polymer Summit 2015测试视频:
 
 <google-youtube video-id="kX2INPJY4Y4" autoplay="0"
                 rel="0" fluid></google-youtube>
 
-The [Web Component Tester README][wct-readme] has more in-depth information
-about Web Component Tester usage.
+[Web Component Tester README][wct-readme]有更深入的用法介绍.
 
 [seed-element]: https://github.com/PolymerElements/seed-element
 [wct-readme]: https://github.com/Polymer/web-component-tester/blob/master/README.md

@@ -1,7 +1,7 @@
 ---
 layout: default
 type: about
-title: About Polymer 1.0
+title: 关于Polymer 1.0
 ---
 
 <style>
@@ -17,19 +17,18 @@ title: About Polymer 1.0
 <!-- toc -->
 
 
-The 1.0 release of the Polymer core library is now out.
+Polymer core library 最新版本是1.0.
 
-This release is optimized for performance and size. We're working hard on filling out the feature set.  See the [roadmap](#roadmap) for more detailed
-timelines.
+1.0优化了性能并减小了文件体积. 我们在努力实现更多的特性.  查看[路线图](#roadmap)获取更多详细信息.
 
-<div class="alert alert-error"><strong>BREAKING CHANGES.</strong>
-This release is <strong>not compatible with the 0.5 APIs.</strong></div>
+<div class="alert alert-error"><strong>重大更改.</strong>
+1.0<strong>不兼容0.5的APIs.</strong></div>
 
-*   For guidance on migrating an existing 0.5 element to the 1.0 APIs,
-    see the <a href="migration.html">Migration guide</a>.
+*   按照0.5组件迁移到1.0的APIs,
+    参照<a href="migration.html">迁移指南</a>.
 
-*   For changes between 0.8 and 1.0, see the <a href="release-notes.html">
-    Release notes</a>.
+*   0.1和1.0的更改,查看<a href="release-notes.html">
+    发行说明</a>.
 
 
 ## Highlights

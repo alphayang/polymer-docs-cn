@@ -1,18 +1,16 @@
 ---
-title: Events
+title: 事件
 ---
 
 <!-- toc -->
 
-## Event listener setup {#event-listeners}
+## 配置事件监听器 {#event-listeners}
 
-Add event listeners to the host element by providing a
-`listeners` object that maps events to event handler function names.
+添加到宿主组件上事件监听器提供了一个`listeners`对象来匹配事件到事件处理器方法名.
 
-You can also add an event listener to any element in the `this.$` collection
-using the syntax <code><var>nodeId</var>.<var>eventName</var></code>.
+可以将事件监听器添加到`this.$`集合中的任意组件上,使用<code><var>nodeId</var>.<var>eventName</var></code>.
 
-Example: { .caption }
+示例: { .caption }
 
 ```
 <dom-module id="x-custom">
@@ -46,14 +44,12 @@ Example: { .caption }
 </dom-module>
 ```
 
-## Annotated event listener setup {#annotated-listeners}
+## 批注式配置事件监听器 {#annotated-listeners}
 
-To add event listeners to local DOM children, use
-<code>on-<var>event</var></code>  annotations in your template. This often
-eliminates the need to give an element an `id` solely for  the purpose of
-binding an event listener.
+要将事件监听器添加到local DOM子结点上,可以在模板中使用
+<code>on-<var>event</var></code>批注. 这样就可以消除仅为了给组件绑定一个事件监听器而要赋与组件一个`id`.
 
-Example: { .caption }
+示例: { .caption }
 
 ```html
 <dom-module id="x-custom">
@@ -72,27 +68,21 @@ Example: { .caption }
 ```
 
 
-**Tip: Use `on-tap` rather than `on-click` for an event that fires consistently
-across both touch (mobile) and click (desktop) devices**. See [gesture
-events](gesture-events) for a complete list of reliable, cross-platform events.
+**提示: 在事件中使用`on-tap`而不是`on-click`来触发可以在跨触摸(移动)和点击(桌面)设备中获得一致性**. 查看[手势事件](gesture-events)获取完整的跨平台一致事件列表.
 {.alert .alert-info}
 
-Because the event name is specified using an HTML attribute, **the event name is always
-converted to lowercase**. This is because HTML attribute names are case
-insensitive. So specifying `on-myEvent` adds a listener for `myevent`. The event handler
-_name_ (for example, `handleClick`) **is** case sensitive.
+由于事件名称使用HTML标记进行了指定, **所以事件名称总是被转换为小写**. 这主要是因为HTML标记是大小写敏感的. 通过指定`on-myEvent`为`myevent`添加一个监听器. 事件处理器
+_名称_ (例如`handleClick`) **也是**大小写敏感的.
 
-**Lowercase event names.** When you use a declarative handler, the event name
-is converted to lowercase, because attributes are case-insensitive.
-So the attribute `on-core-signal-newData` sets up a listener for `core-signal-newdata`,
-_not_ `core-signal-newData`. To avoid confusion, always use lowercase event names.
+**小写事件名称.** 当使用声明式处理器时,事件名被转换为小写, 原因是HTML标记是大小写敏感的.
+所在标记`on-core-signal-newData`为`core-signal-newdata`配置了一个监听器,
+_而不是_ `core-signal-newData`. 为了避免混乱所以事件名称要小写.
 {.alert .alert-info}
 
-## Imperatively add and remove listeners {#imperative-listeners}
+## 强制添加和删除监听器 {#imperative-listeners}
 
-Use [automatic node finding](local-dom#node-finding) and the
-convenience methods
-[`listen`](/1.0/docs/api/Polymer.Base#method-listen) and
+使用[自动节点查找](local-dom#node-finding)和方法
+[`listen`](/1.0/docs/api/Polymer.Base#method-listen)、
 [`unlisten`](/1.0/docs/api/Polymer.Base#method-unlisten).
 
 ```js
@@ -100,20 +90,17 @@ this.listen(this.$.myButton, 'tap', 'onTap');
 this.unlisten(this.$.myButton, 'tap', 'onTap');
 ```
 
-The listener callbacks are invoked with `this` set to the element instance.
+监听器回调使用组件实例上的`this`进行调用.
 
-If you add a listener imperatively, you need to remove it imperatively.
-This is commonly done in the `attached` and `detached`
-[callbacks](registering-elements#lifecycle-callbacks). If you use
-the [`listeners`](#event-listeners) object or [annotated event
-listeners](#annotated-listeners), Polymer automatically adds
-and removes the event listeners.
+如果强制添加了一个监听器就要强制的删除它.
+通知在`attached`和`detached`
+[回调](registering-elements#lifecycle-callbacks)中实现. 如果使用了[`listeners`](#event-listeners)对象或[批注式事件监听器](#annotated-listeners), Polymer会自动添加和删除事件监听器.
 
-## Custom events {#custom-events}
+## 自定义事件 {#custom-events}
 
-To fire a custom event from the host element use the `fire` method. You can also pass in data to event handlers as an argument to `fire`.
+在宿主组件上使用`fire`方法来触发一个自定义事件. 可以在`fire`方法的参数中传递数据到事件处理器中.
 
-Example: { .caption }
+示例: { .caption }
 
 ```html
 <dom-module id="x-custom">
@@ -145,39 +132,27 @@ Example: { .caption }
 ```
 
 
-## Property change events {#property-changes}
+## 属性更改事件 {#property-changes}
 
-You can configure an element to fire a non-bubbling DOM event when a specified
-property changes. See [Change notification
-protocol](data-binding#change-notification-protocol) for more information.
+当属性更改时可以配置组件触发一个不冒泡的DOM事件. 查看[更改通知协议](data-binding#change-notification-protocol)获取更多信息.
 
-## Event retargeting {#retargeting}
+## 事件重定目标 {#retargeting}
 
-Shadow DOM has a feature called "event retargeting" which changes an event's
-target as it bubbles up, such that target is always in the same scope as the
-receiving element. (For example, for a listener in the main document, the
-target is an element in the main document, not in a shadow tree.)
+Shadow DOM一个称为"event retargeting"的特性可以在事件冒泡时改变事件的目标,新目标须和接收组件在同一个范围里. (例如,主文档的监听器,它的目标是主文档里的一个组件而不是一个shadow树.)
 
-Shady DOM doesn't do event retargeting for events as they bubble, because the
-performance cost would be prohibitive. Instead, Polymer
-provides a mechanism to simulate retargeted events when needed.
+Shady DOM不支持事件冒泡时重定目标,由于性能成本会过高. 反而在Polymer中提供一个机制在需要时来模仿事件重定目标.
 
-Use `Polymer.dom(event)` to get a normalized event object that provides
-equivalent target data on both shady DOM and shadow DOM. Specifically, the
-normalized event has the following properties:
+使用`Polymer.dom(event)`获取一个在shady DOM和shadow DOM上提供了等效目标数据的归一化事件.特别是归一化事件有以下属性:
 
-*   `rootTarget`: The original or root target before shadow retargeting
-    (equivalent to `event.path[0]` under shadow DOM or `event.target` under
-    shady DOM).
+*   `rootTarget`: shadow重定目标前的原始目标或根目标T
+    (等效于shadow DOM下的`event.path[0]`或shady DOM下`event.target`).
 
-*   `localTarget`: Retargeted event target (equivalent to `event.target` under
-    shadow DOM). This node is always in the same scope as the node where the
-    listener was added.
+*   `localTarget`: 重定后的事件目标(等效于shadow DOM下的`event.target`). 此结点同监听器所监听的结点处于同一范围.
 
-*   `path`: Array of nodes through which event will pass
-    (equivalent to `event.path` under shadow DOM).
+*   `path`: 事件会经过的所有结点数组
+    (等效于shadow DOM下的`event.path`).
 
-Example: { .caption }
+示例: { .caption }
 
 ```html
 <!-- event-retargeting.html -->
@@ -223,11 +198,7 @@ Example: { .caption }
 </script>
 ```
 
-In this example, the original event is triggered on a `<button>` inside the `<event-retargeting>`
-element's local DOM tree. The listener is added on the `<event-retargeting>` element itself, which
-is in the main document. To hide the implementation of the element, the event should be retargeted
-so it appears to come from `<event-retargeting>` rather than from the `<button>` tag.
+上例中,原始事件被触发于`<event-retargeting>`组件的local DOM树中的`<button>`. 监听器添加在`<event-retargeting>`组件自身上, 位于主文档中.为了隐藏组件的实现,事件应被重定目标,所以看起来事件来自
+`<event-retargeting>`而不是 `<button>`标记.
 
-The document fragment that appears in the event path is the root of the local DOM tree. In shady DOM
-this is an instance of `DocumentFragment`. In native shadow DOM, this would show up as an instance of
-`ShadowRoot` instead.
+事件路径中出现的文档片段是local DOM树的根结点.在shady DOM中它是一个`DocumentFragment`实例.在原生shadow DOM中它是一个`ShadowRoot`的实例.

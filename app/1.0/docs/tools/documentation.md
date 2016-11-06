@@ -1,45 +1,39 @@
 ---
-title: Document your elements
+title: 为组件编写文档
 ---
 
 <!-- toc -->
 
-You can provide API docs for Polymer custom elements by writing
-documentation comments in your source files. Using the `iron-component-pages` element,
-you can create a simple documentation page for your elements that parses these comments
-and renders the API documentation.
+可以通过在源码中添加文档注释的方法来编写Polymer组件的API文档.使用`iron-component-pages`组件来创建一个简单的通过解析注释来渲染的API文档页面.
 
-## Add a documentation page for an element repo
+## 为组件库添加一个文档页面
 
-Polymer CLI's element project template comes with built-in documentation using
-[`iron-component-page`](https://github.com/PolymerElements/iron-component-page).
-If you started your element with this template, you should be good to go.
-See also:
+Polymer CLI'组件项目模板自带使用
+[`iron-component-page`](https://github.com/PolymerElements/iron-component-page)生成的文档.
+使用这个模板来开发你的组件是一个很好的开始.
+查看:
 
-*   [Create an element project](polymer-cli#element)
+*   [创建一个组件项目](polymer-cli#element)
 
-To add a documentation page to an existing project that _didn't_ start from
-Polymer CLI:
+下面为_不是_通过Polymer CLI来创建的已有项目添加一个文档页面:
 
-1.  Add `iron-component-page` to your project as a development dependency:
+1.  添加`iron-component-page`，作为项目的开发依赖:
 
     ```
     bower install --save-dev PolymerElements/iron-component-page
     ```
 
-2.  Create an `index.html` file in the top-level folder of the project.
+2.  项目根目录新建一个`index.html`文件.
 
-3.  Copy the contents of the `index.html` file from the following file and
-    put them in your repo's `index.html`.
+3.  从以下位置的`index.html`文件中复制文件内容到新建的`index.html`文件中.
 
-    [Element documentation page template](https://raw.githubusercontent.com/yeoman/generator-polymer/master/el/templates/index.html)
+    [组件文档页面模板](https://raw.githubusercontent.com/yeoman/generator-polymer/master/el/templates/index.html)
 
-By default, `iron-component-page` assumes a single import, with a name matching
-the folder name (for example, `my-element/my-element.html`).
+默认情况下, `iron-component-page`假设只有一个和文件夹同名的引用(例如, `my-element/my-element.html`).
 
-If you want to document multiple files:
+添加多个文档文件:
 
-1.  Create a single file that imports all of files that you want to document:
+1.  新建一个文件来引用所有的文档:
 
     ```
     <!-- all-imports.html -->
@@ -47,55 +41,48 @@ If you want to document multiple files:
     <link rel="import" href="my-element-two.html">
     ```
 
-2.  Edit `index.html`.
+2.  编辑`index.html`.
 
-3.  Add a `src` attribute to the `iron-component-page` instance, specifying the
-    name of your combined import file as the value:
+3.  添加`src`属性到`iron-component-page`实例, 并指定上一步新建的文档名为值:
 
     ```
     <iron-component-page src="all-imports.html"></iron-component-page>
     ```
 
-## View element docs
+## 查看组件文档
 
-You can use Polymer CLI's [`polymer serve`](polymer-cli#serve) command to
-preview element docs while you're developing a component.
+使用Polymer CLI[`polymer serve`](polymer-cli#serve)命令来预览组件文档.
 
-To view the element docs:
+查看组件文档:
 
-1.  Run `polymer serve`.
+1.  运行`polymer serve`.
 
-2.  Open the element's top-level `index.html` in a browser:
+2.  在浏览器中访问根目录下的`index.html`:
 
     <pre><code>localhost:8080/components/<var>my-el</var>/</code></pre>
 
-    Where <code><var>my-el</var></code> is the name of your element.
+    <code><var>my-el</var></code>是组件的名称.
 
-If everything is set  up right, you should see a documentation page for your
-element, even if you haven't written any doc comments yet.
+全部配置正确的话, 就可以看到组件的文档页面了，就算是没有添加任意文档注释也可以看到页面.
 
-If you have multiple elements or behaviors, use the pulldown menu in the
-top-left corner to choose a documentation page.
+如果有多个组件或行为,使用左上角的下拉菜单来选择文档页面.
 
-**Host your API docs.** See [Create a reusable element](/1.0/docs/tools/reusable-elements#publish)
-for information on publishing an element on GitHub, and hosting its API docs
-using GitHub pages.
+**发布API文档.** 查看[创建一个可重用的组件Create a reusable element](/1.0/docs/tools/reusable-elements#publish)
+可获取如布组件到Github以及使用GitHub pages来发布API文档的更多信息.
 { .alert .alert-info }
 
-## Write element docs
+## 编写组件文档
 
-Add API docs to your element by adding inline HTML or JavaScript comments.
+使用内联的HTML或JavaScript来添加组件的API文档内容.
 
-### Element Summaries
-
+### 组件简介
 <p class="tldr">
-  Provide a thorough overview of what the element does, and provide
-  examples of common usage patterns. Format the documentation as
-  markdown.
+  提供元素的功能和提供的全面概述
+   常见示例。 将文档格式化为
+   markdown.
 </p>
 
-If the element declares a `<dom-module>`, write the documentation as
-HTML comments **immediately** preceeding the `<dom-module>`
+如果组件使用`<dom-module>`来声明,使用HTML注释编写文件会**立即**处理`<dom-module>`
 
 ```
 <link rel="import" href="../polymer/polymer.html">
@@ -113,10 +100,9 @@ Wham! It's all awesome now!
 <dom-module id="awesome-sauce">
 ```
 
-Note that the doc comment should be **after** any dependencies.
+注意文档注释应在所有依赖的**后边*.
 
-If your element lacks a `<dom-module>`, write documentation as a **JavaScript comment**
-immediately preceeding the `Polymer()` call:
+如果组件没有`<dom-module>`, 使用**JavaScript注释**编写文档会立即触发`Polymer()`调用:
 
 ```
 /**
@@ -133,48 +119,42 @@ Polymer({
   is: 'awesome-sauce',
 ```
 
-You can use Markdown headings to break up long element summaries:
+可以使用Markdown headings来分割组件的过长说明内容:
 
-    ### Accessibility
+    ### 辅助功能
 
-Add element-level tags at the **end** of the element summary, as part
-of the same comment block. Two tags are supported currently:
+在组件说明的**底部**添加组件级别的标记来做为注释块的一部分. 现在支持两个标签:
 
-*   `@hero`. Specifies a hero image.
+*   `@hero`. 指定一个人物图片.
 
         @hero path/to/image
 
-*   `@demo`. Specifies a demo, with optional path and description. If path and description are omitted,
-    the standard demo path (`./demo/`) is assumed.
+*   `@demo`. 使用可选的路径和说明参数来指定一个demo. 没有路径和说明的话，使用标准的demo路径(`./demo/`).
 
         @demo
 
         @demo path/to/demo1.html  Super cool demo, with sharks!
         @demo path/to/demo2.html  Even cooler demo. The sharks have lasers!
 
-Any other tags will be ignored.
+其它的标记都会被忽略.
 
-The first tag encountered in the comment block marks the end of the element
-summary. **Any line starting with an at-sign (@) is interpreted as a tag.** Any
-remaining non-tag comments in the comment block are ignored.
+注释块中的第一个标记作为组件概要的结尾. **所有以@开始的行都被解析为一个标记.** 其它剩余没有标记的注释块都被忽略.
 
-### Properties
+### 属性
 
 <p class="tldr">
-  Document all public properties. Docs should start with a one line
-  summary. Make sure that the property's type is annotated.
+  记录所有的公开属性. 文档最好以一个简短的说明开始.确保属性的类型被批注.
 </p>
 
-For example, the most simple property documentation can be a single
-line:
+例如, 一个最简单的属性文档可以是一行:
 
 ```js
 /** Whether this element is currently awesome. */
 isAwesome: Boolean,
 ```
 
-If the property doesn't specify a type, or that type is not primitive,
-be sure to [annotate](#type-annotation) the type properly:
+如果属性没有指定类型或类型不是基本类型,
+确保类型[批注](#type-annotation)是正确的:
 
 ```js
 /**
@@ -185,20 +165,20 @@ be sure to [annotate](#type-annotation) the type properly:
 sauce: Object,
 ```
 
-Private properties should be prefixed with an underscore (`_`):
+私有属性应当以下划线(`_`)开头:
 
 ```js
 /** An awesome message */
 _message: String,
 ```
 
-### Methods
+### 方法
 
-Follow the [property guidelines](#properties). Additionally, make sure
+遵循[属性指南](#properties). 另外要确保所有参数和返回值的类型都有说明Additionally, make sure
 the types for all params and return values are documented.
 { .tldr }
 
-For example:
+例如:
 
 ```js
 /**
@@ -214,15 +194,15 @@ For example:
 makeAwesome: function makeAwesome(element, level, refs) {
 ```
 
-### Events
+### 事件
 
 <p class="tldr">
-  Events must be annotated explicitly with an <code>@event</code> tag.
+  事件必须以一个<code>@event</code>标记做显式批注.
 </p>
 
-Event properties are documented with the `@param` tag, just like method parameters.
+事件属性用`@param`标记，和方法参数一样.
 
-For example:
+例如:
 
 ```js
 /**
@@ -233,19 +213,18 @@ For example:
  */
 ```
 
-### Behaviors
+### 行为
 
-<p class="tldr">Like an element, but add <code>@polymerBehavior</code>.</p>
+<p class="tldr">同组件一样但是要添加<code>@polymerBehavior</code>.</p>
 
-Include a behavior summary, just like an element summary, but ending with a
-`@polymerBehavior` tag. The behavior name can be specified explicitly if the
-doc parser can't infer it correctly.
+包含一个行为说明, 同组件说明一样, 但是要以一个
+`@polymerBehavior`标记结尾. 行为名称需要显式指定如果文档解析器不能正确推断.
 
     @polymerBehavior MyOddBehavior
 
-Document methods, properties, etc. just like an element.
+文档方法、属性等.
 
-For example:
+例如:
 
 ```js
 /**
@@ -257,12 +236,10 @@ For example:
 MyBehaviors.HighlightStuff = { ... }
 ```
 
-When extending a behavior, you place the _new_ functionality
-in an implementation object as described in [Extending behaviors](/1.0/docs/devguide/behaviors#extending).
+当扩展一个行为时, 在类中实现一个_新_ 功能
+参照[行为扩展](/1.0/docs/devguide/behaviors#extending).
 
-The implementation object **must** be named with the behavior name followed
-by `Impl`, and it must be annotated with `@polymerBehavior` _followed by
-the real behavior name_:
+实现类**必须**把行为名跟在`Impl`的后边来命名, 还要用`@polymerBehavior`做批注 _跟在真正的行为名称之后_:
 
 ```js
 /**
@@ -273,8 +250,7 @@ the real behavior name_:
 MyBehaviors.SuperBehaviorImpl = { ... }
 ```
 
-The actual behavior is simply an array of behaviors, ending with the implementation
-object. It must also be annotated with `@polymerBehavior`:
+实际的行为是一组行为的数组并以实现类结尾. 必须用`@polymerBehavior`做批注:
 
 ```js
 /**
@@ -284,13 +260,12 @@ MyBehaviors.SuperBehavior =
     [MyBehaviors.BaseBehavior, MyBehaviors.SuperBehaviorImpl]
 ```
 
-The documentation system merges these declarations into a single behavior
-(in this case, `MyBehaviors.SuperBehavior`).
+文档系统会把这些说明都合并到一个行为中
+(此处为`MyBehaviors.SuperBehavior`).
 
-### Custom CSS properties and mixins
+### 自定义CSS属性和mixins
 
-Currently there is no tag for custom CSS properties and mixins. Document
-properties and mixins in a table in the main element description:
+现在还没有自定义CSS属性和mixins的标记. 文档属性和mixins在主组件说明中的表格:
 
     ### Styling
 
@@ -302,51 +277,48 @@ properties and mixins in a table in the main element description:
     `--paper-button-ink-color` | Background color of the ripple | Based on the button's color
     `--paper-button` | Mixin applied to the button | `{}`
 
-Be sure to place the table before any element-level tags in the element summary.
+确保把表格放组件说明中任何组件级别标记的前面.
 
-### Type Annotation
+### 类型批注
 
-Adhere to [Closure-compatible type expressions](https://developers.google.com/closure/compiler/docs/js-for-compiler#types).
+查看[Closure兼容的类型表达式](https://developers.google.com/closure/compiler/docs/js-for-compiler#types).
 { .tldr }
 
-### Language
+### 语言
 
 <p class="tldr">
-  When in doubt, keep to the 3rd person present tense and keep it
-  simple.
+  使用第三人称表达并尽量保持简单.
 </p>
 
-A few guidelines for consistency:
+一些保持一致性的指南:
 
-* Use the 3rd person for descriptions.
+* 使用第三人称表达.
 
-  * Good. "Creates a foo."
-  * Avoid. "Create a foo."
+  * 推荐. "Creates a foo."
+  * 避免. "Create a foo."
 
   Use 2nd person ("Do this...") when you're _trying_ to be prescriptive,
   such as, "**Add** the `toolbar` attribute to the element you want
   to use as a toolbar."
 
-* Use the present tense whenever possible.
+* 尽可能使用现在时.
 
-  * Good. "Clicking the element starts an animation."
-  * Avoid. "Clicking the element will start an animation."
+  * 推荐. "Clicking the element starts an animation."
+  * 避免. "Clicking the element will start an animation."
 
-* Start method descriptions with an active verb.
+* 使用主动动词进行方法说明.
 
-  * Good. "Starts the animation."
-  * Avoid. "This method to starts the animation."
+  * 推荐. "Starts the animation."
+  * 避免. "This method to starts the animation."
 
-* It's OK to use a fragment, especially in a short description.
+* 使用短语特别是短文字中.
 
-  * Good. "Item height, in pixels."
-  * Avoid. "This property specifies the item height, in pixels."
+  * 推荐. "Item height, in pixels."
+  * 避免. "This property specifies the item height, in pixels."
 
-  (Fragments should still start with a capital letter and
-  have ending punctuation.)
+  (短语应大写并以标点结束.)
 
-The [JavaDoc Style Guide](http://www.oracle.com/technetwork/java/javase/documentation/index-137868.html#styleguide)
-is a good resource on general API doc style. Most of the style rules
-described there can be applied here as well.
+[JavaDoc Style Guide](http://www.oracle.com/technetwork/java/javase/documentation/index-137868.html#styleguide)
+是一个很少的API文档风格资源. 其中的大多数风格规则在这里同样适用.
 
 

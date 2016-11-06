@@ -1,35 +1,29 @@
 ---
-title: Quick tour of Polymer
+title: Polymer快览
 ---
 
 <!-- toc -->
 
-Polymer makes it simple to create web components, declaratively.
+Polymer可以轻松的创建web components.
 
-Custom elements can leverage Polymer's special features to reduce boilerplate
-and make it even easier to build complex, interactive elements:
+自定义组件可以利用Polymer的独特优势来减少冗余代码并且可以更容易的创建复杂可交互的组件:
 
-- Registering elements
-- Lifecycle callbacks
-- Property observation
-- Local DOM template
-- Data binding
+- 组件注册
+- 回调生命周期
+- 属性观察
+- Local DOM模板
+- 数据绑定
 
-In this section you can take a quick tour of the Polymer library,
-without installing anything. Click the **Edit on Plunker** button to open any
-of the samples in an interactive sandbox.
+这一节是Polymer快速入门且不需要安装任何东西. 点击**Edit on Plunker**按钮可以在沙箱环境中与任意示例交互.
 
-Tap the buttons following each feature to learn more.
+点击下面的链接来查看每一项特性.
 
-### Register an element {#register}
+### 注册一个组件 {#register}
 
-To register a new element, call the `Polymer` function, which
-_registers_ a new element with the browser. Registering an element associates
-a tag name with a prototype, so you can add properties and methods to your custom
-element. The custom element's name **must contain a dash (-)**.
+为了注册一个新的叫做`Polymer`的组件,可以在浏览器中使用
+_registers_来注册新组件. 注册一个组件关联了一个标记名称和一个原型, 可以添加属性和方法来定制组件. 定制组件的名称T**必须包含一个中划线(-)**.
 
-The Polymer function takes as an
-argument an object that defines your element's prototype.
+Polymer函数接受一个定义了组件原型的对象作为参数.
 
 <demo-tabs selected="0" src="http://plnkr.co/edit/NQ4qGEoS24hia4numeLP?p=preview">
   <demo-tab heading="proto-element.html">
@@ -42,23 +36,22 @@ argument an object that defines your element's prototype.
   <iframe frameborder="0" src="samples/proto-element/index.html" width="100%" height="40"></iframe>
 </demo-tabs>
 
-This sample uses a lifecycle callback
-to add contents to the `<proto-element>` when it's initialized.
-When a custom element finishes its initialization, the `ready` lifecycle callback is called.
-The `ready` callback is a great place to do constructor-like initialization work.
+这个示例使用了回调生命周期为`<proto-element>`初始化时添加内容.
+自定义组件完成初始化后就调用`ready`回调函数.
+`ready`回调可以用来进行类似构造函数之类的工作.
 
 <p><a href="/1.0/docs/devguide/registering-elements" class="blue-button">
-  Learn more: element registration
+  更多关于: 组件注册
 </a></p>
 
 <p><a href="/1.0/docs/devguide/registering-elements#lifecycle-callbacks" class="blue-button">
-  Learn more: lifecycle callbacks
+  更多关于: 回调生命周期
 </a></p>
 
-### Add local DOM
+### 添加local DOM
 
-Many elements include some internal DOM nodes to implement the element's UI and behavior.
-Polymer calls this _local DOM_, and it provides an easy way to specify it:
+很多组件包含一些内部DOM结点来实现组件UI和功能.
+Polymer称之为 _local DOM_,并提供了一种简单的方式来指定它:
 
 <demo-tabs selected="0" src="http://plnkr.co/edit/q3o7yWQq9cevrEy4fA9I?p=preview">
   <demo-tab heading="dom-element.html">
@@ -71,17 +64,16 @@ Polymer calls this _local DOM_, and it provides an easy way to specify it:
   <iframe frameborder="0" src="samples/dom-element/index.html" width="100%" height="40"></iframe>
 </demo-tabs>
 
-Local DOM is encapsulated inside the element.
+Local DOM被封装在组件的内部.
 
 <p><a href="/1.0/docs/devguide/local-dom" class="blue-button">Learn more: local DOM</a></p>
 
-### Compose with local DOM
+### 使用local DOM
 
-Local DOM lets you control _composition_. The element's children can be _distributed_
-so they render as if they were inserted into the local DOM tree.
+Local DOM让你能够控制_合成_. 组件的子结点可以是_分散的_
+因此它们渲染为好像它们被插入到local DOM树中.
 
-This example creates a simple tag that decorates an image by wrapping it
-with a styled `<div>` tag.
+本便中创建一个简单的标记,它封装了一个图片在一个格式化过的`<div>`标记中.
 
 <demo-tabs selected="0" src="http://plnkr.co/edit/LClm7BxEaq56395cgn64?p=preview">
   <demo-tab heading="picture-frame.html">
@@ -94,21 +86,20 @@ with a styled `<div>` tag.
   <iframe frameborder="0" src="samples/picture-frame/index.html" width="100%" height="60"></iframe>
 </demo-tabs>
 
-**Note:** The CSS styles defined inside the `<dom-module>` are _scoped_ to the element's local DOM.
-So the `div` rule here only affects `<div>` tags inside `<picture-frame>`.
+**注意:**CSS样式定义在`<dom-module>`内部属于组件的local DOM_范围_.
+所以`div`规则只对位于`<picture-frame>`内的`<div>`标记有效.
 {: .alert .alert-info }
 
 <p><a href="/1.0/docs/devguide/local-dom#dom-distribution" class="blue-button">
-Learn more: Composition & distribution</a></p>
+更多关于: 合成 & 分散</a></p>
 
-### Use data binding
+### 使用数据绑定
 
-Of course, it's not enough to have static local DOM. You usually want to have your element update
-its local DOM dynamically.
+当然只有静态local DOM是远远不够的. 可以让组件来动态更新它的local DOM.
 
-Data binding is a great way to quickly propagate changes in your element and reduce boilerplate code.
-You can bind properties in your component using the "double-mustache" syntax (`{%raw%}{{}}{%endraw%}`).
-The `{%raw%}{{}}{%endraw%}` is replaced by the value of the property referenced between the brackets.
+数据绑定D数据绑定是快速传播元素中的更改并减少样板代码的好方法.
+可以使用"double-mustache"语法(`{%raw%}{{}}{%endraw%}`)来绑定组件中的属性.
+`{%raw%}{{}}{%endraw%}`被替换为在括号之间引用的属性值.
 
 <demo-tabs selected="0" src="http://plnkr.co/edit/IdMTRu1boSjWIA6q7Kj8?p=preview">
   <demo-tab heading="name-tag.html">
@@ -122,16 +113,15 @@ The `{%raw%}{{}}{%endraw%}` is replaced by the value of the property referenced 
 </demo-tabs>
 
 <p><a href="/1.0/docs/devguide/data-binding" class="blue-button">
-Learn more: data binding</a></p>
+关于更多: 数据绑定</a></p>
 
-### Declare a property
+### 声明一个属性
 
-Properties are an important part of an element's public API. Polymer
-_declared properties_ support a number of common patterns for properties—setting default
-values, configuring properties from markup, observing property changes, and more.
+属性是组件公开API的重要部分. Polymer的
+_声明属性_支持大量的通用模式来设置属性默认值,通过标记来配置属性以及观察属性的更改等等.
 
-In the following example, we add a declared `owner` property with a default value,
-and configure it in `index.html`.
+下面的示例中,定义了一个具有默认值的`owner`属性,
+并在`index.html`进行配置.
 
 <demo-tabs selected="0" src="http://plnkr.co/edit/DhDSeqNrmLflcQ8UZI1R?p=preview">
   <demo-tab heading="configurable-name-tag.html">
@@ -145,16 +135,14 @@ and configure it in `index.html`.
 </demo-tabs>
 
 <p><a href="/1.0/docs/devguide/properties" class="blue-button">
-Learn more: declared properties</a></p>
+更多关于: 属性声明</a></p>
 
-### Bind to a property
+### 绑定一个属性
 
-In addition to text content, you can bind to an element's _properties_ (using
-`property-name="{%raw%}{{binding}}{%endraw%}"`). Polymer properties
-can optionally support two-way binding.
+除了文本内容还可以绑定一个组件_属性_ (通过
+`property-name="{%raw%}{{binding}}{%endraw%}"`). Polymer属性可选支持双向绑定.
 
-This example uses two-way binding: binding the value of a custom input element (`iron-input`)
-to the element's `owner` property, so it's updated as the user types.
+本例中使用双向绑定:把自定义输入组件(`iron-input`)的值绑定组件的`owner`属性,以便用户输入时自动更新.
 
 <demo-tabs selected="0" src="http://plnkr.co/edit/OXaNcCl7qkeMwXEtiTxX?p=preview">
   <demo-tab heading="editable-name-tag.html">
@@ -167,12 +155,10 @@ to the element's `owner` property, so it's updated as the user types.
   <iframe frameborder="0" src="samples/editable-name-tag/index.html" width="100%" height="100"></iframe>
 </demo-tabs>
 
-**Note:** The `is="iron-input"` attribute indicates the input is a _type-extension_ custom
-element; the element name is `iron-input`, and it _extends_ the native `<input>` element.
+**注意:** `is="iron-input"`属性说明这个输入是一个_扩展类型_的自定义组件;组件名为`iron-input`, _扩展_自原生`<input>`组件.
 {: .alert .alert-info }
 
-## Next steps
+## 下一步
 
-Now that you understand these fundamental Polymer concepts, you can
-[build your first element](/1.0/start/first-element/intro) or explore
-the remainder of the Developer guide.
+已经理解了Polymer的基本原理, 可以
+[创建第一个组件项目](/1.0/start/first-element/intro)或查看更多的开发指南.

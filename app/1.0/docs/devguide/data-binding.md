@@ -1,15 +1,12 @@
 ---
-title: Data binding
+title: 数据绑定
 ---
 
 <!-- toc -->
 
-A _data binding_ connects data from a custom element
-(the _host element_) to a property or attribute of an element in its local DOM (the _child_
-or _target element_). The host element data can be a property or sub-property represented by a
-[data path](data-system#data-paths), or data generated based on one or more paths.
+_数据绑定_将自定义组件(_宿主_组件)的数据连接到组件local DOM(_子_ 或 _目标组件_)中的属性或标记.宿主组件数据可以是属性或子属性表示为一个[数据路径](data-system#data-paths),或基于一个或多个路径生成的数据.
 
-You create data bindings by adding annotations to an element's local DOM template.
+通过添加批注到组件的local DOM模板来添加数据绑定.
 
 ```
 <dom-module id="host-element">
@@ -19,36 +16,34 @@ You create data bindings by adding annotations to an element's local DOM templat
 </dom-module>
 ```
 
-Updating data bindings is a [property effect](data-system#property-effects).
+更新数据绑定是一个[属性效应](data-system#property-effects).
 
-## Anatomy of a data binding
+## 数据绑定解析
 
-A data binding appears in the local DOM template as an HTML attribute:
+数据绑定在local DOM模板中以一个HTML标记出现:
 
 <pre><code><var>property-name</var><b>=</b><var>annotation-or-compound-binding</var></code>
 <code><var>attribute-name</var><b>$=</b><var>annotation-or-compound-binding</var></code></pre>
 
-The left-hand side of the binding identifies the target property or attribute.
+绑定的左边标识出了目标属性或标记.
 
--   To bind to a property, use the property name in attribute form (dash-case not
-    camelCase), as described in [Property  name to attribute name
-    mapping](#property-name-mapping):
+-   使用标记形式(中划线而不是camelCase)的属性来绑定, 查看[属性名到标记名的映射](#property-name-mapping):
 
     ```html
     <my-element my-property="{{hostProperty}}">
     ```
 
-    This example binds to the target property, `myProperty` on `<my-element>`.
+    示例中绑定到目标属性, `<my-element>`上的`myProperty`.
 
--   To bind to an attribute instead, use the attribute name followed by `$`:
+-   绑定到标记时在`$`后使用标记名称:
 
     ```html
     <a href$="{{hostProperty}}">
     ```
 
-    This example binds to the anchor element's `href` **attribute**.
+    此例中绑定到锚组件的`href` **标记**.
 
-The right-hand side of the binding consists of either a _binding annotation_ or a _compound binding_:
+绑定的右边由一个 _绑定批注_ 或 _复合绑定_ 组成:
 
 <dl>
   <dt>Binding annotation</dt>
@@ -58,60 +53,51 @@ The right-hand side of the binding consists of either a _binding annotation_ or 
   <dd>A string literal containing one or more binding annotations.</dd>
 </dl>
 
-Whether data flow goes down from host to target, up from target to host, or both ways is controlled
-by the type of binding annotation and the configuration of the target property.
+不论数据流动是从宿主到目标还是目标到宿主,或由绑定批注控制的双向绑定和目标属性的设置.
 
--   Double-curly brackets (<code>{{ }}</code>) support both upward and downward data flow.
+-   双花括号 (<code>{{ }}</code>) 支持向上和向下的数据流动.
 
--   Double square brackets (<code>[[ ]]</code>) are _one-way_, and support only only downward data
-    flow.
+-   双中括号 (<code>[[ ]]</code>) 是 _单向的_, 并且只支持向下的的数据流动.
 
-For more on data flow, see [How data flow is controlled](data-system#data-flow-control).
+查看[如何控制数据流动](data-system#data-flow-control)来了解更多信息.
 
-## Bind to a target property {#property-binding}
+## 绑定到目标属性 {#property-binding}
 
-To bind to a target property, specify the attribute name that corresponds to the
-property, with an [annotation](#binding-annotation) or [compound binding](#compound-binding)
-as the attribute value:
+要绑定到目标属性,指定对应于属性的标记名称, 使用一个[批注](#binding-annotation)或[复合绑定](#compound-binding)
+作为标记值:
 
 ```
 <target-element name="{{myName}}"></target-element>
 ```
 
-This example binds the target element's `name` property to the host element's
-`myName` property. Since this annotation uses the two-way or "automatic" delimiters (`{{ }}`),
-it creates a two-way binding if the `name` property is configured to support it.
+示例绑定了目标组件的`name`属性到宿主组件的`myName`属性. 由于这个批注使用了双向或"自动"分隔符(`{{ }}`),
+它创建一个双向绑定如果`name`属性也被配置为支持的话.
 
-To ensure a one-way binding, use double square brackets:
+可以使用双中括号来确保使用单向绑定:
 
 ```
 <target-element name="[[myName]]"></target-element>
 ```
 
-Property names are specified in attribute format, as described in [Property name to
-attribute name mapping](properties#property-name-mapping). To
-bind to camel-case properties of elements, use dash-case in the attribute name.
-For example:
+属性名以标记格式指定, 详细格式参考[属性名称到标记名称映射](properties#property-name-mapping).可以在标记名称中使用中划线来绑定到组件的camel-case属性.
+例如:
 
 ```
 <!-- Bind <user-view>.firstName to this.managerName; -->
 <user-view first-name="{{managerName}}"></user-view>
 ```
 
-If the property being bound is an object or an array, both elements get a reference to the **same
-object**. This means that either element can change the object and a true one-way binding is
-impossible. For more information, see [Data flow for objects and
-arrays](data-system#data-flow-objects-arrays).
+如果属性绑定到了一个对象或数组,两个组件都引用到了 **同一个对象**.这意味着任意一个组件可以修改对象并且一个真正的单向绑定是不可能的.
+查看[对象和数组的数据流动](data-system#data-flow-objects-arrays).
 
-**Some attributes and properties are special.** When binding to `style`, `href`, `class`, `for` or
-`data-*` attributes, it is recommend that you use [attribute binding](#attribute-binding)
-syntax. For more information, see [Binding to native element attributes](#native-binding).
+**一些特殊的标记和属性.** 当绑定到`style`, `href`, `class`, `for` 或
+`data-*`标记时, 推荐使用[标记绑定](#attribute-binding)
+语法. 查看[绑定到原生组件标记](#native-binding)查看更多信息.
 { .alert .alert-info }
 
-### Bind to text content
+### 绑定到文本内容
 
-To bind to a target element's `textContent`, you can simply include the
-annotation or compound binding inside the target element.
+要绑定到目标组件的`textContent`,可以简单包含目标组件中的批注或复合绑定.
 
 ```
 <dom-module id="user-view">
@@ -133,42 +119,38 @@ annotation or compound binding inside the target element.
 <user-view name="Samuel"></user-view>
 ```
 
-Binding to text content is always one-way, host-to-target.
+绑定到文本内容总是单向由宿主到目标的.
 
-## Bind to a target attribute {#attribute-binding}
+## 绑定到目标标记 {#attribute-binding}
 
-In the vast majority of cases, binding data to other elements should use [property
-bindings](#property-binding), where changes are propagated by setting the new value to the
-JavaScript property on the element.
+在绝大多数情况下, 绑定数据到其它组件应当使用[属性绑定](#property-binding), 通过为组件上的JavaScript对象设置新值来传递修改.
 
-However, sometimes you need to set an attribute on an element, as opposed to a property.  For
-example, when attribute selectors are used for CSS or for interoperability with attribute-based APIs,
-such as the Accessible Rich Internet Applications (ARIA) standard for accessibility information.
+然而有时相对于属性需要在组件上设置一个标记.例如,当标记选择器被用于CSS或基于标记的API互操作性,
+例如为辅助功能信息而设置的Accessible Rich Internet Applications (ARIA)标准.
 
-To bind to an attribute, add a dollar sign (`$`) after the attribute name:
+经绑定到标记,在标记名称为添加一个dollar符(`$`):
 
 ```
 <div style$="color: {{myColor}};">
 ```
 
-Where the attribute value is either a [binding annotation](#binding-annotation) or a [compound
-binding](#compound-binding).
+标记值可以是一个[绑定批注](#binding-annotation)或[复合绑定](#compound-binding).
 
-Attribute binding results in a call to:
+调用标记绑定结果:
 
 
 ```js
 element.setAttribute(attr,value);
 ```
 
-As opposed to:
+相反:
 
 
 ```js
 element.property = value;
 ```
 
-For example:
+例如:
 
 
 ```html
@@ -184,52 +166,46 @@ For example:
 ```
 
 
-Attribute bindings are always one-way, host-to-target. Values are serialized according to the
-value's _current_ type, as described for
-[attribute serialization](properties.html#attribute-serialization).
+标记绑定总是单向由宿主到目标的.绑定值根据其值的 _当前_ 类型进行序列化,查看
+[标记序列化](properties.html#attribute-serialization)获取更多信息.
 
-Again, as values must be serialized to strings when binding to attributes, it is always more
-performant to use property binding for pure data propagation.
+再说一遍,当绑定到标记时值必须序列化为字符串, 使用属性绑定来纯粹传播数据总是能得到更好的性能.
 
-### Native properties that don't support property binding {#native-binding}
+### 不支持属性绑定的原生属性 {#native-binding}
 
-There are a handful of common native element properties that Polymer can't data-bind to directly,
-because the binding causes issues on one or more browsers.
+有一些常见的原生组件属性Polymer不能直接进行数据绑定,原因是绑定会在导致一个或多个浏览器出现问题.
 
-You need to use attribute bindings to affect the following properties:
+可以使用标记绑定来影响以下属性:
 
 | Attribute | Property | Notes
 
-| `class` | `classList`, `className` | Maps to two properties with different formats.
+| `class` | `classList`, `className` | 两个不同格式的属性映射.
 
-| `style` | `style` | By specification, `style` is considered a read-only reference to a `CSSStyleDeclaration` object.
+| `style` | `style` | 规范中`style`用来引用一个只读的`CSSStyleDeclaration`对象.
 
 | `href` | `href` |
 
 | `for` | `htmlFor` |
 
-| `data-*` |  `dataset` | Custom data attributes (attribute names starting with `data-`) are stored on the `dataset` property.
+| `data-*` |  `dataset` | 自定义数据标记(标记名以`data-`开始)保存在`dataset`属性.
 
-| `value` | `value` | Only for `<input type="number">`.
+| `value` | `value` | 只适用于`<input type="number">`.
 
-**Note:** data binding to the `value` property doesn't work on IE for ***numeric input types***. For
-this specific case, you can use one-way attribute binding to set the `value` of a numeric input. Or
-use another element such as `iron-input` or `paper-input` that handles two-way binding correctly.
+**注意:** 数据绑定到`value`属性在IE中遇到 ***数值输入类型*** 不能工作. 在这个特定情况下可以使用单向标记绑定来设置数值输入的`value`.
+或使用如`iron-input`或`paper-input`这样可以正常进行双向绑定的组件.
 {.alert .alert-info }
 
-This list includes the properties currently known to cause issues with property bindings. Other
-properties may also be affected.
+此列表包含当前已知的属性绑定会导致问题的属性.其它可能会受到影响.
 
-There are various reasons that properties can't be bound:
+有很多原因导致属性不能被绑定:
 
-*   Cross-browser isssues with the ability to place binding braces `{{...}}` in some of these
-    attribute values.
+*   跨浏览器的问题，不能够在某些属性值中放置绑定大括号`{{...}}`.
 
-*   Attributes that map to differently-named JavaScript properties (such as `class`).
+*   属性映射到了不同名称的JavaScript属性上(如`class`).
 
-*   Properties with unique structures (such as `style`).
+*   具有唯一结构的属性 (如`style`).
 
-Attribute binding to dynamic values (use `$=`):
+标记绑定到动态值 (使用`$=`):
 
 
 ```html
@@ -253,44 +229,40 @@ Attribute binding to dynamic values (use `$=`):
 
 ```
 
-## Binding annotations {#binding-annotation}
+## 绑定批注 {#binding-annotation}
 
-Polymer provides two kinds of data binding delimiters:
+Polymer提供两种数据绑定的分隔符:
 
 <dl>
-  <dt>One-way delimiters: <code>[[<var>binding</var>]]</code></dt>
-  <dd>One-way bindings allow only <strong>downward</strong> data flow.</dd>
-  <dt>Two-way or "automatic" delimiters: <code>{{<var>binding</var>}}</code></dt>
-  <dd>Automatic bindings allow <strong>upward and downward</strong> data flow.</dd>
+  <dt>单向分隔符: <code>[[<var>binding</var>]]</code></dt>
+  <dd>单向绑定只允许 <strong>向下</strong> 数据流动.</dd>
+  <dt>双向或"自动"分隔符: <code>{{<var>binding</var>}}</code></dt>
+  <dd>自动绑定允许<strong>向上和向下</strong>数据流动.</dd>
 </dl>
 
-See [Data flow](data-system#data-flow) for information on two-way binding and upward data flow.
+查看[Data flow](data-system#data-flow)获取更多关于双向绑定的向上数据流动的信息.
 
-The text inside the delimiters can be one of the following:
+分隔符内的文本可以为以下一种:
 
-*   A property or subproperty path (`users`, `address.street`).
-*   A computed binding (`_computeName(firstName, lastName, locale)`).
-*   Any of the above, preceded by the negation operator (`!`).
+*   属性或子属性路径(`users`, `address.street`).
+*   计算绑定(`_computeName(firstName, lastName, locale)`).
+*   使用否定运算符(`!`)的上面任意一种.
 
-The paths in a data binding annotation are relative to the current [data binding
-scope](data-system#data-binding-scopes).
+数据绑定批注中的路径是相对于当前[数据绑定范围](data-system#data-binding-scopes).
 
-### Bind to a host property {#host-property}
+### 绑定到宿主属性 {#host-property}
 
-The simplest form of binding annotation uses a host property:
+最简单的绑定批注是使用一个宿主属性:
 
 ```
 <simple-view name="{{myName}}"></simple-view>
 ```
 
-If the property being bound is an object or an array, both elements get a reference to the **same
-object**. This means that either element can change the object and a true one-way binding is
-impossible. For more information, see [Data flow for objects and
-arrays](data-system#data-flow-objects-arrays).
+如果属性被绑定到了一个对象或数组,两个组件都得到了 **相同对象** 的引用. 这意味着任意组件要以改变对象以及一个真正的单向绑定是不可能的.查看[对象和数组的数据流动](data-system#data-flow-objects-arrays)获取更多信息.
 
-### Bind to a host sub-property {#path-binding}
+### 绑定到宿主子属性 {#path-binding}
 
-Binding annotations can also include paths to sub-properties, as shown below:
+绑定批注可以包含到子属性的路径,如下所示:
 
 ```
 <dom-module id="main-view">
@@ -311,11 +283,11 @@ Binding annotations can also include paths to sub-properties, as shown below:
 </dom-module>
 ```
 
-Subproperty changes are not automatically [observable](data-system#observable-changes).
+子属性更改不会自动[被观察到](data-system#observable-changes).
 
-If the host element updates the subproperty it needs to use the `set` method, as described in
-[Set a property or subproperty by path](model-data#set-path). Or the `notifyPath` method, as described in
-[Notify Polymer of a subproperty change](model#notify-path).
+如果宿主组件更新子属性需要使用`set`方法,查看
+[设置给定路径的属性或子属性](model-data#set-path). 或`notifyPath`方法,查看
+[通知子属性更改给Polymer](model#notify-path).
 
 
 ```
@@ -323,18 +295,13 @@ If the host element updates the subproperty it needs to use the `set` method, as
 this.set('name.last', 'Maturin');
 ```
 
-If the binding is two-way and the target element updates the bound property, the change propagates
-upward automatically.
+如果绑定是双向且目标组件更新了绑定属性,更改会自动向上传播.
 
-If the subproperty being bound is an object or an array, both elements get a reference to the **same
-object**. This means that either element can change the object and a true one-way binding is
-impossible. For more information, see [Data flow for objects and
-arrays](data-system#data-flow-objects-arrays).
+如果子属性被绑定到了一个对象或数组,两个组件都得到了 **相同对象** 的引用. 这意味着任意组件要以改变对象以及一个真正的单向绑定是不可能的.查看[对象和数组的数据流动](data-system#data-flow-objects-arrays)获取更多信息.
 
-### Logical not operator {#expressions-in-binding-annotations}
+### 逻辑不是操作符 {#expressions-in-binding-annotations}
 
-Binding annotations support a single logical not operator (`!`), as the first character inside
-the binding delimiters:
+绑定批注支持一个简单逻辑而不是操作符(`!`),位于绑定分隔符的第一个字符上:
 
 ```
 <template>
@@ -342,49 +309,39 @@ the binding delimiters:
 </template>
 ```
 
-In this example, `showLogin` is `false` if `isLoggedIn` has a truthy value.
+上例中`showLogin`为`false`如果`isLoggedIn`有一个真值.
 
-Only a single logical not operator is supported. You can't cast a value to boolean using `!!`. For
-more complicated transformations, use a [computed binding](#annotated-computed).
+只支持一个非操作符的逻辑. 不能使用`!!`将值转换为布尔. 查看[计算绑定](#annotated-computed)获取更多关于复杂转换的信息.
 
-**Negated bindings are one-way**:
-A binding with a logical not operator is **always one-way, host-to-target**.
+**否定绑定是单向的**:
+一个非操作符的逻辑绑定 **总是单向由宿主到目标的**.
 {.alert .alert-info}
 
-### Computed bindings {#annotated-computed}
+### 计算绑定 {#annotated-computed}
 
-A *computed binding* is similar to a [computed property](observers#computed-properties). It's
-declared inside a binding annotation.
+*计算绑定* 类似于[计算属性](observers#computed-properties). 在在给定批注内声明.
 
 ```
 <div>[[_formatName(first, last, title)]]</div>
 ```
 
-The computed binding declaration includes a computing function name, followed by a list of
-_dependencies_, in parenthesis.
+计算绑定声明包含一个计算函数名,在括号中传入 _依赖_ 列表.
 
-An element can have multiple computed bindings in its template that refer to the same computing
-function.
+组件模板中可以有多个计算绑定引用相同的计算函数=.
 
-In addition to the dependency types supported by computed properties and complex observers, the
-dependencies for a computed binding can include string or number literals.
+除了在计算属性和复杂观察器中支持的依赖类型, 计算绽的依赖还包括字符串或数字.
 
-A computed binding is useful if you don't need to expose a computed property as part of the
-element's API, or use it elsewhere in the element. Computed bindings are also useful for filtering
-or transforming values for display.
+如果不需要在组件的API中暴露一个计算属性或在组件其它地方使用,就可以使用计算绑定.计算绑定同样对显示值的过滤或绑定同样有用.
 
-Computed bindings differ from computed properties in the following ways:
+计算绑定同计算属性有以下的不同点:
 
-*   A computed binding's dependencies are interpreted relative to the current *binding scope*. For
-    example, inside a [template repeater](templates.html#dom-repeat), a dependent property could
-    refer to the current `item`.
+*   计算绑定依赖解析相对于当前 *绑定范围*.例如[模板重复器](templates.html#dom-repeat)内部,一个依赖属性可能指向当前`item`.
 
-*   A computed binding's argument list can include literal arguments.
+*   计算绑定参数列表包含文字参数.
 
-*   A computed binding can have an *empty* argument list, in which case the computing function is
-    only called once.
+*   计算绑定可以有 *空* 参数列表, 当计算函数只调用一次的时候.
 
-Example: { .caption }
+示例: { .caption }
 
 ```
 <dom-module id="x-custom">
@@ -410,48 +367,41 @@ Example: { .caption }
 </dom-module>
 ```
 
-In this case, the span's `textContent` property is bound to the return value
-of `_formatName`, which is recalculated whenever `first` or `last` changes.
+此时span的 `textContent` 属性绑定到了`_formatName`的返回值, 当`first`或`last`更改时被重新计算.
 
-**Computed bindings are one-way.** A computed binding is always one-way, host-to-target.
+**计算绑定是单向的.** 计算绑定总是单向由宿主到目标的.
 {.alert .alert-info}
 
-#### Dependencies of computed bindings {#computed-binding-dependencies}
+#### 计算绑定的依赖 {#computed-binding-dependencies}
 
-A computed binding's dependencies can include any of the dependency types supported by
-[complex observers](observers#complex-observers):
+计算绑定的依赖可以包含任意[复杂观察器](observers#complex-observers)支持的依赖类型:
 
-*   Simple properties on the current scope.
+*   当前范围内的简单属性.
 
-*   Paths to subproperties.
+*   子属性的路径.
 
-*   Paths with wildcards.
+*   带通配符的路径.
 
-*   Paths to array splices.
+*   数组拼接的路径.
 
-In addition, a computed binding can include literal arguments.
+另外,计算绑定还可以包含文本.
 
-For each type of dependent property, the argument passed to the computing function is the same as
-that passed to an observer.
+对于各种类型的依赖属性,传递给计算函数的参数同传递给观察器的参数是同样的.
 
-As with observers and computed properties, the computing function **is not called until all
-dependent properties are defined (`!=undefined`)**.
+与观察器和计算属性一样,计算函数 **直到所有依赖都为defined(`!=undefined`后才会调用)**.
 
-For an example computed binding using a path with a wildcard, see [Binding to array
-items](#array-binding).
+查看[绑定到数组元素](#array-binding)来查看使用通配符路径的计算绑定示例.
 
-#### Literal arguments to computed bindings {#literals}
+#### 计算绑定中的文本 {#literals}
 
-Arguments to computed bindings may be string or number literals.
+计算绑定中的参数可以是字符串或数字.
 
-Strings may be  either single- or double-quoted. In an attribute or property binding, if you use
-double quotes for the attribute value, use single quotes for string literals, or the reverse.
+字符串可以使用单引号或双引号. 在标记或属性绑定中如果使用双引号表示属性值,则使用单引号来表示字符串,反之亦然.
 
-**Commas in literal strings:** Any comma occurring in a string literal **must** be escaped using a
-backslash (`\`).
+**字符串中的逗号:** 字符串中的任意逗号 **必须** 使用转义符(`\`).
 {.alert .alert-info }
 
-Example:
+例如:
 
 ```html
 <dom-module id="x-custom">
@@ -461,7 +411,7 @@ Example:
 </dom-module>
 ```
 
-Finally, if a computed binding has no dependent properties, it is only evaluated once:
+最后,如果计算绑定没有依赖属性则只计算一次:
 
 ```
 <dom-module id="x-custom">
@@ -483,10 +433,9 @@ Finally, if a computed binding has no dependent properties, it is only evaluated
 </dom-module>
 ```
 
-## Compound bindings {#compound-bindings}
+## 复合绑定 {#compound-bindings}
 
-You can combine string literals and bindings in a single property binding or
-text content binding. For example:
+可以在一个属性绑定或文本内容绑定中合并文本和绑定.例如:
 
 ```
 <img src$="https://www.example.com/profiles/[[userId]].jpg">
@@ -494,19 +443,15 @@ text content binding. For example:
 <span>Name: [[lastname]], [[firstname]]</span>
 ```
 
-Compound bindings are re-evaluated whenever the value of any of the individual
-bindings changes. Undefined values are interpolated as empty strings.
+复合绑定在任意的单独绑定值发生更改后被重新计算. 未定义的值则以空字符串插入.
 
-**Compound bindings are one-way**: You can use either one-way (`[[ ]]`) or automatic (`{{ }}`)
-binding annotations in a compound binding, but the bindings are **always
-one-way, host-to-target.**
+**复合绑定是单向的**: 可以在复合绑定中使用单向(`[[ ]]`)或自动(`{{ }}`)绑定批注, 但是绑定 **总是单向由宿主到目标的.**
 {.alert .alert-info}
 
 
-## Binding to arrays and array items {#array-binding}
+## 绑定到数组和数组元素 {#array-binding}
 
-To keep annotation parsing simple, **Polymer doesn't provide a way to bind directly to an array
-item**.
+为了保持批注可以被解析, **Polymer不提供直接绑定到一个数组元素的方法**.
 
 ```
 <!-- Don't do this! -->
@@ -516,30 +461,27 @@ item**.
 ```
 
 
-There are several ways to interact with arrays in a data binding:
+在数据绑定中有很多方法与数组交互:
 
-*   The `dom-repeat` helper element lets you create a instance of a template for each item in an
-    array. Inside a `dom-repeat` instance, you can bind to the properties of the array item.
+*   `dom-repeat`助手组件可以帮你为数组中的每个元素创建一个模板实例.在`dom-repeat`实例内部, 可以绑定到数组元素的属性.
 
-*   The `array-selector` helper element lets you data bind to a selection from an array, where the
-    selection is either a single item or a subset of the original array.
+*   `array-selector`助手组件可以帮你把数据绑定数组的选集,选集可以是单个元素或原始数组的子集.
 
-*   You can bind an individual array item using a computed binding.
+*   可以使用一个计算绑定来绑定一个单独的数组元素.
 
-Related topics:
+相关内容:
 
-*   [Template repeater](templates#dom-repeat)
-*   [Array selector](templates#array-selector)
-*   [Bind to an array item](#bind-array-item)
+*   [模板重复器](templates#dom-repeat)
+*   [数组选择器](templates#array-selector)
+*   [绑定到数组元素](#bind-array-item)
 
-### Bind to an array item {#bind-array-item}
+### 绑定到数组元素 {#bind-array-item}
 
-You can use a computed binding to bind to a specific array item, or to a
-subproperty of an array item, like `array[index].name`.
+使用计算绑定来绑定到特定的数组元素或数组元素的子属性例如`array[index].name`.
 
-The following example shows how to access a property from an array item using a computed binding.
-The computing function needs to be called if the subproperty value changes,
-_or_ if the array itself is mutated, so the binding uses a wildcard path, `myArray.*`.
+以下示例展示了如何使用计算绑定来访问数组的属性.
+计算函数在子属性值更改后需要被调用,
+_或_ 如果数组本身变换了,所以绑定使用一个通配路径`myArray.*`.
 
 ```
 <dom-module id="bind-array-element">
@@ -582,30 +524,23 @@ _or_ if the array itself is mutated, so the binding uses a wildcard path, `myArr
 </dom-module>
 ```
 
-## Two-way bindings
+## 双向绑定
 
-Two-way bindings can propagate data changes both downward (from host to target) and upward (from
-target to host). For changes to propagate upward, the you must use automatic data binding
-delimiters (`{{ }}`) and the target property must be set to `notify: true`. For more information,
-see [Data flow](data-system#data-flow).
+双向绑定可以进行向下(由宿主到目标)和向上(由目标到宿主)传播. 向上传播更改时,必须使用自动数据绑定分隔符(`{{ }}`)以及目标属性必须设置为`notify: true`.查看[Data flow](data-system#data-flow)获取更多信息.
 
-When you bind an array or object property, both elements have access to the shared array or object,
-and both can make changes to it. Use automatic binding delimiters to ensure that property effects
-propagate upward. For more information, see [Data flow for objects and
-arrays](#data-flow-objects-arrays).
+当绑定到一个数组或对象属性时,两个组件都可以访问共享的数组或对象,
+并且都可以改变它.使用自动绑定分隔符来确保属性更改向上传播.查看[对象和数组的数据流动](#data-flow-objects-arrays)获取更多信息.
 
-### Two-way binding to a non-Polymer element {#two-way-native}
+### 双向绑定到一个非Polymer组件 {#two-way-native}
 
-As described in [Change notification events](#change-events), Polymer uses an event naming
-convention to achieve two-way binding.
+如同[更改通知事件](#change-events)中描述的, Polymer使用事件命名转换来达到双向绑定.
 
-To two-way bind to native elements or non-Polymer elements that _don't_ follow this event naming
-convention, you can specify a custom change event name in the annotation using the following syntax:
+双向绑定到原生组件或 _不_ 遵循事件命名转换的非Polymer组件,可以在批注中使用以下语法来指定一个自定义更改事件名 :
 
 <code><var>target-prop</var>="{{<var>hostProp</var>::<var>target-change-event</var>}}"</code>
 
 
-Example: { .caption }
+示例: { .caption }
 
 ```
 <!-- Listens for `input` event and sets hostValue to <input>.value -->
@@ -618,9 +553,7 @@ Example: { .caption }
 <video url="..." current-time="{{hostTime::timeupdate}}">
 ```
 
-When binding to standard notifying properties on Polymer elements,
-specifying the event name is unnecessary, as the default convention will be
-to listen for `property-changed` events.  The following constructions are equivalent:
+当绑定到Polymer组件的标准通知属性时,指定事件名称是不必要的,默认的转换是监听`property-changed`事件.以下构造是等同的:
 
 ```
 <!-- Listens for `value-changed` event -->
@@ -631,16 +564,15 @@ to listen for `property-changed` events.  The following constructions are equiva
 ```
 
 
-## Moved sections
+## 已移动的部分
 
-The following section have moved to [Data system concepts](data-system):
+以下部分被移到了[数据系统原理](data-system):
 
 <a id="#property-notification"></a>
 
--   Property change notification and two-way binding. See [How data flow is
-    controlled](data-system#data-flow-control).
+-   属性更改通知和双向绑定.查看[如何控制数据流动](data-system#data-flow-control).
 
 <a id="##path-binding"></a>
 
--   Binding to structured data. See [Observable changes](data-system#observable-changes),
-    [Data paths](data-system#paths), and [Bind to a property or sub-property](#)
+-   绑定以结构化数据. 查看[可观察更改](data-system#observable-changes),
+    [数据路径](data-system#paths)和 [绑定到属性或子属性](#)

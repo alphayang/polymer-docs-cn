@@ -1,17 +1,16 @@
 ---
-title: Services
+title: 服务
 ---
 
 <!-- toc --> 
 
-This document is a list of miscellaneous services that you may find useful
-when creating Polymer elements. 
+本文提供了一些在创建Polymer组件时有用的服务. 
 
-## <b>polygit</b>—CDN web service for serving components {#polygit}
+## <b>polygit</b>—托管组件的CDN web服务 {#polygit}
 
-[Polygit](http://polygit.org/) is a proxy server for serving components from a CDN. **It is not meant to be used for production apps**, but is very useful when prototyping and sharing jsbins.
+[Polygit](http://polygit.org/)是一个通过CDN来托管组件的代理服务器. **不适用于生产应用**, 但对于开发原型和分享jsbins很有用.
 
-Usage:
+使用:
 
 ```
 <head>
@@ -22,15 +21,15 @@ Usage:
 </head>
 ```
 
-For more documentation, see [http://polygit.org](http://polygit.org/).
+查看更多[http://polygit.org](http://polygit.org/).
 
-Source: [github.com/PolymerLabs/polygit](https://github.com/PolymerLabs/polygit)
+源码: [github.com/PolymerLabs/polygit](https://github.com/PolymerLabs/polygit)
 
-## <b>polystyle</b>—web service for creating style modules {#polystyle}
+## <b>polystyle</b>—创建模块样式的web服务 {#polystyle}
 
-[polystyle](https://poly-style.appspot.com/demo/) is a web service that can wrap an existing stylesheet on a remote server as Polymer [style module](/1.0/docs/devguide/styling#style-modules). This is useful if you have a hosted third-party stylesheet that you want to use in an element or your application.
+[polystyle](https://poly-style.appspot.com/demo/)是一个将现有远程服务器上的样式包装为Polymer[style module](/1.0/docs/devguide/styling#style-modules)的web服务. 对于托管的第三方样式使用到你的组件或应用中非常有用.
 
-Usage:
+使用:
 
 ```
 <head>
@@ -42,20 +41,18 @@ Usage:
 </head>
 ```
 
-For more information, see [https://poly-style.appspot.com/demo/](https://poly-style.appspot.com/demo/).
+查看更多[https://poly-style.appspot.com/demo/](https://poly-style.appspot.com/demo/).
 
-**Related tools**
+**相关工具**
 
-- [gulp-style-modules](https://github.com/MaKleSoft/gulp-style-modules)—3rd party Gulp plugin for wrapping local CSS files into style modules
+- [gulp-style-modules](https://github.com/MaKleSoft/gulp-style-modules)—第三方Gulp插件用来包装本地CSS文件到style modules
 
-Source: [github.com/PolymerLabs/polystyles](https://github.com/PolymerLabs/polystyles)
+源码: [github.com/PolymerLabs/polystyles](https://github.com/PolymerLabs/polystyles)
 
-## <b>polyicon</b>—create an optimized custom icon set {#polyicon}
+## <b>polyicon</b>—创建一个优化过的自定义图标集 {#polyicon}
 
-[polyicon](https://github.com/PolymerLabs/polyicon) is an online tool to generate
-an optimized custom icon set for your app, with only the icons that you need.
-Instead of loading entire sets, this tool creates a slimmer (custom) icon set that you can load and use in your app.
+[polyicon](https://github.com/PolymerLabs/polyicon) 用来创建只包含应用需要的经过化的自定义图标集的在线工具.不用加载整个集合,这个工具创建一个自定义的图标集用在应用中.
 
-Try it out: [https://poly-icon.appspot.com/](https://poly-icon.appspot.com/)
+直接使用: [https://poly-icon.appspot.com/](https://poly-icon.appspot.com/)
 
-Source: [github.com/PolymerLabs/polyicon](https://github.com/PolymerLabs/polyicon)
+源码: [github.com/PolymerLabs/polyicon](https://github.com/PolymerLabs/polyicon)

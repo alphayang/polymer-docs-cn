@@ -1,68 +1,60 @@
 ---
-title: Step 1. Get set up
-subtitle: "Build an app with App Toolbox"
+title: Step 1. 配置
+subtitle: "使用App Toolbox构建应用"
 ---
 
 <!-- toc -->
 
-The [Polymer App Toolbox][toolbox] is a collection of components, tools and
-templates for building Progressive Web Apps with Polymer.
+[Polymer App Toolbox][toolbox]提供了一系列组件、工作和模板用来构建基于Polymer的Progressive Web Apps。
 
-Follow the instructions below to install, build, and deploy a project using an
-App Toolbox template in less than 15 minutes.
+在15分钟内，按照如下步骤可以安装、创建和发布一个基于App Toolbox模板的项目。
 
-## Install the Polymer CLI
+## 安装Polymer CLI
 
-1.  Install the LTS version (4.x) of Node.js. The current version (6.x) should work, but is not
-    officially supported. Versions below LTS are not supported.
+1.  安装LTS版本的(4.x)Node.js. 最新版本(6.x)也可以工作，但是还没有得到官方支持。不支持低于LTS的版本。
 
-1.  Install the Polymer CLI
+1.  安装Polymer CLI
 
         npm install -g polymer-cli
 
-## Initialize your project from a template
+## 使用模板来初始化项目
 
-1. Create a new project folder to start from
+1. 新建一个项目文件夹
 
         mkdir my-app
         cd my-app
 
-1. Initialize your project with an app template
+1. 使用一个应用模板来初始化项目
 
         polymer init app-drawer-template
 
-## Serve your project
+## 运行项目
 
-The App Toolbox templates do not require any build steps to get started
-developing.  You can serve the application using the Polymer CLI, and
-file changes you make will be immediately visible by refreshing
-your browser.
+App Toolbox模板不需要Build。可以直接使用Polymer CLI来运行项目，文件的改变会自动刷新浏览器。
 
     polymer serve --open
 
-The task above automatically opens up your default web browser and
-fetches the locally-hosted application (at `http://localhost:8080`).
+上面的任务会自动打开你的默认浏览器并导航到本地应用(位置 `http://localhost:8080`).
 
 ![App Toolbox Drawer Template](/images/1.0/toolbox/app-drawer-template.png)
 
-## Initialize Git repository (optional)
+## 初始化Git库（可选）
 
-Your app template does not contain any version control system. Follow the
-instructions below if you want to manage your source code with Git.
+应用模板不包含任何版本控制系统。使用下面的步骤可以利用Git来管理你的源码。Y
 
-1.  `cd` into the base directory of your project.
+1.  `cd` 进入到项目文件夹。
 
-1.  Initialize a Git repository.
+1.  初始化Git库。
 
         git init
 
-1.  Add and commit all of the files.
+1.  添加并提交所有文件。
 
         git add . && git commit -m "Initial commit."
 
-## Directory structure
+## 文件夹结构
 
-The diagram below is a brief summary of the directories within the template.
+下图是一个模板的基本结构。
 
     /
     |---index.html
@@ -72,18 +64,16 @@ The diagram below is a brief summary of the directories within the template.
     |---test/
 
 
-*   `index.html` is the main entry point into your application
-*   `src/` is where your application-specific custom elements will go
-*   `bower_components/` is where reusable custom elements and/or libraries
-       fetched via bower will go
-*   `images/` is for static images
-*   `test/` is where you [define tests for your web
-    components](https://github.com/Polymer/web-component-tester).
+*   `index.html`是应用的主入口 
+*   `src/` 存放应用相关的自定义组件
+*   `bower_components/` 存储使用bower获取的其它可重用自定义组件
+*   `images/` 存放静态图片
+*   `test/` 存放[web
+    components的测试](https://github.com/Polymer/web-component-tester).
 
-## Next steps
+## 下一步
 
-Now that your App Toolbox template is up and running, learn how to [add a new
-page of content](create-a-page), or how to [deploy the app to the web](deploy).
+App Toolbox模板已经建立和运行，开始学习如何Now that your App Toolbox template is up and [添加一个新的内容页](create-a-page), 或如何[把应用发布到web](deploy).
 
 [toolbox]: /1.0/toolbox/
 [shared styles]: /1.0/docs/devguide/styling.html#style-modules

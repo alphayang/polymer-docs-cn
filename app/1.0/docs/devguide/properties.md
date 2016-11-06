@@ -1,31 +1,27 @@
 ---
-title: Declared Properties
+title: 声明属性
 ---
 
 <!-- toc -->
 
-You can declare properties on your custom element by adding them to
-the `properties` object on your prototype. Adding a property to the `properties`
-object allows a user to configure the property from markup (see
-[attribute deserialization](#attribute-deserialization) for details).
-**Any property that's part of your element's public API should be declared in the
-`properties` object.**
+可以通过在原型上添加`properties`对象来为自定义组件添加声明属性. 允许用户使用标记的属性来为`properties`添加属性(查看
+[属性反序列化](#attribute-deserialization)获取更多信息).
+**任意自定义组件的公开属性API都应在`properties`对象中声明.**
 
-In addition, the `properties` object can be used to specify:
+另外, `properties`对象可以用来指定:
 
-*   Property type.
-*   Default value.
-*   Property change observer. Calls a method whenever the property value changes.
-*   Read-only status. Prevents accidental changes to the property value.
-*   Two-way data binding support. Fires an event whenever the property value changes.
-*   Computed property. Dynamically calculates a value based on other properties.
-*   Property reflection to attribute. Updates the corresponding attribute value when the property
+*   属性类型.
+*   默认值.
+*   属性更改观察器. 当属性值有更改时调用一个方法.
+*   只读状态. 防止对属性值的意外修改.
+*   双向数据绑定支持. 当属性值更改时触发一个事件.
+*   计算属性. 其它属性更改时动态计算新值.
+*   与标记属性关联. 当属性值更改时更新相应的标记值Updates the corresponding attribute value when the property
     value changes.
 
-Many of these features are tightly integrated into the [data system](data-system), and are
-documented in the Data system section.
+很多特性都紧密集成到了[数据系统](data-system), 在数据系统部分也有文档说明.
 
-Example { .caption }
+示例 { .caption }
 
 ```
 Polymer({
@@ -49,7 +45,7 @@ Polymer({
 });
 ```
 
-The `properties` object supports the following keys for each property:
+`properties`对象对各个属性支持的键如下:
 
 <table>
 <tr>
@@ -60,9 +56,9 @@ The `properties` object supports the following keys for each property:
 <td>
 Type: constructor (one of <code>Boolean</code>, <code>Date</code>, <code>Number</code>, <code>String</code>, <code>Array</code> or <code>Object</code>)<br>
 
-Attribute type, used for deserializing from an attribute. Unlike 0.5, the
-property's type is explicit, specified using the type's constructor. See
-<a href="#attribute-deserialization">attribute deserialization</a> for more information.
+标记属性类型用于对标记属性的反序列化. 不像0.5版本中，
+属性类型是显式的，使用类型构造函数指定。 查看
+<a href="#attribute-deserialization">标记属性反序列化</a>获取更多信息.
 
 </td>
 </tr>
@@ -71,113 +67,83 @@ property's type is explicit, specified using the type's constructor. See
 <td>
 Type: <code>boolean</code>, <code>number</code>, <code>string</code> or <code>function</code>.<br>
 
-Default value for the property. If <code>value</code> is a function, the function is
-invoked and the return value is used as the default value of the property. If
-the default value should be an array or object unique to the instance, create
-the array or object inside a function. See
-<a href="#configure-values">Configuring default property values</a> for more information.
+属性的默认值. 如果 <code>value</code>是一个函数且被调用后返回值做为属性值. 如果默认值是一个数组或对象实例则在函数内部创建数组或对象.
+查看<a href="#configure-values">配置属性默认</a>获取更多信息.
 </td>
 </tr>
 <tr>
 <td><code>reflectToAttribute</code></td>
 <td>Type: <code>boolean</code><br>
 
-Set to <code>true</code> to cause the corresponding attribute to be set on the host node
-when the property value changes. If the property value is Boolean, the attribute
-is created as a standard HTML boolean attribute (set if true, not set if false).
-For other property types, the attribute value is a string representation of the
-property value. Equivalent to <code>reflect</code> in Polymer 0.5.
-See <a href="#attribute-reflection">Reflecting properties to attributes</a> for
-more information.
+为<code>true</code>时将和宿主结点的HTML标记属性值联动. 如果属性值为Boolean那么就创建一个标准的HTMLboolean标记(是true而不是false).
+对于其它属性类型,标记值是属性值的字符串形成. 等同于在 Polymer 0.5 中的<code>reflect</code>.
+查看<a href="#attribute-reflection">属性和标记联动</a>来获取更多信息.
 </td>
 </tr>
 <tr>
 <td><code>readOnly</code></td>
 <td>Type: <code>boolean</code><br>
 
-If <code>true</code>, the property can't be set directly by assignment or data binding. See <a href="#read-only">Read-only properties</a>.
+为<code>true</code>时属性不能直接使用赋值或数据绑定来设置.查看 <a href="#read-only">只读属性</a>.
 </td>
 </tr>
 <tr>
 <td><code>notify</code></td>
 <td>Type: <code>boolean</code><br>
 
-If <code>true</code>, the property is available for two-way data binding. In addition, an
-event, <code><var>property-name</var>-changed</code> is fired whenever the
-property changes. See <a href="#notify">Property change notification events (notify)</a>
-for more information.
+为<code>true</code>时属性可使用双向绑定.另外当属性更改时会触发<code><var>属性名</var>-changed</code>事件. 查看<a href="#notify">属性更改通知事件(notify)</a>
+获取更多信息.
 </td>
 </tr>
 <tr>
 <td><code>computed</code></td>
 <td>Type: <code>string</code><br>
 
-The value is interpreted as a method name and argument list. The method is invoked
-to calculate the value whenever any of the argument values changes. Computed
-properties are always read-only. See <a href="observers#computed-properties">Computed properties</a>
-for more information.
+属性值被解析为一个函数名和参数列表. 当参数值更改时调用函数为计算属性值. 计算属性全部是只读. 查看<a href="observers#computed-properties">计算属性</a>
+获取更多信息.
 </td>
 </tr>
 <tr>
 <td><code>observer</code></td>
 <td>Type: <code>string</code><br>
 
-The value is interpreted as a method name to be invoked when the property value
-changes. Note that unlike in 0.5, <strong>property change handlers must be registered
-explicitly.</strong> The <code><var>propertyName</var>Changed</code> method will not be
-invoked automatically. See <a href="observers">Property change callbacks (observers)</a>
-for more information.
+属性值更改时调用以属性值为函数名称的函数. 注意不同于0.5版本, <strong>属性更改接收器必须显示注册.</strong> <code><var>propertyName</var>Changed</code> 函数会被自动调用. 查看<a href="observers">属性更改回调(观察器)</a>
+获取更多信息.
 </td>
 </tr>
 </table>
 
-## Property name to attribute name mapping {#property-name-mapping}
+## 属性名称与标记名称匹配 {#property-name-mapping}
 
-For data binding, deserializing properties from attributes, and reflecting
-properties back to attributes, Polymer maps attribute names to property
-names and the reverse.
+在数据绑定中属性和标记的序列化和反序列化都是由Polymer来对属性名称和标记名称进行匹配来完成的.
 
-When mapping attribute names to property names:
+当进行属性名称与标记名称匹配:
 
-*   Attribute names are converted to lowercase property names. For example,
-    the attribute `firstName` maps to `firstname`.
+*   标记名称转化为小写的属性名称. 例如
+    `firstName`标记匹配到`firstname`.
 
-*   Attribute names with _dashes_ are converted to _camelCase_ property names
-    by capitalizing the character following each dash, then removing the dashes.
-    For example, the attribute `first-name` maps to `firstName`.
+*   标记名称中的_中划线_转化为_camelCase_属性名称,每个中划线之后的都进行首字母大写并去掉中划线.
+    例如标记`first-name`匹配为`firstName`.
 
-The same mappings happen in reverse when converting property names to attribute
-names (for example, if a property is defined using `reflectToAttribute: true`.)
+从属性名称转化为标记名称时恰好相反的操作(例如属性被定义为`reflectToAttribute: true`.)
 
-**Compatibility note:** In 0.5, Polymer attempted to map attribute names to corresponding properties.
-For example, the attribute `foobar` would map to the property `fooBar` if it was
-defined on the element. This **does not happen in 1.0**—attribute to property
-mappings are set up on the element at registration time based on the rules
-described above.
+**兼容性考虑:** 在0.5版本中, Polymer会把标记名称匹配到相应的属性名称.
+例如标记`foobar`会匹配到其所在组件内的属性`fooBar`. **在1.0中不会发生**—标记与属性的匹配是基于根据以上规则所注册的组件.
 { .alert .alert-warning }
 
-## Attribute deserialization {#attribute-deserialization}
+## 标记反序列化 {#attribute-deserialization}
 
-If a property is configured in the `properties` object, an attribute on the
-instance matching the property name will be deserialized according to the type
-specified and assigned to a property of the same name on the element instance.
+如果属性在`properties`对象中进行了配置, 实例中匹配属性名称的标记会根据指定类型进行反序列化并赋值给组件实例相对应的属性.
 
-If no other `properties` options are specified for a property, the `type`
-(specified using the type constructor, e.g. `Object`, `String`, etc.) can be set
-directly as the value of the property in the `properties` object; otherwise it
-should be provided as the value to the `type` key in the `properties`
-configuration object.
+如果属性没有指定其它`properties`选项, `type`
+(由类型构造函数指定如`Object`, `String`等等.)就可以直接设置为`properties`对象的属性值; 除此之外它应当在`properties`配置对象中充当`type`键的值.
 
-The type system includes support for Boolean and Number values, Object and Array values
-expressed as JSON, or Date objects expressed as any Date-parsable string
-representation.
+类型系统支持Boolean和数值,对象和数组值以JSON形式存在 ,日期对象则以任意可解析的日期字符串形式存在.
 
-Boolean properties are set based on the _presence_ of the attribute:
-if the attribute exists at all, the property is set to `true`, regardless
-of the attribute _value_. If the attribute is absent, the property
-gets its default value.
+Boolean属性基于标记的_存在_与否:
+如果标记存在, 不论标记_值_为何其属性值总是`true`. 如果标记不存在,其属性就被赋以默认值.
 
-Example: { .caption }
+示例: { .caption }
 
 ```
 <script>
@@ -212,8 +178,7 @@ This user is a manager.
 -->
 ```
 
-In order to configure camel-case properties of elements using attributes, dash-
-case should be used in the attribute name.
+为了在组件中使用标记来配置came-case属性, 标记名中需使用中划线形式.
 
 Example: { .caption }
 
@@ -236,41 +201,33 @@ Example: { .caption }
 <!-- Sets <x-custom>.userName = 'Scott';  -->
 ```
 
-**Note:** Deserialization occurs both at create time, and at runtime (for
-example, when the attribute is changed using `setAttribute`).  However, it is
-encouraged that attributes only be used for configuring properties in static
-markup, and instead that properties are set directly for changes at runtime.
+**注意:** 反序列化会在创建期和运行期都发生(例如标记由于`setAttribute`发生了更改).然后建议只使用静态标记来配置属性而不直接在运行期改变属性.
 
-### Configuring boolean properties
+### 配置布尔属性
 
-For a Boolean property to be configurable from markup, it must default to `false`. If it defaults to `true`, you cannot set it to `false` from markup, since the presence of the attribute, with or without a value, equates to `true`. This is the standard behavior for attributes in the web platform.
+对于标记中可配置的布尔属性, 默认值必须为`false`.如果默认为`true`, 由于标记的存在不论值是什么都将解析为`true`,尽管被设置为`false`. 这是web平台上标记的标准行为.
 
-If this behavior doesn't fit your use case, you can use a string-valued or number-valued attribute instead.
+如果这个行为不能满足需要,可以使用字符串值或数值标记来代替.
 
-### Configuring object and array properties
+### 配置对象和数组属性
 
-For object and array properties you can pass an object or array in JSON format:
+可以使用JSON格式的对象或数组为对象和数组属性赋值:
 
 ```
 <my-element book='{ "title": "Persuasion", "author": "Austen" }'></my-element>
 ```
 
-Note that JSON requires double quotes, as shown above.
+注意JSON需要双引号,如上所示.
 
-## Configuring default property values {#configure-values}
+## 配置属性默认值 {#configure-values}
 
-Default values for properties may be specified in the `properties` object using
-the `value` field.  The value may either be a primitive value, or a function
-that returns a value.
+可以使用`properties`对象的`value`字段来指定属性的默认值.  值可以是基本类型也可以是一个函数的返回值.
 
-If you provide a function, Polymer calls the function once
-_per element instance_.
+如果使用函数,Polymer对_每个实例_调用一次函数.
 
-When initializing a property to an object or array value, use a function to
-ensure that each element gets its own copy of the value, rather than having
-an object or array shared across all instances of the element.
+当将属性初始化为对象或数组时使用一个函数来确保各个组件拥有自己的值而不是在所有组件的实例间共享一个对象或数组.
 
-Example: { .caption }
+示例: { .caption }
 
 ```
 Polymer({
@@ -296,31 +253,22 @@ Polymer({
 ```
 
 
-## Property change notification events (notify) {#notify}
+## 属性改变通知事件(通知) {#notify}
 
-When a property is set to `notify: true`, an event is fired whenever the
-property value changes. The event name is:
+当属性设置了`notify: true`, 当属性值更改时就会触发一个事件. 事件名称为:
 
 <code><var>property-name</var>-changed</code>
 
-Where <code><var>property-name</var></code> is the dash-case version of
-the property name. For example, a change to `this.firstName` fires
+<code><var>property-name</var></code>是带有中划线的属性名.例如,`this.firstName`的改变触发了
 `first-name-changed`.
 
-These events are used by the two-way data binding system. External
-scripts can also listen for events (such as `first-name-changed`)
-directly using `addEventListener`.
+这些事件被用于双向数据绑定. 外部脚本也可直接使用`addEventListener`来监听些事件(如`first-name-changed`).
 
-For more on property change notifications and the data system, see
-[Data flow](data-system#data-flow).
+查看[数据流动](data-system#data-flow)获取更多关于属性更改通知和数据系统.
 
-## Read-only properties {#read-only}
+## 只读属性 {#read-only}
 
-When a property only "produces" data and never consumes data, this can be made
-explicit to avoid accidental changes from the host by setting the `readOnly`
-flag to `true` in the `properties` property definition.  In order for the
-element to actually change the value of the property, it must use a private
-generated setter of the convention <code>\_set<var>Property</var>(value)</code>.
+当一个属性只"produces"数据却从不消费数据, 可以显式设置`properties`属性定义中的`readOnly`标志为`true`用来避免宿主造成的意外改变.为了让组件可以修改属性的值必须使用一个私有的赋值器，其形式为<code>\_set<var>Property</var>(value)</code>.
 
 ```
 <script>
@@ -342,17 +290,13 @@ generated setter of the convention <code>\_set<var>Property</var>(value)</code>.
 </script>
 ```
 
-For more on read-only properties and data binding, see
-[How data flow is controlled](data-system#data-flow-control).
+想了解更多关只读属性和数据绑定可查看
+[如何控制数据流动](data-system#data-flow-control).
 
 
-## Reflecting properties to attributes  {#attribute-reflection}
+## 属性和标记联动  {#attribute-reflection}
 
-In specific cases, it may be useful to keep an HTML attribute value in sync with
-a property value.  This may be achieved by setting `reflectToAttribute: true` on
-a property in the `properties` configuration object.  This will cause any
-[observable change](data-system#observable-changes) to the property to be serialized out to an
-attribute of the same name.
+在特定情况下, 保持一个HTML标记值和属性值的同步是很有用的.  这个可以通过设置`properties`配置对象的`reflectToAttribute: true`来达到.这就使得任何属性的[可观察的更改](data-system#observable-changes)都被序列到与之同名的标记.
 
 ```
 <script>
@@ -374,70 +318,70 @@ attribute of the same name.
 </script>
 ```
 
-### Attribute serialization {#attribute-serialization}
+### 标记序列化 {#attribute-serialization}
 
-When reflecting a property to an attribute or
-[binding a property to an attribute](data-binding#attribute-binding),
-the property value is _serialized_ to the attribute.
+当反射属性到标记时或
+[绑定属性到标记时binding a property to an attribute](data-binding#attribute-binding),
+属性值被_序列化_成标记.
 
-By default, values are serialized according to value's  _current_ type
-(regardless of the property's `type` value):
+默认情况下根据属性值的_当前_类型进行序列化
+(不论属性的`type`值):
 
-*   `String`. No serialization required.
-*   `Date` or `Number`. Serialized using  `toString`.
-*   `Boolean`. Results in a non-valued attribute to be either set (`true`) or removed (`false`).
-*   `Array` or `Object`. Serialized using `JSON.stringify`.
+*   `String`. 无需序列化.
+*   `Date` 或 `Number`. 使用`toString`进行序列化.
+*   `Boolean`. 为`true`时序列化为一个非值标记,为`false`无任何序列化结果为空.
+*   `Array`或`Object`. 使用`JSON.stringify`进行序列化.
 
-To supply custom serialization for a custom element, override your element's `serialize` method.
+可以覆盖组件的`serialize`方法来为组件提供一个自定义序列化方式.
 
-## Moved sections
+## 移到它处的部分=
 
-The following section have moved to [Observers and computed properties](observers):
+以下部分移至[观察器和计算属性](observers):
 
 <a href="#change-callbacks"></a>
 
--   [Observe a property](observers#change-callbacks).
+-   [观察一个属性](observers#change-callbacks).
 
     <a href="#multi-property-observers"></a>
 
--   [Observe multiple properties or paths](observers#multi-property-observers).
+-   [观察多个属性或路径](observers#multi-property-observers).
 
     <a href="#observing-path-changes"></a>
 
--   [Observe changes to a subproperty](observers#observing-path-changes).
+-   [观察一个子属性的更改](observers#observing-path-changes).
 
     <a href="#array-observation"></a>
 
--   [Observe array mutations](observers#array-observation).
+-   [观察数组的更改](observers#array-observation).
 
     <a href="#key-splices"></a>
 
--   [Track key splices](observers#key-splices).
+-   [跟踪关键拼接](observers#key-splices).
 
     <a href="#deep-observation"></a>
 
--   [Deep sub-property observation](observers#deep-observation).
+-   [观察深度子属性](observers#deep-observation).
 
     <a href="#key-paths"></a>
 
--   [Deep sub-property changes on array items](observers#key-paths).
+-   [观察数组元素的深度子属性](observers#key-paths).
 
     <a href="#dependencies"></a>
 
--   [Always include dependencies as observer arguments](observers#dependencies).
+-   [观察器参数中总是包含信赖](observers#dependencies).
 
     <a href="#computed-properties"></a>
 
--   [Computed properties](observers#computed-properties)
+-   [计算属性](observers#computed-properties)
 
-The following sections have moved to [Work with object and array data](model-data):
+以下部分移至[操作对象和数组](model-data):
 
 <a href="#array-mutation"></a>
 
--   [Mutate an array](model-data#array-mutation).
+-   [操作数组](model-data#array-mutation).
 
     <a href="#notifysplices"></a>
 
--   [Notify Polymer of array mutations](model-data#notifysplices).
+-   [数组的操作通知给Polymer](model-data#notifysplices).
 
 

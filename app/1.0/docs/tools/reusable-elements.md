@@ -1,163 +1,150 @@
 ---
-title: Publish an element
+title: 发布组件
 ---
 
 <!-- toc -->
 
-## Introduction
+## 介绍
 
-So, you want to publish your first reusable Polymer element?
-Fantastic! This guide walks you through the process.
+想发布你的第一个可重用Polymer组件?
+完美! 这一节帮助你进行发布.
 
-When you're done, you'll have:
+你需要:
 
--   A local git repo for your element, based on the official boilerplate.
--   A published, Bower-installable version of your element on GitHub.
--   Documentation and a running demo of your element hosted on GitHub pages.
+-   使用官方模板的组件并添加本地git管理.
+-   在Github上有一个发布后的可利用Bower安装的组件版本.
+-   托管在Github pages上的文档和一个运行中的组件demo.
 
-## Set up
+## 配置
 
-This guide assumes you have Git, Node.js, and Bower installed, and that you
-have a GitHub account. 
+本文假设你已经安装了Git, Node.js和Bower，也有一个GitHub帐户. 
 
-1.  [Install Polymer CLI](polymer-cli#install). 
-1.  [Create an element project](polymer-cli#element). 
+1.  [安装 Polymer CLI](polymer-cli#install). 
+1.  [创建一个组件项目](polymer-cli#element). 
 
-## Develop
+## 开发
 
-As you develop your new element, make sure that you follow the relative URL 
-conventions for importing other elements into your element project. See [HTML 
-imports and dependency management](polymer-cli#element-imports) for more 
-information.
+开发新组件时确保使用相对URL以便于引用其它组件到你的组件项目中. 查看 [HTML 
+imports和依赖管理](polymer-cli#element-imports)获取更多信息.
 
-A good way to quickly sanity test your component is to access a demo of your
-element using Polymer CLI's `serve` command:
+一个快捷测试组件的方法是访问组件的demo，使用Polymer CLI的`serve` 命令:
 
     polymer serve 
 
-From here you can view your element demo at the following URL:
+然后就可以在以下URL中查看你的组件demo:
 
 <pre><code>http://localhost:8080/components/<var>test-element</var>/demo/</code></pre>
 
-Where <code><var>test-element</var></code> is the name of your element project
-directory. 
+<code><var>test-element</var></code>是组件项目的根目录名称. 
 
-See [Run local web server](polymer-cli#serve) for more help. 
+查看 [运行本地web服务器](polymer-cli#serve)获取更多帮助. 
 
-### Unit tests
+### 单元测试
 
-Use Polymer CLI's `test` command to run unit tests against your element. 
+使用Polymer CLI的`test`命令来运行组件的测试. 
 
     polymer test
 
-See [Run tests](polymer-cli#tests) for more information. 
+查看[运行测试](polymer-cli#tests)获取更多信息. 
 
-### Documentation
+### 文档
 
-The Polymer CLI element project comes with built-in documentation.
+Polymer CLI组件项目自带了内置的文档.
 
-See [Document your elements](documentation) to learn more. 
+查看[为组件编写文档](documentation)获取更多信息. 
 
-## Publish
+## 发布
 
-There are two steps to publishing an element on GitHub:
+将组件发布到GitHub需要两个步骤:
 
--   Push your work to a GitHub repo and tag it with
-    a release number, so people can install it using Bower.
+-   将项目推送到GitHub库中并打了一个发布版本号的标记,其它人可以使用Bower来安装.
 
-    In this step you create a *master* branch containing the bare-minimum
-    of code that needs to be consumed by other apps or elements.
+    这一步中需要创建一个*master*分支只包含最小的代码量来其它应用或组件来使用.
 
--   Push a `gh-pages` branch to your repo. This provides live docs and previews of your element via GitHub pages.
+-   推送一个`gh-pages`分支到GitHub库.通过GitHub pages提供在线文档和组件预览.
 
-    In this step you create a *gh-pages (GitHub pages)* branch containing a landing page for your element.
-    This branch contain **checked-in dependencies**, **demos** and **documentation**.
+    这步中创建的*gh-pages (GitHub pages)*分支包含一个组件的首页.分支包含**checked-in dependencies**, **demos**和**documentation**.
 
-### Pushing your element to GitHub
+### 把组件摄像头到GitHub
 
-Once you're happy with your element, you’ll want to push the code to GitHub and tag a new version of it.
+组件开发完成后,推送一个新的版本到GitHub库中.
 
-Click [here](https://github.com/new) to create a new repository on GitHub. Try to keep the name of the repository consistent with the naming of your element (e.g if your element is `<test-element>`, your repository should be called `test-element`).
+ 点击[此处](https://github.com/new)在GitHub上创建一个新库. 最好库的命令和组件的命令保持一致(例如组件为`<test-element>`,那么库也应当命名为`test-element`).
 
-Next, follow the steps below (assuming that the name of your element is 
+按照下列步骤(假设组件的名称为
 `test-element`):
 
-    # Inside your development folder, navigate to your element directory
+    # 进入组件目录
     cd test-element
 
-    # Initialize a new Git repository for test-element
+    # 初始化Git库
     git init
 
-    # Add the commits for your current code
+    # 提交代码
     git add .
     git commit -m 'My initial version'
 
-    # Add a remote pointing to the GitHub repository you created.
-    # Replace <username> with your GitHub username.
+    # 添加GitHub上新创建库的远程地址.
+    # 将<username>替换为你的GitHub用户名.
     git remote add origin https://github.com/<username>/test-element.git
 
-    # Push your code to master by running
+    # 把代码推送到远程master分支
     git push -u origin master
 
 
-Next, you’ll want to tag a version of your element on GitHub. You can either do this directly through the GitHub UI **or** via the terminal.
+下面，为GitHub库中的组件添加一个版本号标记. 可以在GitHub UI **或** 终端中完成此操作.
 
-#### Using the terminal
+#### 使用终端
 
-    # Once you feel you have a version of your element you can release, tag it
-    # For example, to tag version 0.0.1
+    # 标记一个可以发布的组件版本
+    # 比如标记version 0.0.1
     git tag -a v0.0.1 -m '0.0.1'
 
-    # Then, push your tag to GitHub
+    # 推送标记到GitHub
     git push --tags
 
 
-#### Using the GitHub UI
+#### 使用GitHub UI
 
-Navigate to the main GitHub page for your element and click the "releases" link in the main navigation. It is highlighted in red below:
+在组件的GitHub主页中点击导航栏的"releases"链接. 如下图:
 
 ![Preview of the GitHub navigation bar for a repository listing four navigation items—commits, branches, releases, and contributors. The releases link is highlighted.](/images/1.0/reusable-elements/publishing/image_2.png)
 
-This will navigate you to the *Releases* page. For a project without any releases, this page will display a message similar to the one below.
+导航到*Releases*页面中. 没有任何发布的一个项目会显示如下图的一个消息.
 
 ![GitHub Releases page message stating that there aren't any releases here yet. The Create a new release button is highlighted](/images/1.0/reusable-elements/publishing/image_3.png)
 
-Click the ‘Create a new release’ button to proceed.
+点击‘Create a new release’按钮.
 
-This will display a Release drafting page where you can enter in version and release information for your element.
-For example, setting v0.0.1 as the tag to create and the `master` branch as target
+显示一个Release草稿页面来输入版本号和发布信息.
+例如, 设置标记为v0.0.1在`master`分支中创建
 
 ![The GitHub releases form displaying an input field for entering in a version number, a drop-down box for selecting the target branch, a release titles field and a description field](/images/1.0/reusable-elements/publishing/image_4.png)
 
-Once you are happy with the information you have entered into the above form, click the ‘Publish release’ button to complete tagging and publishing a release of your element.
+表单中的信息填写好后,点击‘Publish release’按钮来完成标记和版本发布.
 
 ![Preview of the Publish release button in the GitHub releases page](/images/1.0/reusable-elements/publishing/image_5.png)
 
-#### Test install your element
+#### 对组件进行安装测试
 
-You should now be able to install your component. Change to a new directory for testing and run:
+现在应该可以安装你的组件了. 切换到一个新的目录中运行命令进行测试:
 
-    # Replace <username> with your GitHub username and <test-element>
-    # with your repository's name. 
+    # 替换<username>为你的GitHub用户名,<test-element>
+    # 为你的代码库名称. 
     bower install <username>/<test-element>
 
-### Publishing a demo and landing page for your element
+### 为组件发布一个demo和首页
 
-As was mentioned earlier, the Polymer CLI element project template comes with
-built-in support for creating demos and documentation for your element. This
-section shows you how to host your demo and documentation on GitHub Pages.
+下如之前提到的,Polymer CLI组件项目模板内建了demo和文档支持.在这一部分中就可以看到如何使用GitHub Pages来托管demo和文档.
 
-Walk through the commands below to use the Polymer teams [`gp.sh` 
-script](https://github.com/Polymer/tools/blob/master/bin/gp.sh) to push a 
-landing page for your element to GitHub Pages. 
+下面的命令使用了Polymer团队的 [`gp.sh` 
+脚本](https://github.com/Polymer/tools/blob/master/bin/gp.sh)来推送一个组件首页到GitHub Pages. 
 
-**Important:** Make sure you run the `gp.sh` script in a temporary directory,
-as described below. The script overwrites the contents of the current directory.
+**重要:** 确保在一个临时目录中运行`gp.sh`脚本,
+. 脚本会重写当前目录中的内容.
 { .alert .alert-error }
 
-In the commands below, replace <code><var><username></var></code> with your
-GitHub username, and <code><var><test-element></var></code> with your GitHub
-repository name. 
+下面的命令中, 替换<code><var><username></var></code>为你的GitHub用户名,  <code><var><test-element></var></code>为你的GitHub库名称. 
 
     # git clone the Polymer tools repository somewhere outside of your 
     # element project
@@ -176,16 +163,13 @@ repository name.
     cd ..
     rm -rf temp
 
-This will create a new `gh-pages` branch (or clone and clear the current one) then
-push a shareable version of your element to it. To see your newly-published docs,
-point a browser at:
+这样就创建了一个新的`gh-pages`分支 (或clone并清理当前分支),然后推送一个共享的组件版本.要查看新发布的文档,
+用浏览器访问:
 
     http://<username>.github.io/<test-element>/
 
-## Share
+## 分享
 
-You can now share the link to your element hosted on GitHub pages with the
-world. The Polymer CLI element project gives you a styled documentation page
-that looks similar to the screenshot below: 
+现在可以分享你的组件链接给其它人了.Polymer CLI组件项目提供了一个定义了样式的文档页面如下图所示: 
 
 ![Preview of the component langing page, displaying the element title in the header with a demo link next to it. The rest of the page contains formatted summary and attribute/method/event information parsed from the documentation in your element](/images/1.0/reusable-elements/documentation-page.png)

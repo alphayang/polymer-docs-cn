@@ -1,10 +1,8 @@
 ---
-title: Global Polymer settings
+title: Polymer全局设置
 ---
 
-Document-level global Polymer settings can be set
-by creating a `Polymer` object on window before importing the Polymer
-library:
+页面级别的全局Polymer设置可以通过在引用Polymer之前创建一个属于window的`Polymer`对象:
 
 ```
 <html>
@@ -25,19 +23,18 @@ library:
   ...
 ```
 
-Settings can also be switched on the URL query string:
+也可以通过URL查询字符串来设置:
 
     http://example.com/test-app/index.html?dom=shadow
 
-Available settings:
+可用设置:
 
-*   `dom`—options:
-    * `shady`. All local DOM is rendered using shady DOM, even where shadow DOM is supported (current default).
-    * `shadow`. Local DOM is rendered using shadow DOM where supported (this will be the default in the future).
+*   `dom`—选项:
+    * `shady`. 使用shady DOM渲染也有local DOM就算支持shadow DOM时也一样(当前默认使用此选项).
+    * `shadow`. Local DOM在支持shadow DOM是使用shadow DOM做渲染(未来会默认使用此选项).
 
-*   `lazyRegister`—options:
-    * `true`, many registration-time activities are deferred until the first instance of an element
-	type is created. Defaults to `false`. (This default may change in the future.)
-    * `"max"`, Defers all behavior work until first element creation. When setting `lazyRegister` to `"max"`, cannot set an element's `is` property or create a custom constructor by defining the `factoryImpl` method. Polymer will call your element's `beforeRegister` to preserve the ability to define elements using ES6. The element's `beforeRegister` will be called before the behavior's.
-*   `useNativeCSSProperties` - when `true`, Polymer uses native custom CSS properties if the browser supports them. Defaults to `false` because of Safari 9 support being buggy. See [1.6.0 release notes](https://www.polymer-project.org/1.0/docs/release-notes#v-1-6-0) for more information.
-*   `noUrlSettings`- when `true`, Polymer settings can only be sent from a script in the page. In other words, URL query parameters such as `?dom=shadow` will be ignored. Defaults to `false`.
+*   `lazyRegister`—选项:
+    * `true`, 将一些注册时的活动延迟到第一个组件实例被创建时.默认是`false`. (默认值将来可能改变.)
+    * `"max"`, 延迟所有行为执行一直到第一个组件被创建.当设置`lazyRegister`为`"max"`时,不能改变一个组件的`is`属性或通过定义`factoryImpl`方法来创建一个自定义构造函数. Polymer会调用组件的`beforeRegister`用以保留使用ES6定义组件的能力.组件的`beforeRegister`会在特性的`beforeRegister`之前调用.
+*   `useNativeCSSProperties` - 为`true`时, Polymer在浏览器支持时使用本地自定义CSS属性. 默认是`false`由于Safari 9还不支持. 查看[1.6.0 release notes](https://www.polymer-project.org/1.0/docs/release-notes#v-1-6-0)获取更多信息.
+*   `noUrlSettings`- 为`true`时, Polymer的设置只能通过页面上脚本来设置. 也就是说通过URL查询字符串设置的`?dom=shadow`会被忽略. 默认为`false`.

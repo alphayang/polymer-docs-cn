@@ -1,26 +1,23 @@
 ---
-title: Optimize for production
+title: 为线上环境优化
 ---
 
 <!-- toc -->
 
-[Polymer CLI](polymer-cli) is the recommended starting point for building
-Polymer applications. If for some reason it does not meet your needs, you
-can use the underlying libraries that power its build toolchain. See
-[Advanced tools](advanced#build) for a list of these tools.
+[Polymer CLI](polymer-cli)是构建Polymer应用的推荐入门工具. 如果它不能满足你的需求,可以利用其中的库来定制自己的工具链.查看
+[高级工具](advanced#build)来获取更多工具信息.
 
-This guide teaches you more about two of these underlying tools: Vulcanize
-and Cripser. This doc is mainly of interest to people who are developing their
-own customized build toolchains.
+这部分包含了其中的两个工具: Vulcanize
+和Cripser. 此文档对于需要自定义开发工具链的人更有用.
 
-## Overview
+## 概览
 
-Reducing network requests is important for a performant app experience. In the Polymer world, [Vulcanize](https://github.com/Polymer/vulcanize) is the name given to a build tool that lets you **concatenate** a set of elements and their HTML imported dependencies into a single file. Vulcanize recursively pulls in all your imports, flattens their dependencies and spits out something that can **reduce the number of network requests** your app makes. Additionally, the Polymer build tools can also be used to transform your code to run in an environment that enforces [content security policy (CSP)](#content-security-policy), including Chrome Apps and Extensions.
+减少网络请求对于应用的体验和性能至关重要. 在Polymer中, [Vulcanize](https://github.com/Polymer/vulcanize)工具用来把组件和它们的HTML依赖引用都**合并**成一个文件. Vulcanize递归获取所有的引用和它们的依赖,然后输出可以**应用网络请求的**的资源. 另外, Polymer工具还可以用来转换代码到执行[content security policy (CSP)](#content-security-policy)的环境中，包含了Chrome Apps和扩展.
 
-**Note:** for more great info on performance considerations worth keeping in mind when using HTML Imports, see [HTML Imports - #include for the web](http://www.html5rocks.com/en/tutorials/webcomponents/imports/#performance)
+**说明:** 在使用HTMl Imports时关于更多的性能考虑请参照[HTML Imports - #include for the web](http://www.html5rocks.com/en/tutorials/webcomponents/imports/#performance)
 { .alert .alert-info }
 
-Follow the steps below to get set up, or watch the Polycast:
+使用如下步骤来配置或观看Polycast:
 
 <google-youtube
   video-id="EUZWE8EZ0IU"
@@ -29,48 +26,48 @@ Follow the steps below to get set up, or watch the Polycast:
   fluid>
 </google-youtube>
 
-## Installation
+## 安装
 
-Install Vulcanize and its dependencies using [NPM](http://npmjs.org):
+安装Vulcanize和依赖，使用[NPM](http://npmjs.org):
 
     npm install -g vulcanize
 
-It's recommended to install Vulcanize globally so you can run it from anywhere on the command-line. To install locally, simply omit the `-g` flag.
+推荐将Vulcanize安装到系统中可以在任何目录下使用命令行调用. 想要安装到本地,只需去掉`-g`参数.
 
-## Usage
+## 使用
 
-Vulcanize can be used standalone from the command line, or as part of a `gulp`/`grunt` build chain.
+Vulcanize可以在命令行中单独使用也可以配合`gulp`/`grunt`一起使用.
 
-### Use Vulcanize from the command line
+### 在命令行中使用Vulcanize
 
-If you have an input HTML file, `elements.html`, that uses a number of HTML imports, you can run it through Vulcanize as follows:
+有一个`elements.html`文件使用了HTML imports,使用Vulcanize处理:
 
     vulcanize elements.html -o elements.vulcanized.html
 
-The `-o` or `--output` flag will direct the output to a new file called `elements.vulcanized.html`. If you omit the `-o` flag, Vulcanize will print the output to stdout, which can be useful if you want to pipe it to another command.
+`-o` 或 `--output`参数指定新的输出文件`elements.vulcanized.html`. 如果去掉`-o`参数, Vulcanize输出到stdout, 可以用做其它工作的输入.
 
-`elements.vulcanized.html` now contains a version of `elements.html` with all imports inlined and dependencies flattened. Paths to any URLs are automatically adjusted for the new output location, with the exception of those set in JavaScript.
+`elements.vulcanized.html`包含了`elements.html`以及所有的引用和依赖资源. 除了在JavaScript指定的URL外其它所有URL都被重写到新的输出位置.
 
-You can pass additional options to Vulcanize in the form of flags. For a full list of supported flags, see [the official Vulcanize documentation](https://github.com/Polymer/vulcanize#using-vulcanize-programmatically).
+Vulcanize还有很多参数. 可以查看 [Vulcanize官方文档](https://github.com/Polymer/vulcanize#using-vulcanize-programmatically)来获取更多信息.
 
-Here’s the same example from above. The extra flags tell Vulcanize to strip out comments, and to merge external scripts and CSS files into the vulcanized file.
+依然是上边的示例. 参数指定Vulcanize剥离掉注释并合并所有的外部脚本和CSS文件到输出文件中.
 
     vulcanize -o elements.vulcanized.html elements.html --strip-comments --inline-scripts --inline-css
 
-### Use Vulcanize with gulp
+### 在Gulp中使用Vulcanize
 
-Although Vulcanize does a great job of flattening imports, you may have an existing build system setup that needs to uglify/minify your code or run your CSS through a preprocessor. This section shows you how to add Vulcanize to `gulp` using  [gulp-vulcanize](https://github.com/sindresorhus/gulp-vulcanize).
+尽管Vulcanize可以很好的处理引用,但你现在有构建系统中还要通过预处理器来混淆/压缩代码或CSS.这部分内部展示了在`gulp`中使用gulp-vulcanize](https://github.com/sindresorhus/gulp-vulcanize).
 
-*Using Grunt?* You can use the [grunt-vulcanize](https://github.com/Polymer/grunt-vulcanize) task. It supports a similar set of options [maybe link to README?]
+*在用Grunt?* 可用使用[grunt-vulcanize](https://github.com/Polymer/grunt-vulcanize). 参数都差不多[maybe link to README?]
 { .alert .alert-info }
 
-To add Vulcanize to your build process:
+将Vulcanize添加到构建流程中:
 
-Install `gulp-vulcanize`
+安装 `gulp-vulcanize`
 
     npm install --save-dev gulp gulp-vulcanize
 
-Require the Vulcanize module in your `gulpfile` and add a task to run it.
+`gulpfile`需要Vulcanize模块并添加一个任务来运行它 and add a task to run it.
 
 ```
 var gulp = require('gulp');
@@ -85,12 +82,12 @@ gulp.task('vulcanize', function() {
 gulp.task('default', ['vulcanize']);
 ```
 
-This sample assumes your project has a single `elements.html` file that imports your other web component dependencies.
+示例中假设项目有一个`elements.html`文件引用了其它web component依赖.
 { .alert .alert-info }
 
-You should now be able to run `gulp` and vulcanize your dependencies.
+现在可以运行`gulp`和Vulcanize.
 
-To configure the task with the same `stripComments`, `inlineScripts`, and `inlineCss` options from above, pass them to the Vulcanize task in a configuration object:
+将一个添加对象传给Vulcanize可以添加`stripComments`, `inlineScripts`和`inlineCss`这些选项:
 
 ```
 gulp.task('vulcanize', function() {
@@ -104,9 +101,9 @@ gulp.task('vulcanize', function() {
 });
 ```
 
-Depending on the structure of your app, it may make sense to break it into a few small vulcanized bundles, instead of inlining everything into one file. This technique can cut down on loading times as it enables you to only load the elements required for a specific section.
+取决于应用的结构,除了把所有任务集合到一个文件中也可以分拆为多个小的vulcanized任务. 这个技术可以降低运行时间由于只加载组件所需的部分.
 
-To prevent certain imports from being inlined in your bundle, use the `excludes` and `stripExcludes` options together, passing each an array of file paths or regexes.
+为了避免特定的引用被内联可以使用`excludes`和`stripExcludes`, 通过传输一个文件路径或正则表达式的数组.
 
 ```
 gulp.task('vulcanize', function() {
@@ -119,11 +116,11 @@ gulp.task('vulcanize', function() {
 });
 ```
 
-If you wish to leave the link tags for an element inside of a bundle, omit the `stripExcludes` option. This will only prevent the resource(s) from being _inlined_ in the bundle. This technique can be useful if you have several pages with different element sets (but all depending on `polymer.html`), where you may want to keep the `polymer.html` file separate, so the browser can cache it efficiently.
+如果希望为组件留下链接标记可能忽略`stripExcludes`选项. 这样可以防止资源被_内联_. 对于多个页面使用不同的组件集合（但全部依赖`polymer.html`）非常有用,这样就可以单独保留`polymer.html`文件以便浏览器可以有效的进行缓存.
 
-#### Example
+#### 示例
 
-Consider a Polymer app composed of four HTML files: index.html, elements/elements.html, elements/x-foo.html, and elements/x-bar.html.
+Polymer应用有四个HTML文件: index.html, elements/elements.html, elements/x-foo.html, 和 elements/x-bar.html.
 
 app/index.html:
 
@@ -179,11 +176,11 @@ app/elements/elements.html:
 </dom-module>
 ```
 
-Without any concatenation in place, loading this application results in at least 5 network requests. Let's bring that number down. Running Vulcanize on `elements/elements.html`, and specifying `elements.vulcanized.html` as the output:
+没有经过合并的话,加载这个应用需要至少5个网络请求. 我们来降低这个请求数量. 运行Vulcanize处理`elements/elements.html`, 指定`elements.vulcanized.html`为输出:
 
     vulcanize elements.html -o elements.vulcanized.html
 
-This results in a `elements.vulcanized.html` that looks a little like this:
+输出文件`elements.vulcanized.html` 的内容:
 
 ```
 <!-- all the code for polymer.html -->
@@ -207,9 +204,9 @@ This results in a `elements.vulcanized.html` that looks a little like this:
 
 ## Content Security Policy
 
-[Content Security Policy](http://en.wikipedia.org/wiki/Content_Security_Policy) (CSP) is a JavaScript security model that aims to prevent XSS and other attacks. In so doing, it prohibits the use of inline scripts.
+[Content Security Policy](http://en.wikipedia.org/wiki/Content_Security_Policy) (CSP)是一种JavaScript安全模型用来防止XSS和其它攻击. 它禁止使用内联脚本.
 
-To use Polymer in a CSP environment (such as a Chrome App or Extension), you can use the Crisper project. Crisper removes all scripts from the HTML Imports and places their contents into an external JavaScript file.
+在CSP环境(如Chrome App或扩展)中使用Polymer,可以利用Crisper项目. Crisper移除了所有HTML Imports中的脚本并合并到一个单独的JavaScript文件中.
 
 <google-youtube
   video-id="VrajHIZZbE4"
@@ -218,30 +215,30 @@ To use Polymer in a CSP environment (such as a Chrome App or Extension), you can
   fluid>
 </google-youtube>
 
-Like Vulcanize, Crisper can be used either from the command line, or as a `gulp` plugin.
+如同Vulcanize, Crisper可以在命令行中使用或利用`gulp`插件.
 
-### Command Line
+### 命令行
 
-To install Crisper, run the following command:
+使用如下命令安装Crisper:
 
     npm install -g crisper
 
-Crisper can work directly with the piped output from Vulcanize, as shown below:
+Crisper可以直接通过管道使用Vulcaize的输出,比如:
 
     vulcanize elements/elements.html --inline-script | crisper --html elements/elements.vulcanized.html --js elements/elements.vulcanized.js
 
-It may seem a little strange to call `vulcanize` with `--inline-script` then pass it through `crisper` to separate out the JavaScript. However, if any of your elements use external scripts, this flag ensures that both inline and external scripts are extracted and concatenated into `elements.vulcanized.js`.
+好像有点奇怪先用了`vulcanize` 带 `--inline-script`参数再传递给`crisper` 分离出JavaScript. 其实如果你的组件使用了外部脚本,这个参数可以确保不论是内联或是外部脚本都被提取并合并到`elements.vulcanized.js`.
 { .alert .alert-info }
 
 ### Gulp
 
-Similarly, you can pipe the output from the Vulcanize task directly to the Crisper task in `gulp`.
+同样的, 可以在`gulp`中通过管道让Crisper任务使用Vulcanize的输出y.
 
 Run the following command:
 
     npm install -g gulp-crisper
 
-Then add it to your `gulpfile`:
+添加到`gulpfile`:
 
 ```
 var gulp = require('gulp');
@@ -260,11 +257,11 @@ gulp.task('default', ['vulcanize']);
 
 ## FAQ
 
-### Is concatenation a good idea?
+### 合并好吗?
 
-This depends on how large your application is. Excessive requests are often far worse than filesize. Hypothetically, let's say you have 20 HTML files/imports of 0.5MB each. Out of which only 2 (1MB) are required on the first page. You might want to vulcanize just those two requests into a critical bundle, then load the others in a separate, deferred bundle using Polymer’s importHref method.
+这取决于你的应用有多大. 过度请求远比大文件效果差. 假设, 有20个0.5MB的文件.其中只有2(1MB)个在第一个页面中需要.你可以将这个2个请求通过Vulcaize合并为一个包, 然后使用Polymer’s importHref来延迟分别请求其它的文件.
 
-For example:
+例如:
 
 ```
 Polymer.Base.importHref('/elements/less-important-stuff.html',
@@ -280,10 +277,10 @@ Polymer.Base.importHref('/elements/less-important-stuff.html',
 true);
 ```
 
-Some of the things that you should think about before combining a large number of imports are when you combine 100 files together, you're eliminating 99 requests. But concatenation does have some drawbacks:
+通过合并100个文件可以减少99次请求.但是合并也有一些缺点:
 
-* The single file takes much longer to download, and potentially blocks loading of an important page.
+* 单个文件需要更长时间来下载从而阻塞了重要页面的加载.
 
-* The browser needs to parse and render additional code that might not be required yet.
+* 浏览器需要解析和渲染额外的还不需要的代码.
 
-The short answer is "don't guess it, test it". There are always trade-offs when it comes to concatenation, but tools like [WebPageTest](http://webpagetest.org) can be useful for determining what your true bottlenecks are.
+答案是"不用猜, 而用测". 使用合并是总有一个妥协, 但是用 [WebPageTest](http://webpagetest.org)这些有用的工具可以帮我们确定到底真正的瓶颈是什么.

@@ -1,10 +1,10 @@
 ---
-title: Instance methods
+title: 实例方法
 ---
 
 <!-- toc -->
 
-To add an instance method to your element, just add a method on the element's prototype.
+只需要在组件的原型上添加一个方法就可以为组件的添加一个实例方法.
 
 ```
 Polymer({
@@ -16,7 +16,7 @@ Polymer({
 });
 ```
 
-You can invoke the method on any instance of your element.
+可以在组件的任意实例中调用此方法.
 
 ```
 var cat1 = document.querySelector('cat-element');
@@ -26,79 +26,63 @@ cat2.speak();
 ```
 
 
-## Built-in methods {#instance-methods}
+## 内建方法 {#instance-methods}
 
-All Polymer elements inherit from [`Polymer.Base`](/1.0/docs/api/Polymer.Base), which
-provides a set of useful convenience functions for instances to use.
+所有的Polymer组件都继承自[`Polymer.Base`](/1.0/docs/api/Polymer.Base),它提供了一组方便实例使用的便利功能.
 
-This section summarizes some common instance methods. For a complete list of methods, see the [`Polymer.Base`](/1.0/docs/api/Polymer.Base) API docs.
-
+这一节总结了一些常用的实例方法.查看[`Polymer.Base`](/1.0/docs/api/Polymer.Base)API文档获取完整方法列表.
 
 
-*   [`$$(selector)`](/1.0/docs/api/Polymer.Base#method-$$). Returns the first node in this element's local DOM that matches
-    `selector`.
 
-*   [`fire(type, [detail], [options])`](/1.0/docs/api/Polymer.Base#method-fire). Fires a custom event. The `options` object can contain
-      the following properties:
+*   [`$$(selector)`](/1.0/docs/api/Polymer.Base#method-$$). 返回组件的local DOM中匹配`selector`的的第一个结点.
 
-    -   `node`. Node to fire the event on (defaults to `this`).
+*   [`fire(type, [detail], [options])`](/1.0/docs/api/Polymer.Base#method-fire). 触发一个自定义事件.`options`对象包含以下属性:
 
-    -   `bubbles`. Whether the event should bubble. Defaults to `true`.
+    -   `node`. 触发事件的结点(默认为`this`).
 
-    -   `cancelable`. Whether the event can be canceled with `preventDefault`. Defaults to `false`.
+    -   `bubbles`. 事件是否应该向外传递. 默认`true`.
 
-### Async and debounce
+    -   `cancelable`. 事件是否可以用`preventDefault`来取消.默认为`false`.
 
-*   [`async(method, [wait])`](/1.0/docs/api/Polymer.Base#method-async). Calls `method` asynchronously. If no wait time is specified,
-    runs tasks with microtask timing (after the current method finishes, but before the
-    next event from the event queue is processed). Returns a handle that can be used to cancel
-    the task.
+### 异步和去抖
 
-*   [`cancelAsync(handle)`](/1.0/docs/api/Polymer.Base#method-cancelAsync). Cancels the identified async task.
+*   [`async(method, [wait])`](/1.0/docs/api/Polymer.Base#method-async). 异步调用`method`. 如果没有指定等待时间就以微任务时段(当前方法完成之后,事件队列中的下一个任务开始执行之前)来运行任务. 返回值可用来取消任务.
 
-*   [`debounce(jobName, callback, [wait])`](/1.0/docs/api/Polymer.Base#method-debounce). Call `debounce` to collapse multiple
-    requests for a named task into one invocation, which is made after the wait
-    time has elapsed with no new request.  If no wait time is given, the callback
-    is called at microtask timing (guaranteed to be before paint).
+*   [`cancelAsync(handle)`](/1.0/docs/api/Polymer.Base#method-cancelAsync). 取消所属的异步任务.
 
-*   [`cancelDebouncer(jobName)`](/1.0/docs/api/Polymer.Base#method-cancelDebouncer). Cancels an active debouncer without calling the callback.
+*   [`debounce(jobName, callback, [wait])`](/1.0/docs/api/Polymer.Base#method-debounce). 调用`去抖`用以合并同一任务的多个请求到一个调用中,合并会在超过等待时间内没有新请求时调用.  若没有设置等待时间回调在微任务时段内调用(保证在paint之前).
 
-*   [`flushDebouncer(jobName)`](/1.0/docs/api/Polymer.Base#method-flushDebouncer). Calls the debounced callback immediately and cancels the debouncer.
+*   [`cancelDebouncer(jobName)`](/1.0/docs/api/Polymer.Base#method-cancelDebouncer). 取消活动去抖器而不调用回调.
 
-*   [`isDebouncerActive(jobName)`](/1.0/docs/api/Polymer.Base#method-isDebouncerActive). Returns true if the named debounce task is waiting to run.
+*   [`flushDebouncer(jobName)`](/1.0/docs/api/Polymer.Base#method-flushDebouncer). 立即调用去抖回调,取消去抖器.
 
-### Class and attribute manipulation
+*   [`isDebouncerActive(jobName)`](/1.0/docs/api/Polymer.Base#method-isDebouncerActive). 若相应的去抖任务在等待执行则返回true.
 
-*   [`toggleClass(name, bool, [node])`](/1.0/docs/api/Polymer.Base#method-toggleClass). Toggles the named boolean class on the
-    host element, adding the class if `bool` is truthy and removing it if
-    `bool` is falsey. If `node` is specified, sets the class on `node` instead
-    of the host element.
+### 类和属性操作
 
-*   [`toggleAttribute(name, bool, [node])`](/1.0/docs/api/Polymer.Base#method-toggleAttribute). Like `toggleClass`, but toggles the named boolean attribute.
+*   [`toggleClass(name, bool, [node])`](/1.0/docs/api/Polymer.Base#method-toggleClass). 切换宿主组件上的命名布尔类,`bool`为真是添加类,为假时删除.如果指定了`node`, 则切换`node`上的类而不是宿主组件.
 
-*   [`attributeFollows(name, newNode, oldNode)`](/1.0/docs/api/Polymer.Base#method-attributeFollows). Moves a boolean attribute from `oldNode` to
-    `newNode`, unsetting the attribute (if set) on `oldNode` and setting it on `newNode`.
+*   [`toggleAttribute(name, bool, [node])`](/1.0/docs/api/Polymer.Base#method-toggleAttribute). 如同`toggleClass`, 但是切换命名布尔类属性.
 
-*   [`classFollows(name, newNode, oldNode)`](/1.0/docs/api/Polymer.Base#method-classFollows). Moves a class from `oldNode` to
-    `newNode`, removing the class (if present) on `oldNode` and adding it to `newNode`
+*   [`attributeFollows(name, newNode, oldNode)`](/1.0/docs/api/Polymer.Base#method-attributeFollows). 从`oldNode`上移动布尔属性到`newNode`,移除`oldNode`上的属性值(如果有的话)并设置`newNode`上的值.
+
+*   [`classFollows(name, newNode, oldNode)`](/1.0/docs/api/Polymer.Base#method-classFollows). 从`oldNode`上移动类到`newNode`，移除`oldNode`上的类然后添加到`newNode`.
 
 
-### CSS transforms
+### CSS转换
 
-*   [`transform(transform, [node])`](/1.0/docs/api/Polymer.Base#method-transform). Applies a CSS transform to the specified node,
-    or host element if no node is specified.
-    `transform` is specified as a string. For example:
+*   [`transform(transform, [node])`](/1.0/docs/api/Polymer.Base#method-transform). 将CSS转换应用到指定结点,或宿主组件(没有指定结点).
+    `transform`以字符串形式指定.例如:
 
          this.transform('rotateX(90deg)', this.$.myDiv);
 
-*   [`translate3d(x, y, z, [node])`](/1.0/docs/api/Polymer.Base#method-translate3d). Transforms the specified node, or host element
-    if no node is specified. For example:
+*   [`translate3d(x, y, z, [node])`](/1.0/docs/api/Polymer.Base#method-translate3d). 转换指定结点或宿主组件(没有指定结点).例如:
 
         this.translate3d('100px', '100px', '100px');
 
-### Imports and URLs
+### 引入和URLs
 
-*   [`importHref(href, onload, onerror, optAsync)`](/1.0/docs/api/Polymer.Base#method-importHref). Dynamically imports an HTML document.
+*   [`importHref(href, onload, onerror, optAsync)`](/1.0/docs/api/Polymer.Base#method-importHref). 动态引入一个HTML文档.
 
     ```
     this.importHref('path/to/page.html', function(e) {
@@ -108,9 +92,7 @@ This section summarizes some common instance methods. For a complete list of met
     });
     ```
 
-    **Note:** To call `importHref` from outside a Polymer element, use `Polymer.Base.importHref`.
+    **注意:** 在Polymer组件外调用`importHref`,需使用Polymer.Base.importHref`.
     { .alert .alert-info }
 
-*   [`resolveUrl(url)`](/1.0/docs/api/Polymer.Base#method-resolveUrl). Takes a URL relative to the `<dom-module>` of an imported Polymer
-    element, and returns a path relative to the current document. This method can be used, for example,
-    to refer to an asset delivered alongside an HTML import.
+*   [`resolveUrl(url)`](/1.0/docs/api/Polymer.Base#method-resolveUrl). 将相对于已引入组件的`<dom-module>`相对URL转换为当前文档的相对路径. 例如该方法可被用于引用一个HTML Import之外的资源.

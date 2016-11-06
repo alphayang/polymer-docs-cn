@@ -1,21 +1,17 @@
 ---
-title: Browser compatibility
+title: 浏览器兼容性
 ---
 
-Polymer 1.0+ works in the _latest two versions_ of all major browsers: Safari 7+, IE 11+, and the
-evergreen Chrome, Firefox, and Edge.
+Polymer 1.0+的版本兼容各大浏览器_最新的2个版本号_: Safari 7+, IE 11+和 Chrome, Firefox, and Edge.
 
-## Browser support
+## 浏览器支持
 
-The Polymer library is a lightweight sugaring layer on top of the [Web Components
-APIs](http://webcomponents.org/articles/why-web-components/). Unlike a typical javascript framework,
-Polymer is designed to leverage features _baked into the web platform itself_ to let you build
-components. Some features used by Polymer are not (yet) supported natively in all browsers. For
-broad web components support, Polymer uses the [polyfills](http://webcomponents.org/polyfills/) from
-[webcomponents.org](http://webcomponents.org). They're lightweight, work well, and provide the
-feature support Polymer requires.
+Polymer是基于[Web Components
+APIs](http://webcomponents.org/articles/why-web-components/)的轻量代码. 不同于典型的Ujavascript框架,
+Polymer设计用于提供web平台自身特性来创建组件. 甩以一些Polymer特性没有被所有浏览器支持. 为了获得更广泛的web components支持, Polymer使用[polyfills](http://webcomponents.org/polyfills/)由
+[webcomponents.org](http://webcomponents.org)提供. 轻量级的代码用来支持Polymer的特性.
 
-With the polyfills, Polymer works in these browsers:
+通过polyfills, Polymer支持以下浏览器:
 
 <table>
 <thead>
@@ -60,19 +56,14 @@ With the polyfills, Polymer works in these browsers:
 </tr>
 </table>
 
-Notes:
+说明:
 
--   Older versions of the Android Browser may run into some issues - please file an
-    [issue](https://github.com/polymer/polymer/issues) if you run into a problem on this browser.
-    Chrome for Android is supported.
+-   老版本的Android浏览器可能会有问题- 请提交
+    [issue](https://github.com/polymer/polymer/issues)如果你在这类浏览器上遇到了.
+    Chrome for Android是支持的.
 
--   We recommend conditionally loading the polyfills in your application: using the server or
-    feature-detecting on the client whether the browser supports web components natively, and then
-    only loading the polyfills if it doesn't.  An advantage of using standards-based features is the
-    payload necessary to run your application will continue to decrease as browsers implement the
-    standard. If you've installed the polyfills using
-    `bower install --save webcomponents/webcomponentsjs`, here is some example code for how to
-    feature-detect on the client:
+-   我们建议有条件的加载polyfills到你的应用中:使用服务器或客户端的检测功能来查看浏览器是否原生支持web components,只在不支持的支持加载polyfills,使用基于标准的功能的优点是运行应用程序所需的有效载荷将会随着浏览器实现而减少. 如果你安装polyfills是通过
+    `bower install --save webcomponents/webcomponentsjs`, 这里有一些示例代码用来进行客户端特性检测h:
 
     ```
     (function() {
@@ -89,55 +80,45 @@ Notes:
     })();
     ```
 
-#### Should I use webcomponents-lite.js or webcomponents.js?
+#### 使用webcomponents-lite.js 还是 webcomponents.js?
 
-We recommend using the `webcomponents-lite.js` version of the polyfills with Polymer 1.0+. This
-version is designed to be used with [Shady DOM](https://www.polymer-project.org/1.0/blog/shadydom.html),
-and does not contain the full Shadow DOM polyfill.
+我们推荐使用`webcomponents-lite.js`版本的polyfills同Polymer 1.0+. 该版本可以与[Shady DOM](https://www.polymer-project.org/1.0/blog/shadydom.html)一同工作,
+没有包含完整的Shadow DOM polyfill.
 
-Although the full `webcomponents.js` polyfill works with Polymer 1.0+, we do not recommend using it.
-This version contains the full Shadow DOM polyfill, which is known to have high performance overhead.
+尽管完整的`webcomponents.js` polyfill和Polymer 1.0+配合, 但我们不建议这么用.
+这个版本包含完整的TShadow DOM polyfill,已知需要消耗大量资源.
 
-**See** the webcomponents.js [compatibility matrix](https://github.com/WebComponents/webcomponentsjs#browser-support) for more details on support.
+**查看** twebcomponents.js [compatibility matrix](https://github.com/WebComponents/webcomponentsjs#browser-support)获取更多支持.
 {: .alert .alert-info }
 
-#### Other features used by Polymer or the elements
+#### Polymer或其它组件使用的其它特性
 
-IE 10 has flaky Mutation Observer support, and is also largely [no longer supported by
-Microsoft](https://www.microsoft.com/en-us/WindowsForBusiness/End-of-IE-support). Much of Polymer
-will still work, but you may run into some bugs here and there. "Official" support is for IE
+IE 10已经不支Microsoft支持，大多数Polymer功能可以正常使用，但也可能遇到问题."官方"支持是IE
 11/Edge.
 
 ## Progress of native browser support
 
-As of 2016-05, there has been broad cross-browser agreement around the v1 versions of the [Custom
-Elements](https://w3c.github.io/webcomponents/spec/custom/) and [Shadow
-DOM](https://w3c.github.io/webcomponents/spec/shadow/) APIs, and many implementations are well
-underway in major browsers.
+截止2016-05, 围绕v1版本的[Custom
+Elements](https://w3c.github.io/webcomponents/spec/custom/)和[Shadow
+DOM](https://w3c.github.io/webcomponents/spec/shadow/) APIs已经有了广泛的跨浏览器厂商协议,在主流浏览器中正在实现支持.
 
-Polymer currently relies on the v0 implementations of these APIs, which are also supported by the
-web components polyfills. Polymer will begin transitioning to these v1 APIs very soon. Components
-built with the current version of Polymer will still work even when browsers support v1 APIs
-natively, but will require the v0 polyfills. Upgrading components built with Polymer from the v0
-APIs to v1 will be relatively straightforward, as Polymer already provides light abstractions over
-some of the more low-level, spec-specific details and will be able to handle the transition under
-the hood.
+Polymer现在依赖于这些API的V0版本, 同时也支持
+web components polyfills. Polymer会很快迁移到V1版本. 当前版本的组件在v1 API依然可用，只要使用v0 polyfills. 可以简单的做好从v0到v1的升级工作得益于Polymer已经提供了这些低级别和特性相关的轻量级抽象.
 
-**See** [Are We Componentized Yet?](http://jonrimmer.github.io/are-we-componentized-yet/) and
-[caniuse.com](http://caniuse.com/) for more information on native browser support for web
-components.
+**查看** [Are We Componentized Yet?](http://jonrimmer.github.io/are-we-componentized-yet/) 和
+[caniuse.com](http://caniuse.com/) 获取更多本地浏览器支持web components的信息.
 {: .alert .alert-info }
 
-Notes:
+说明:
 
--   Chrome natively implements the v0 APIs, and work is underway on the v1 APIs.
+-   Chrome原生实现了v0 APIs，正在实现v1 APIs.
 
--   WebKit Nightly has a working implementation of Shadow DOM v1.
+-   WebKit Nightly正在实现Shadow DOM v1.
 
--   Edge has on its backlog to support [Shadow
+-   Edge的备忘录中要支持[Shadow
     DOM v1](https://wpdev.uservoice.com/forums/257854-microsoft-edge-developer/suggestions/6263785-shadow-dom-unprefixed)
-    and [Custom Elements v1](https://wpdev.uservoice.com/forums/257854-microsoft-edge-developer/suggestions/6261298-custom-elements).
+    和[Custom Elements v1](https://wpdev.uservoice.com/forums/257854-microsoft-edge-developer/suggestions/6261298-custom-elements).
 
--   Firefox currently supports some of the v0 web component APIs behind a flag. Polymer
-    **does not work correctly** with this flag enabled, because of an incompatibility with the web
-    components polyfills.
+-   Firefox现在通过配置可以支持部分v0 web components. Polymer
+    **不能正常工作**在打开这些开关后, 由于和web
+    components polyfills不兼容.

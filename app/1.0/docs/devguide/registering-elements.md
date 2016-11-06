@@ -1,19 +1,17 @@
 ---
-title: Registration and lifecycle
+title: 组件注册和生命周期
 ---
 
 <!-- toc -->
 
-## Register a custom element {#register-element}
+## 注册一个自定义组件 {#register-element}
 
 
-To register a custom element, use the `Polymer` function, and pass in the
-prototype for the new element. The prototype must have an `is` property that
-specifies the HTML tag name for your custom element.
+使用`Polymer`函数来注册一个自定义组件并传递一个新组件的原型做为参数.原型必须有一个`is`属性来指定自定义组件的HTML标记名称.
 
-By specification, the custom element's name **must contain a dash (-)**.
+按照规范自定义组件名**必须包含一个中划线(-)**.
 
-Example: { .caption }
+例如: { .caption }
 
 ```
     // register an element
@@ -35,31 +33,20 @@ Example: { .caption }
     var el2 = new MyElement();
 ```
 
-The `Polymer` function registers the element with the browser and returns a
-constructor that can be used to create new instances of your element via code.
+`Polymer`函数在浏览器中注册组件并返回可在代码中创建组件新实例的一个构造函数.
 
-The `Polymer` function sets up the prototype chain for your custom element,
-chaining it to the Polymer `Base` prototype (which provides
-Polymer value-added features), so you cannot set up your own
-prototype chain. However, you can use [behaviors](#prototype-mixins) to
-share code between elements.
+`Polymer`函数为自定义组件配置好了原型链并链接到Polymer `Base`原型(提供Polymer的功能),不能使用自己的原型链.然而可以使用[行为](#prototype-mixins).
 
 <!-- legacy anchor -->
 <a id="bespoke-constructor"></a>
 
-### Define a custom constructor {#custom-constructor}
+### 定义一个自定义构造函数 {#custom-constructor}
 
-The `Polymer` method returns a basic constructor that can be used to
-instantiate the custom element. If you want to
-pass arguments to the constructor to configure the new element, you can
-specify a custom `factoryImpl` function on the prototype.
+`Polymer`函数返回一个基本的构造函数可用来创建自定义组件的实例. 需要传一个参数给构造函数来配置新组件时可以指定一个自定义`factoryImpl`函数给原型.
 
-The constructor returned from `Polymer` creates an instance using
-`document.createElement`, then invokes the user-supplied `factoryImpl` function
-with `this` bound to the element instance. Any arguments passed to the actual
-constructor are passed on to the `factoryImpl` function.
+构造函数使用`document.createElement`来返回`Polymer`创建的实例然后使用绑定到组件实例的`this`来调用用户提供的`factoryImpl`函数.
 
-Example: { .caption }
+例如: { .caption }
 
 ```
     MyElement = Polymer({
@@ -80,36 +67,29 @@ Example: { .caption }
     var el = new MyElement(42, 'octopus');
 ```
 
-Two notes about the custom constructor:
+关于自定义构造函数的两个注意的地方:
 
-*   The `factoryImpl` method is _only_ invoked when you create an element using the
-    constructor. The `factoryImpl` method is not called if the element is created
-    from markup by the HTML parser, or if the element is created using `document.createElement`.
+*   `factoryImpl`函数_只_在使用构造函数创建实例时才被调用.使用HTML解析器由标记创建组件或使用`document.createElement`创建组件时`factoryImpl`函数不会被调用.
 
-*   The `factoryImpl` method is called **after** the element is initialized (local DOM
-    created, default values set, and so on). See
-    [Ready callback and element initialization](#ready-method) for more information.
+*   `factoryImpl`函数在组件初始化(local DOM已创建,默认值已赋值等等)**之后**. 查看
+    [组件初始化和回调准备完成](#ready-method)获取更多信息.
 
-### Extend native HTML elements {#type-extension}
+### 扩展原生HTML组件 {#type-extension}
 
-Polymer currently only supports extending native HTML elements (for example,
-`input`, or `button`, as opposed to extending other custom elements, which will
-be supported in a future release). These native element extensions are called
-_type extension custom elements_.
+Polymer现在只支持扩展原生HTML组件(例如
+`input`或`button`, 相比于将来会支持扩展其它自定义组件).这些原生组件扩展被称为
+_自定义类型扩展组件_.
 
-**Note:**
-When using native shadow DOM, extension of native elements can have
-unexpected behavior and is sometimes not permitted. Test your element with
-native shadow DOM enabled to catch any problems during development.
-For information on enabling native shadow DOM, see
-[Global Polymer settings](settings).
+**注意:**
+使用原生shadow DOM时扩展原生组件可能引起意外的结果所以不被允许. 使用原生shadown DOM来测试组件以便在开发时发现问题.
+关于如何使用原生shadow DOM可查看
+[Polymer全局设置](settings).
 {.alert .alert-error}
 
-To extend a native HTML element, set the `extends` property on your prototype to
-the tag name of the element to extend.
+为了扩展原生的HTML组件,需要在组件的原型标记中设置`extends`属性.
 
 
-Example: { .caption }
+例如: { .caption }
 
 ```
     MyInput = Polymer({
@@ -131,8 +111,8 @@ Example: { .caption }
     console.log(el2 instanceof HTMLInputElement); // true
 ```
 
-To use a type-extension element in markup, use the _native_ tag and add an
-`is` attribute that specifies the extension type name:
+在标记中使用类型扩展,使用_native_标记并添加一个
+`is`属性来指定类型扩展名称:
 
 ```
     <input is="my-input">
@@ -141,17 +121,13 @@ To use a type-extension element in markup, use the _native_ tag and add an
 <!-- legacy anchor -->
 <a id="basic-callbacks"></a>
 
-### Define an element in the main HTML document {#main-document-definitions}
+### 在主HTML文档中定义组件Define an element in the main HTML document {#main-document-definitions}
 
-**Note:**
-You should only define elements from the main document when
-experimenting. In production, elements should always be defined in
-separate files and imported into your main document.
+**注意:**
+在主文档中定义组件还处于实验阶段. 实际工作中组件应当定义在不同的文件中并引用到主文档里.
 {.alert .alert-error}
 
-To define an element in your main HTML document, define the element
-from `HTMLImports.whenReady(callback)`. `callback` is invoked when
-all imports in the document have finished loading.
+通过使用`HTMLImports.whenReady(callback)`来在主HTML文档中定义组. `callback`在所有文档的引用加载完成后被调用.
 
 ```
     <!DOCTYPE html>
@@ -183,15 +159,11 @@ all imports in the document have finished loading.
     </html>
 ```
 
-## Lifecycle callbacks {#lifecycle-callbacks}
+## 生命周期回调 {#lifecycle-callbacks}
 
-Polymer's Base prototype implements the standard Custom Element lifecycle
-callbacks to perform tasks necessary for Polymer's built-in features.
-Polymer in turn calls shorter-named lifecycle methods on your
-prototype.
+Polymer的原型实现了标准的自定义组件生命周期回调来完成Polymer内置功能的必要任务.Polymer在原型中调用短命名的生命周期方法.
 
-Polymer adds an extra callback, `ready`, which is invoked when Polymer has
-finished creating and initializing the element's local DOM.
+Polymer会添加一个额外的`ready`回调用来在Polymer完成创建和初始化组件的local DOM后调用.
 
 <table>
   <tr>
@@ -259,7 +231,7 @@ finished creating and initializing the element's local DOM.
 </table>
 
 
-Example: { .caption }
+例如: { .caption }
 
 ```
     MyElement = Polymer({
@@ -292,30 +264,24 @@ Example: { .caption }
 
 <!-- ToDo: the following section should probably be moved to the local DOM chapter. -->
 
-### Ready callback and local DOM initialization {#ready-method}
+### local DOM初始化完成后的回调 {#ready-method}
 
-The `ready` callback is called when a Polymer element's
-local DOM has been initialized.
+`ready`回调在在Polymer组件的local DOM完成初始化后被调用.
 
-**What is local DOM?**
-Local DOM is a subtree of elements created and
-managed by your element. It's separate from the element's children,
-which are called _light DOM_ for clarity. For more information, see
+**什么是local DOM?**
+Local DOM组件创建的子DOM树并由组件管理.它与组件的为区分起见被称为_light DOM_的子级相分离. 查看信息查看
 [Local DOM](local-dom).
 {.alert .alert-error}
 
-An element is _ready_ when:
+组件的_可用_ 是指:
 
-*   Its property values have been configured, with values data-bound from parents,
-    deserialized from attribute values, or else set to their default value.
+*   属性值已配置,通过父级的数据绑定、标记属性值的反序列化或赋与了默认值.
 
-*   Its local DOM template has been instantiated.
+*   local DOM模板已被初始化.
 
-*   All of the registered elements **inside the element's local DOM** are ready, and have had
-    their `ready` methods called.
+*   所有在**组件local DOM内部的**组件已经可用并完成了它们的`ready`方法调用.
 
-Implement `ready` when it's necessary to manipulate an element's
-local DOM when the element is constructed.
+需要在组件完成构造后操作它的local DOM就可以实现`ready`回调.
 
 ```
     ready: function() {
@@ -324,45 +290,32 @@ local DOM when the element is constructed.
     }
 ```
 
-**Note:**
-This example uses [Automatic node finding](local-dom#node-finding) to
-access a local DOM element.
+**注意:**
+此例中使用[自动节点查找](local-dom#node-finding)来访问一个local DOM组件.
 {.alert .alert-info}
 
-Within a given tree, `ready` is generally called in _document order_,
-but you should not rely on the ordering of initialization callbacks between
-sibling elements, or between a host element and its **light DOM** children.
+在一个DOM树中`ready`会按照_文档顺序_被调用,但是兄弟组件或宿主组件与它的**light DOM**子级之间的初始化回调顺序是不确定的.
 
-### Initialization order and timing {#initialization-order}
+### 初始化顺序和时机 {#initialization-order}
 
-The element's basic initialization order for a given element is:
+组件的初始化顺序是:
 
--   `created` callback.
--   Local DOM initialized (This means that **local DOM** children are created,
-    their property values are set as specified in the template, and `ready`
-    has been called on them, assuming they are registered).
--   `ready` callback.
--   [`factoryImpl` callback](#custom-constructor).
--   `attached` callback.
+-   `created`回调.
+-   Local DOM被初始化(**local DOM**的子级已被创建,根据模板已对它们进行了赋值以及
+    如果注册了`ready`回调也已经完成调用).
+-   `ready`回调.
+-   [`factoryImpl`回调](#custom-constructor).
+-   `attached`回调.
 
-Local DOM children only have `ready` called if they are *registered* custom
-elements. If a local DOM child is registered later, its `created` and
-`ready` methods are called when that child upgrades, without delaying the
-host's remaining callbacks. Importing sources before they are used ensures
-that elements are created in order.
+Local DOM子级只有`ready`回调如果它们注册了自定义组件. 如果loal DOM在之后注册一个子元素那么这些子元素的`created`和`ready`函数会在子元素更新时被调用,不会导致宿主元素剩余回调的延迟. 在资源使用前引用它们可以确保组件按顺序被创建.
 
-Note that while the life cycle callbacks listed above will be called in the
-described order for any given element, the  **initialization timing between
-elements may vary** depending on many factors, including whether or not the
-browser includes native support for web components.
+注意尽管组件的生命周期回调会按照上列的顺序被享受生活但由于很多因素导致不同组件的**初始化时机各不相同**,包括浏览器是否原生支持web components等等.
 
-#### Initialization timing for light DOM children
+#### light DOM子级的初始化时机
 
-There are no guarantees about the initialization timing of light
-DOM children. In general elements are initialized in document order,
-so children are usually initialized after their parents.
+light DOM子级的初始化时机没有保证.正常情况下组件按照文档顺序被初始化所以子级通常在父级初始化之后.
 
-For example, consider this light DOM for an element `avatar-list`:
+例如`avatar-list`的light DOM:
 
 ```
     <avatar-list>
@@ -371,54 +324,38 @@ For example, consider this light DOM for an element `avatar-list`:
     </avatar-list>
 ```
 
-`<avatar-list>` is _likely_ to have its `ready` method called before the various
-`<my-photo>` elements do.
+`<avatar-list>`的`ready`函数会在它各个
+`<my-photo>`组件之_前_被调用.
 
-In addition, the user can add light children at any time after
-the parent element has been created. A well-designed element
-should handle having its light DOM manipulated at runtime.
+另外父组件创建后它的light DOM可在任意时间添加. 一个好的组件应在运行期提供它的light DOM操作.
 
-To avoid timing issues, you can use the following strategies:
+可以使用如下策略来避免超时:
 
-*   Handle light DOM children lazily. For example, a popup menu
-    element may need to count its light DOM children. By counting
-    its `children` when the menu is opened, it can handle the user
-    adding and removing menu items with minimal overhead.
+*   被动处理light DOM子级. 例如一个弹出菜单组件对它的light DOM子元素进行计数. 只在菜单打开时进行计数就可以最小代价来添加和删除菜单项.
 
-*   To react when children are added and removed, use the
-    [`observeNodes` method](local-dom#observe-nodes).
+*   使用[`observeNodes`函数](local-dom#observe-nodes)来处理子元素的添加和删除.
 
-#### Initialization timing for local DOM children
+#### Local DOM子级的初始化时机
 
-In terms of local DOM and initialization timing, local DOM children are created,
-their property values are set as specified in the template, and `ready` is
-called on them _before_ their parent's `ready` callback is called.
+在local DOM初始化中,local DOM子元素被创建,属性被赋与了模板中的值, 子元素的`ready`大父元素的`ready`回调之前被调用.
 
-There are two caveats:
+需要注意以下两个方面:
 
- *  `dom-repeat` and `dom-if` templates create DOM **asynchronously**
-    after their properties are updated. For example, if you have a
-    `dom-repeat` in your element's local DOM, the `ready` callback is
-    invoked before the `dom-repeat` finishes creating its instances.
+ *  `dom-repeat`和`dom-if`模板在它们的值更新后会**异步**创建DOM树.例如在组件的local DOM中有一个
+    `dom-repeat`,`ready`回调在`dom-repeat`完成实例创建前被调用.
 
-    If you need to know when a `dom-repeat` or `dom-if` creates or
-    removes template instances, listen for its `dom-change` event.
-    See [`dom-change` event](templates#dom-change) for details.
+    如果需要捕获`dom-repeat`或`dom-if`创建或删除模板实例的动作只需要为`dom-change`添加一个事件监控器.
+    查看[`dom-change`事件](templates#dom-change)获取更多信息.
 
-*   Polymer guarantees that local DOM children have their `ready` callback called
-    before their parent's; however, it cannot guarantee the same thing for the
-    `attached` callback. This is one fundamental difference between native
-    behavior and  polyfill behavior.
+*   Polymer保证local DOM子元素的`ready`回调在它们的父元素之前被调用; 然而不能为`attached`的回调做同样的保证. 这是原生行为和polyfill的根本区别.
 
-#### Initialization timing for siblings
+#### 兄弟节点的初始化时机
 
-There are no guarantees with regard to initialization timing between sibling
-elements.
+对于兄弟节点的初始化时机没有顺序的保证.
 
-This means that siblings may become `ready` in any order.
+也可以说兄弟节点可能以任何顺序回调各自的`ready`.
 
-For accessing sibling elements when an element initializes, you can call `async`
-from inside the `attached` callback:
+当组件初始化时可以在其内部`async`调用`attached`回调来访问其兄弟节点:
 
 ```
     attached: function() {
@@ -428,31 +365,22 @@ from inside the `attached` callback:
     }
 ```
 
-### Registration callback {#registration-callback}
+### 注册回调 {#registration-callback}
 
-Polymer also provides two registration-time callbacks, `beforeRegister`
-and `registered`.
+Polymer提供了两个注册期回调, `beforeRegister`和`registered`.
 
-Use the `beforeRegister` callback to transform an element's prototype before
-registration. This is useful when registering an element using an ES6 class,
-as described in the article, [Building web components using ES6 classes](/1.0/blog/es6).
+使用`beforeRegister`回调在注册前转化组件原型. 当然使用ES6类来注册组件时很有用,
+如同[Building web components using ES6 classes](/1.0/blog/es6)中所提到的.
 
-You can implement the `registered` callback to perform one-time initialization
-when an element is registered. This is primarily useful when implementing
-[behaviors](behaviors).
+可以实现`registered`回调在组件注册后进行一次初始化操作. 主要用来实现
+[行为](behaviors).
 
-## Static attributes on host {#host-attributes}
+## 宿主上的表态属性 {#host-attributes}
 
-If a custom element needs HTML attributes set on it at create-time, the attributes may
-be declared in a `hostAttributes` property on the prototype, where keys are the
-attribute names and values are the values to be assigned.  Values should
-typically be provided as strings, as HTML attributes can only be strings;
-however, the standard `serialize` method is used to convert values to strings,
-so `true` will serialize to an empty attribute, and `false` will result in no
-attribute set, and so forth (see [Attribute serialization](properties#attribute-serialization) for more
-details).
+如果自定义组件需要在创建期使用HTML属性进行赋值,可以通过在原型上定义一个`hostAttributes`键值对属性来完成.由于HTML属性只能是字符串所以属性值通常也是字符串;然后标准的`serialize`方法会把值转化为字符串所以`true`会被序列化为一个空值,`false`则不被赋值等等,
+(查看[属性序列化](properties#attribute-serialization)查看更多信息).
 
-Example:  { .caption }
+例如:  { .caption }
 
 ```
     <script>
@@ -472,37 +400,30 @@ Example:  { .caption }
     </script>
 ```
 
-Results in:
+结果是:
 
 ```
     <x-custom string-attribute="Value" boolean-attribute tabindex="0"></x-custom>
 ```
 
-**Note:**
-The `class` attribute can't be configured using `hostAttributes`.
+**注意:**
+`class`属性不能使用`hostAttributes`来配置.
 {.alert .alert-error}
 
-## Behaviors {#prototype-mixins}
+## 行为 {#prototype-mixins}
 
-Elements can share code in the form of _behaviors_, which can define
-properties, lifecycle callbacks, event listeners, and other features.
+组件间可以利用_行为_的行为来分享代码,可以用来定义属性、生命周期回调、事件监听器和其它功能.
 
-For more information, see [Behaviors](behaviors).
+查看[行为](behaviors)获取更多信息.
 
-## Class-style constructor {#element-constructor}
+## 类样式构造函数 {#element-constructor}
 
-If you want to set up your custom element's prototype chain but **not** register
-it immediately, you can use the  `Polymer.Class` function. `Polymer.Class` takes
-the same prototype argument as the `Polymer` function,  and sets up the
-prototype chain, but does _not_ register the element. Instead it  returns a
-constructor  that can be passed to `document.registerElement` to register your
-element with the browser, and after  which can be used to instantiate new
-instances of your element via code.
+想要配置自定义组件的原型链而**不**立即注册可以使用I`Polymer.Class`函数. `Polymer.Class`接受与`Polymer`函数相同的原型参数来配置原型链但_不_注册组件. 
+它返回一个构造函数可用于传递给`document.registerElement`用来在浏览器中注册组件,稍后可以在代码中来初始化组件实例.
 
-If you want to define and register the custom element in one step, use the
-[`Polymer` function](#register-element).
+想要在组件中一次性定义和注册就可以使用[`Polymer` function](#register-element).
 
-Example: { .caption }
+例如: { .caption }
 
 ```
     var MyElement = Polymer.Class({
@@ -523,5 +444,4 @@ Example: { .caption }
     var el2 = document.createElement('my-element');
 ```
 
-`Polymer.Class` is designed to provide similar ergonomics to a speculative future
-where an ES6 class may be defined and provided to `document.registerElement`.
+`Polymer.Class`旨在提供和ES6能提供给`document.registerElement`的类似.

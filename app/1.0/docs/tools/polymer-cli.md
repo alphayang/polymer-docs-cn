@@ -4,111 +4,95 @@ title: Polymer CLI
 
 <!-- toc -->
 
-Polymer CLI is still pre-release. Some options may be subject to change.
+Polymer CLI还处于pre-release阶段. 有些参数可能会改变.
 {.alert .alert-warning}
 
-## Install {#install}
+## 安装 {#install}
 
-1.  Install [Git](https://git-scm.com/downloads).
+1.  安装 [Git](https://git-scm.com/downloads).
 
-1.  Install the current LTS version (4.x) of
-    [Node.js](https://nodejs.org/en/download/) or newer.
+1.  安装LTS版本(4.x)的
+    [Node.js](https://nodejs.org/en/download/)或最新版.
 
-1.  Install the latest version of Bower.
+1.  安装最新版本的Bower.
 
         npm install -g bower
 
-1.  Install Polymer CLI.
+1.  安装Polymer CLI.
 
         npm install -g polymer-cli
 
-You're all set. Run `polymer help` to view a list of commands.
+全部安装好了.运行`polymer help`来查看命令列表.
 
-## Overview {#overview}
+## 概览 {#overview}
 
-Polymer CLI is a command-line interface for Polymer projects. It includes a build pipeline, a boilerplate generator for creating elements and apps, a linter, a development server, and a test runner.
+Polymer CLI是Polymer项目的命令行接口. 它包含一个构建工具, 一个组件和应用模板生成器,一个静态检查器, 一个开发服务器以及一个测试运行工具.
 
-Polymer CLI works with two types of projects:
+Polymer CLI适用于两种项目类型:
 
-* Elements projects. In an element project, you expose a single element or
-  group of related elements which you intend to use
-  in other element or app projects, or
-  distribute on a registry like Bower or NPM. Elements are reusable and
-  organized to be used alongside other elements, so components are referenced
-  outside the project.
-* Application projects. In an app project, you build an application, composed
-  of Polymer elements, which you intend to deploy as a website. Applications are
-  self-contained, organized with components inside the application.
+* 组件项目. 在组件项目中你只暴露出一个或一种相关的组件用于其它的组件或应用项目中,也可以发布到例如Bower或NPM的库中. 组件可以其它项目中重复使用.
+* 应用项目. 在应用项目中，可以使用Polymer组件创建一个应用发部署为一个网站. 应用内部以独立的组件存在.
 
-Complete the [Install](#install) section to learn how to install
-Polymer CLI and then proceed to the [Build an element](#element) or
-[Build an app](#app) section to get started on your first project.
+参照[安装](#install)来如何安装
+Polymer CLI然后进入[创建一个组件](#element)或
+[创建一个应用](#app)来开始你的第一个Polymer项目.
 
-## Create an element project {#element}
+## 创建一个组件项目{#element}
 
-This section shows you how to start an element project.
+该部分展示了如何创建一个组件项目.
 
-1.  Create a directory for your element project. It's best practice for the name
-    of your project directory to match the name of your element.
+1.  新建一个组件项目的根目录. 最好的办法是根据见名思义的原则来命令目录名称,使用你的组件名.
 
     <pre><code>mkdir <var>my-el</var> && cd <var>my-el</var></code></pre>
 
     Where <code><var>my-el</var></code> is the name of the element you're
     creating.
 
-1.  Initialize your element. Polymer CLI asks you a few
-    questions as it sets up your element project.
+1.  初始化组件. Polymer CLI需要一些信息来创建组件项目.
 
         polymer init
 
-1.  Select `element`.
+1.  选择`element`.
 
-1.  Enter a name for your element.
+1.  输入组件名称.
 
-    The [custom elements
-    specification](https://www.w3.org/TR/2016/WD-custom-elements-20160226/#concepts) requires the
-    element name to contain a dash.
+    [自定义组合规范](https://www.w3.org/TR/2016/WD-custom-elements-20160226/#concepts)规则组件名包含一个中划线.
     {.alert .alert-info}
 
-1.  Enter a description of the element.
+1.  输入组件描述.
 
-At this point, Polymer CLI generates files and directories for your element,
-and installs your project's dependencies.
+Polymer CLI这时会生成组件所需的文件和目录并安装项目的依赖.
 
-### Element project layout
+### 组件项目构成
 
-After the initialization process Polymer CLI generates the following files and directories.
+初始化完成后Polymer CLI生成如下的文件和目录.
 
-*   `bower.json`. Configuration file for Bower.
-*   `bower_components/`. Project dependencies. See
-    [Manage dependencies](#dependencies).
-*   `demo/index.html`. Demo of <code><var>my-el</var></code>`.html`.
-*   `index.html`. Automatically-generated API reference.
-*   <code><var>my-el</var></code>`.html`. Element source code.
-*   `test/`<code><var>my-el</var></code>`_test.html`. Unit tests for
-    the element.
+*   `bower.json`. Bower的配置文件.
+*   `bower_components/`. 项目依赖. 查看
+    [管理依赖](#dependencies).
+*   `demo/index.html`. <code><var>my-el</var></code>`.html`.
+*   `index.html`的demo. 自动生成API文档.
+*   <code><var>my-el</var></code>`.html`. 组件源码.
+*   `test/`<code><var>my-el</var></code>`_test.html`. 组件的单元测试.
 
-#### HTML imports and dependency management {#element-imports}
+#### HTML imports和依赖管理{#element-imports}
 
-Summary:
+简介:
 
-When importing Polymer elements via HTML imports, always use the relative URL
-<code>../<var>package-name</var>/<var>element-name</var>.html</code> (e.g.
-`../polymer/polymer.html` or `../paper-elements/paper-button.html`).
+When importing Polymer elements via 当通过HTML imports引用Polymer组件时, 要使用相对URL
+<code>../<var>package-name</var>/<var>element-name</var>.html</code> (例如.
+`../polymer/polymer.html` 或 `../paper-elements/paper-button.html`).
 
-Details:
+详情:
 
-Suppose that you ran Polymer CLI to generate an element project. Your element is named `my-el`. You look inside `my-el.html` and see that Polymer has been
-imported like so:
+假设你用Polymer CLI生成一个名为`my-el`的组件项目. 打开`my-el.html`可以看到Polymer也这样引用:
 
     <link rel="import" href="../polymer/polymer.html">
 
-This path doesn't make sense. Relative to `my-el.html`,
-Polymer is actually located at `bower_components/polymer/polymer.html`. Whereas
-the HTML import above is referencing a location *outside* of your element
-project. What's going on?
+路径不重要,相对于`my-el.html`,
+Polymer实际上使用的是`bower_components/polymer/polymer.html`. 所以上面的HTML import引用位置在你的组件项目之*外*. 这是为什么呢?
 
-Bower installs dependencies in a flat dependency tree, like so:
+Bower的依赖安装路径为:
 
     bower_components/
       polymer/
@@ -118,230 +102,197 @@ Bower installs dependencies in a flat dependency tree, like so:
       other-el/
         other-el.html
 
-This works well on the application-level. All elements are siblings, so they can
-all reliably import each other using relative paths like
-`../polymer/polymer.html`. This is why Polymer CLI uses relative paths
-when initializing your element project.
+这个在应用层一切正常. 所有的组件在同一层,所以他们都可以用`../polymer/polymer.html`这种方式来稳定的互相引用. 这也正是为什么Polymer CLI使用相对路径来初始化你的组件项目.
 
-However, one problem with this approach, as stated earlier, is that this
-structure does not actually match the layout in your element project. Your
-element project is actually laid out like so:
+但是这个结构在你的组件项目里却是个问题. 组件项目的结构是这样的:
 
     bower_components/
       polymer/
         polymer.html
     my-el.html
 
-Polymer CLI handles this by remapping paths. When you run `polymer serve`,
-all elements in `bower_components` are remapped to appear to be in sibling
-directories relative to `my-el`. The current element is served from the
-made-up path of <code>/components/<var>bower name</var></code>, where
-<code><var>bower name</var></code> is the `name` field from your element
-project's `bower.json` file.
+Polymer CLI使用了重新映射路径来处理这个问题. 当你使用`polymer serve`时,
+所有位于`bower_components`的组件被重新映射从而可以在`my-el`中使用相对路径. 当前组件的访问路径为 <code>/components/<var>bower name</var></code>,
+<code><var>bower name</var></code>是`bower.json`文件中定义的你的组件`name`字段.
 
-## Create an app project {#app}
+## 创建一个应用项目 {#app}
 
-Polymer CLI supports initializing a project folder with one of
-several application templates.  The CLI comes with a `basic` template,
-which is the most basic starting point for a Polymer-based application,
-as well as others that introduce more complex layout and application patterns.
+Polymer CLI支持利用一个模板来初始化你的项目目录.  CLI自带了一个`basic`模板,
+可以用来创建一个简单的Polymer应用,同样也可以使用其它具有更多复杂而已和应用模式的模板.
 
-This chapter teaches you more about `basic` app projects.  See
-[Polymer App Toolbox templates](../../toolbox/templates) for more details on
-other templates.
+这一节将使用`basic`应用模板.  See
+[Polymer App Toolbox模板](../../toolbox/templates)可以看到更多模板详情.
 
-### App project architecture {#app-architecture}
+### 应用项目结构 {#app-architecture}
 
-Polymer CLI is designed for apps that follow the [app shell
-architecture](https://developers.google.com/web/updates/2015/11/app-shell).
+Polymer CLI用来开发带有 [app shell
+architecture](https://developers.google.com/web/updates/2015/11/app-shell)的应用.
 
-There are fundamental concepts of the app shell architecture that you should understand before creating your app project with Polymer CLI: the entrypoint,
-the shell, and fragments. See [App structure](/1.0/toolbox/server#app-structure)
-from the App Toolbox docs for an in-depth overview of these concepts.
+在使用Polymer CLI来创建项目应用之前先理解App shell architecture的基本原理: 入口,
+shell, fragments. 查看位于App Toolbox中的[App结构](/1.0/toolbox/server#app-structure)
+来深入了解这些原理.
 
-### Set up basic app project {#basic-app}
+### 配置基本的应用项目 {#basic-app}
 
-Follow the steps below to get your `basic` app project set up.
+使用如下步骤来配置`基本`应用项目.
 
-1.  Create a directory for your app project.
+1.  为应用项目创建一个根目录.
 
     <pre><code>mkdir <var>app</var>
     cd <var>app</var></code></pre>
 
-    Where <code><var>app</var></code> is the name of your project directory.
+   <code><var>app</var></code>是根目录名称.
 
-1.  Initialize your app. Polymer CLI asks you a few questions
-    as it sets up your app.
+1.  初始化应用. Polymer CLI需要一些信息来配置应用.
 
         polymer init
 
-1.  Select `application`.
+1.  选择`application`.
 
-1.  Enter a name for your app. Defaults to the name of the current directory.
+1.  输入应用名称. 默认使用当前目录名称.
 
-1.  Enter a name for the main element in your project. The main element is the
-    top-most, application-level element of your app. Defaults to the name of
-    the current directory, followed by `-app`.
+1.  输入主组件的名称.主组件是最顶层的应用级别组件. 默认使用当前目录名称,使用`-app`来指定.
 
-    The code samples throughout this doc use the example app element name
-    <code><var>my-app</var></code>. When creating your app you'll want to
-    replace any instance of <code><var>my-app</var></code> with the name of
-    your main element.
+    这个文档中的救命代码使用<code><var>my-app</var></code>做为救命应用组件的名称. 在创建应用时需要把<code><var>my-app</var></code>全部替换为你的主组件名称.
     {.alert .alert-info}
 
-1.  Enter a description for your app.
+1.  输入应用的描述.
 
-At this point, Polymer CLI generates files and directories for your app,
-and installs your project's dependencies.
+此时, Polymer CLI生成应用的文件和目录并安装项目依赖.
 
-### App project layout
+### 应用项目结构App project layout
 
-After the initialization process Polymer CLI generates the following files and directories.
+完成初始化后Polymer CLI生成如下文件和目录.
 
-*   `bower.json`. Configuration file for Bower.
-*   `bower_components/`. Project dependencies. See
-    [Manage dependencies](#dependencies).
-*   `index.html`. Entrypoint page of the app.
+*   `bower.json`.Bower的配置文件.
+*   `bower_components/`. 项目依赖. 查看
+    [管理依赖](#dependencies).
+*   `index.html`. 应用的入口页面.
 *   `src/`<code><var>my-app</var></code>/<code><var>my-app</var></code>`.html`.
-    Source code for main element.
-*    `test/`<code><var>my-app</var></code>/<code><var>my-app</var></code>`_test.html`. Tests for main element.
+    主组件的源码.
+*    `test/`<code><var>my-app</var></code>/<code><var>my-app</var></code>`_test.html`. 主组件的测试.
 
-#### Add elements
+#### 添加组件
 
-You may want to compose your main element out of smaller, application-specific
-elements. These app-specific elements should be defined in the `src` directory, at the same level as <code><var>my-app</var></code>.
+你也可以从一些与应用专属的较小的组件来创建主组件.这些应用特定的组件放置于`src`目录中, 和<code><var>my-app</var></code>处于同一级.
 
     app/
       src/
         my-app/
         my-el/
 
-Currently there is no Polymer CLI command to generate application-specific elements. You should do it by hand and should not create an [element project](#element) within your app project.
+现在Polymer CLI命令还不支持生成应用专属的组件. 可以手动创建但不能在应用项目中再创建一个[组件项目](#element).
 
-## Commands {#commands}
+## 命令 {#commands}
 
-This section explains various useful Polymer CLI commands that you'll want to incorporate into your development workflow while you build your element or app project.
+这一部分将介绍一些Polymer CLI命令,可以用来在开发组件或应用项目时放到自己的开发流程中.
 
-The commands are intended for both element and app projects unless otherwise
-noted.
+这些命令除非单独说明均适用于组件和应用项目.
 
-### Run tests {#tests}
+### 运行测试 {#tests}
 
-If you want to run tests on your element or app project, `cd` to the base directory of your project and run:
+想在组件或应用项目中运行测试, `cd`到项目根目录而后运行:
 
     polymer test
 
-Polymer CLI automatically runs all of the tests that it finds in the `test` directory. You'll see the results of the tests in your CLI.
+Polymer CLI自动运行所有位于`test`目录中的测试. 所有测试结果会显示在命令行中.
 
-If you create your own tests, they should also go in the `test` directory.
+如果创建了自定义测试也应当放到`test`目录中.
 
-The underlying library that powers `polymer test` is called `web-component-tester` (`wct`). Learn more about creating unit tests with `wct`
-in [Test your elements](/1.0/tools/tests).
+`polymer test`使用了`web-component-tester` (`wct`)这个工具. 查看更多关于利用`wct`创建测试,点击
+[组件测试](/1.0/tools/tests).
 
-### Run local web server {#serve}
+### 运行本地服务器{#serve}
 
-If you want to view a live demo of your element or app, run the local web server:
+运行本地web服务器来查看组件或应用的效果:
 
     polymer serve
 
-To view the demo, point your browser to one of the following URLs.
+在浏览器里导航到如上的URL.
 
-Element project demo:
+组件项目demo:
 
 <pre><code>http://localhost:8080/components/<var>my-el</var>/demo/</code></pre>
 
-Element project API reference:
+组件项目API文档:
 
 <pre><code>localhost:8080/components/<var>my-el</var>/</code></pre>
 
-App project demo:
+应用项目demo:
 
     http://localhost:8080
 
-#### Server options {#server-options}
+#### 服务器选项 {#server-options}
 
-This section shows examples of using various `polymer serve` options.
+这一部分展示了使用`polymer serve`选项的一些例子.
 
-Serve from port 3000:
+使用3000端口:
 
     polymer serve --port 3000
 
-Serve from hostname `test` (e.g. app project demo is available at
+使用域名`test` (例如应用项目demo位于
 `http://test:8080`):
 
     polymer serve --hostname 'test'
 
-Open up a page other than the default `index.html` in a specific browser
-(Apple Safari, in this case):
+在指定浏览器中打开指定的页面而不是默认页面`index.html`
+(此处使用Apple Safari):
 
     polymer serve --open app.html --browser Safari
 
-### Lint element(s) {#lint}
+### 组件静态检查 {#lint}
 
-Check elements in your element project or app project for syntax errors, anti-patterns and more.
+检查项目中的组件是否有语法错误或不符合规范等.
 
-Element project example:
+组件项目示例:
 
     polymer lint --input my-el.html
 
-App project example (linting multiple elements):
+应用项目示例 (检查多个组件):
 
     polymer lint --root src/ --input my-app/my-app.html my-el/my-el.html
 
-If all of the elements you want to test are in the same directory, you can specify the `--root` flag to make all of the `--input` files relative to that directory.
+如果所要检查没的组件都位于同一个目录中,可以使用`--root`参数来指定所有`--input`文件.
 
-### Build app {#build}
+### 构建应用 {#build}
 
-*This command is for app projects only.*
+*此命令只适用于应用项目.*
 
-Generates a production-ready build of your app. This process includes minifying the HTML, CSS, and JS of the application dependencies, and generating a service worker to pre-cache dependencies.
+生成应用的生产版本. 这个过程包含压缩应用依赖的HTML, CSS和JS并生成一个service worker用来预缓存这个依赖.
 
-Polymer CLI's build process is designed for apps that follow the [app shell architecture](https://developers.google.com/web/updates/2015/11/app-shell).
-The build command is typically run with the following options:
+Polymer CLI的构建过程适用于遵循了[app shell architecture](https://developers.google.com/web/updates/2015/11/app-shell)的应用.
+构建命令有如下参数:
 
-*   `entrypoint`. The main HTML file that is imported for all routes. This file
-    should import the app shell file specified in the `shell` option. It should
-    be minimal since it's loaded and cached for each route.
-*   `shell`. The app shell file containing common code for the app.
-*   `fragment`. Any imports that are not synchronously loaded from the
-    app shell, such as async imports or any imports loaded on-demand (e.g. by
-    `importHref`). Can be a space-separated list of values, or the option
-    can be repeated.
-*   `sw-precache-config`. The underlying library that Polymer CLI uses to
-    generate service workers, `sw-precache`, accepts various configurtion
-    options. You can specify a path to a `sw-precache` config file with
-    this option. See [Options parameter][op] from the `sw-precache` README
-    for more information.
+*   `entrypoint`. 应用的入口,必须引用`shell`参数中定义的app shell文件. 由于在每个页面中加载和缓存所以要体积尽量小I.
+*   `shell`. 应用app shell文件提供通用代码.
+*   `fragment`. 没有在app shell中同步加载的引用,比如异步引用或任何的按需引用(例如
+    `importHref`).可以是空格分析或重复指定.
+*   `sw-precache-config`.Polymer CLI用来生成service workers的参数, `sw-precache`接受配置选项. 可用使用`sw-precache`来指定配置文件的路径. 查看`sw-precache`中的README[选项参数 ][op]获得更多信息.
 
-For example, in a newly created `basic` app project you would run the following command to generate a build:
+例如在新创建的`basic`应用项目中使用如下命令来构建:
 
     polymer build --entrypoint index.html
 
-Suppose you added an app shell and two views for your `basic` app project,
-located at `src/app-shell/app-shell.html` and `src/view-one/view-one.html`
-and `src/view-two/view-two.html`, respectively. You'd specify them in your
-build with the following flags:
+假设你为`basic`应用项目添加了一个app shell和两个视图,
+位于`src/app-shell/app-shell.html`和`src/view-one/view-one.html`
+、`src/view-two/view-two.html`. 在构建使用如下参数来指定:
 
     polymer build --entrypoint index.html --shell src/app-shell/app-shell.html /
     --fragment src/view-one/view-one.html src/view-two/view-two.html
 
 [op]: https://github.com/GoogleChrome/sw-precache#options-parameter
 
-#### Bundled and unbundled builds {#bundles}
+#### 绑定和非绑定的构建Bundled and unbundled builds {#bundles}
 
-Polymer CLI generates two build versions:
+Polymer CLI生成两个版本:
 
-*   `bundled`. All fragments are bundled together to reduce the number of file
-    requests. Optimal for sending to clients or serving from servers that are
-    not HTTP/2 compatible.
-*   `unbundled`. Fragments are unbundled. Optimal for HTTP/2-compatible servers
-    and clients.
+*   `bundled`. 所有fragments打包在一起来减少资源请求. are bundled together to reduce the number of file
+    requests. 是不兼容HTTP/2的服务器或客户端的最佳选择.
+*   `unbundled`. Fragments没有绑定. 是兼容HTTP/2的服务器和客户端的最佳选择.
 
-#### Build configuration file (polymer.json) {#build-config}
+#### 构建配置文件 (polymer.json) {#build-config}
 
-Rather than specifying your build options on the command line, you can also
-create a `polymer.json` file at the top-level of your project and store your
-build configurations there. For example:
+比在命令行中使用参数指定的方式更好的是创建一个`polymer.json`文件,位于项目根目录中用来保存构建配置. For example例如:
 
 ```json
 {
@@ -355,13 +306,13 @@ build configurations there. For example:
 }
 ```
 
-## Manage dependencies {#dependencies}
+## 管理依赖 {#dependencies}
 
-Polymer CLI uses [Bower](http://bower.io) for dependency management.
+Polymer CLI使用[Bower](http://bower.io)做依赖管理.
 
-Dependencies are stored in the `bower_components` directory. You should never manually alter the contents of this directory.
+所有依赖保存在`bower_components`目录中. 不要手动修改这个目录中的内容.
 
-Use the Bower CLI to manage dependencies.
+使用Bower CLI来管理依赖.
 
 ```bash
 # downloads dependency to bower_components/
@@ -371,17 +322,15 @@ bower install --save PolymerElements/iron-ajax
 bower uninstall PolymerElements/iron-ajax
 ```
 
-## Global options {#global-options}
+## 全局参数 {#global-options}
 
-You can see a list of global options by running `polymer help`. Most of them
-are self-explanatory.
+运行`polymer help`来查看所有的全局参数. 大多遵循见名思义的规则.
 
-The following commands are currently only supported for the `polymer build`
-command, with planned support for other commands in the future.
+以下参数目前只支持`polymer build`命令, 其它命令的支持已在计划中.
 
 *   `entry`
 *   `shell`
 *   `fragment`
 
-See [Build app](#build) for more information on how to use these options.
+查看[构建应用](#build)来获取如何这些参数的更多信息.
 

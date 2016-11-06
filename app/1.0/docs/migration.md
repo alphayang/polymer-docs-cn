@@ -1,5 +1,5 @@
 ---
-title: Migration guide
+title: 迁移指南
 ---
 
 <!-- toc -->
