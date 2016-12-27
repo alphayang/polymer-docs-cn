@@ -1,79 +1,65 @@
 ---
-title: Responsive app layout
+title: 响应式应用布局
 ---
 
 <!-- toc -->
 
-**The app layout elements are prerelease.** APIs may be subject to change.
+**应用布局组件处于prerelease阶段.** API可能会改变.
 {.alert .alert-info}
 
-**Breaking changes:** In 
-[version 0.10](https://github.com/PolymerElements/app-layout/releases/tag/v0.10.0) 
-of the app layout package the `title` attribute of `<app-toolbar>` was 
-changed to `main-title`, and the `primary` attribute of `<app-header>` was 
-changed to `sticky`.
+**重大改变:** 应用布局包在
+[version 0.10](https://github.com/PolymerElements/app-layout/releases/tag/v0.10.0)
+中,`<app-toolbar>`组件的`title`标记变为`main-title`, `<app-header>`组件的`primary`标记变为 `sticky`.
 {.alert .alert-warning}
 
-Every application needs some layout, and the app layout elements provide the tools to create
-responsive layouts easily.
+每个应用都需要一些布局,应用布局组件提供的工具可以很轻松的创建响应式布局.
 
-If you've worked with the previous generation of Material Design layout elements, like
-`paper-header-panel` and `paper-drawer-panel`, the app layout elements should feel fairly familiar.
-However, these elements are designed to be:
+如果已经使用了上一代的Material Design布局组件, 如
+`paper-header-panel` 和 `paper-drawer-panel`, 那么对于应用布局组件就会感觉很熟悉.
+无论以什么形式, 这些组件都被设计为:
 
-- More flexible and composable -- supporting a wider range of layout patterns.
-- Less opinionated -- these elements don't enforce a particular look and feel
-(although they still support the Material Design effects and UI patterns if that's
-what you're looking for).
-- Extensible -- with a new, pluggable system for scroll effects.
+- 更好的灵活性和组合性 -- 支持更广泛的布局模式.
+- 更少的预设 -- 组件不要求特定的观感
+(当你想要Material Design的效果和UI模式时还是会继续支持的).
+- 可扩展 -- 滚动效果使用一个新的可插拔系统.
 
-## Design your layout
+## 设计你的布局
 
-Before you can build your layout, you need to design it.
+在创建布局前需要进行设计.
 
--   Do you want a simple app header that scrolls with the content, or a collapsing header with fancy
-    scroll effects?
--   How will users navigate your app? Tabs? A side menu?
--   How does the app layout change on a small screen?
+-   是否想要一个简单的应用标题可以随着内容滚动,或是一个伴随花式滚动效果的折叠头部?
+-   用户如何导航? 标签? 侧边菜单?
+-   应用布局在小屏幕上有什么变化?
 
-You may already have design mockups you're trying to implement, or you may be doing it yourself. If
-you're not sure exactly what you want, you can browse through some of the pre-built app layout
-templates for inspiration:
+或许已经有想要实现的设计模型, 或者你想要自己做模型. 如果不确定想要的效果, 可以看看这些内置的应用布局模板来寻找启发:
 
 -   [Simple landing page.](https://polymerelements.github.io/app-layout/templates/landing-page/)
-    A simple landing page with a header. Tabs at the top of the page jump to sections on the page.
-    The basic layout of this page stays the same across all screen sizes.
--   [Getting started](https://polymerelements.github.io/app-layout/templates/getting-started/). A basic
-    layout with a simple header and a responsive drawer.
--   [ZUPERKÜLBLOG](https://polymerelements.github.io/app-layout/templates/publishing/). A basic blog-style
-    layout, similar to Getting Started, but with a fixed header.
+    一个带头部的简单登陆页面.页面顶部的标签跳转到页面中的不同部分.
+    这个页面的基本布局在任何尺寸的屏幕上都一样.
+-   [Getting started](https://polymerelements.github.io/app-layout/templates/getting-started/).
+    一个带简单头部和响应式抽屉的布局.
+-   [ZUPERKÜLBLOG](https://polymerelements.github.io/app-layout/templates/publishing/).
+    一个博客风格的布局, 类似于Getting Started, 但带有一个固定头部.
 -   [Shrine](https://polymerelements.github.io/app-layout/templates/shrine/). An e-commerce-style
-    site that implements a number of patterns, including tab navigation that's replaced by a
-    navigation drawer on narrow screens, and multiple toolbars that collapse to a single toolbar as
-    you scroll down.
+    一个电商风格的站点,实现了很多模式, 包括在窄屏上使用导航抽屉来代替标签导航, 在向下滚动时多个工具栏折叠成一个工具栏.
 
-Once you've decided on your basic design, you can start implementing it, starting with the top of
-the screen: toolbars and headers.
+一旦敲定了基本设计, 就开始实现, 从屏幕的顶部开始: 工具栏和头部.
 
 
-## Toolbars and headers
+## 工具栏和头部
 
-Almost every app has some kind of header or toolbar at the top. The header can scroll with the
-content, be fixed at the top of the screen, or have dynamic behavior as the user scrolls. The
-elements you need depend on what you're looking for:
+绝大多数应用在顶部都有头部或工具栏. 头部可以随着内容滚, 可以固定在屏幕顶部, 或在用户滚动时动态变化.
+基于不同的需要可以会使用这些组件:
 
--   For a simple header that scrolls with the content, you can use an, `<app-toolbar>` element by
-    itself. The `<app-toolbar>` is a simple horizontal container for controls and labels. If you
-    need multiple rows of controls, you just use multiple toolbars.
+-   想要一个伴随内容滚动的简单头部, 可以使用一个 `<app-toolbar>` 组件. `<app-toolbar>`是一个简单的水平容器来管理控件和标签. 如果需要多行的控件只需使用多个
+    工具栏.
 
--   For scroll effects (like a header that changes size as the user scrolls), you need the
-    `<app-header>` element. The `<app-header>` can hold one or more toolbars, and it manages scroll
-    effects.
+-   想要滚动效果 (例如在用户滚动时改变头部的大小), 可以使用
+    `<app-header>` 组件.  `<app-header>` 可以包含一个或多个工具栏并管理滚动效果.
 
-### Simple toolbars
+### 简单工具栏
 
-A toolbar by itself serves as a simple header that scrolls with the page content. With a little
-extra CSS, it can be fixed to the top of the page. The following [sample](http://jsbin.com/haroru/edit?html,output) uses a toolbar as a simple scrolling header with a title.
+简单工具栏随着页面内容的滚动. 只需一点额外的CSS, 就可以将它固定在页面顶部. [sample](http://jsbin.com/haroru/edit?html,output) 使用了一个带有头部的简单工具栏.
 
 `index.html` { .caption }
 
@@ -111,11 +97,7 @@ extra CSS, it can be fixed to the top of the page. The following [sample](http:/
 
 ![screenshot of a siple app-toolbar](/images/1.0/toolbox/simple-toolbar.png)
 
-The toolbar is a horizontal flexbox container, so you can use the usual flexbox rules to adjust the
-layout of its children. A child with the attribute `main-title` is
-automatically styled to flex, so it
-takes up all the extra space in the container. If you add buttons or icons on either side of the
-title, they'll automatically be pushed to the sides of the toolbar:
+工具栏是一个水平flexbox容器, 可以使用常用的flexbox 规则来调整子元素的布局. 带有 `main-title` 标记的子元素会自动适应flex, 所以它会填充容器内的所有额外空间. 如果添加按钮或图标到头部的任意一边, 都会自动添加到工具栏:
 
 ```
   <app-toolbar>
@@ -128,46 +110,38 @@ title, they'll automatically be pushed to the sides of the toolbar:
 ![screenshot of a simple app-toolbar with a menu and search buttons](/images/1.0/toolbox/toolbar-with-buttons.png)
 
 
-### Dynamic headers
+### 动态头部
 
-An `<app-header>` element is a container that applies scroll effects. The app header can hold any
-kind of element, but the most common children are toolbars and tab bars. Use multiple toolbars for
-multiple rows of controls.
+ `<app-header>` 组件是珍上应用滚动效果的容器. 应用头部可以容纳任意类型的组件, 通常是工具栏和标签栏. 多行控件可以使用多个工具栏.
 
-By default, the header scrolls offscreen as you scroll down the page, just like the simple toolbar.
-You can change the default behavior by adding attributes to the header:
+默认情况下, 向下滚动页面时头部滚动关闭, 如同简单的工具栏.
+可以给头部添加标记来改变它的默认行为:
 
-- `fixed`. A _fixed header_ stays put at the top of the screen.
-- `reveals`. A _revealing header_ scrolls back on-screen (reveals itself)  as soon as you start
-    scrolling up, no matter how far down the page you are.
-- `condenses`. A _condensing header_ is taller than the usual header, and shrinks vertically as
-    you scroll down. Condensing headers usually have multiple toolbars/tab bars with one (the
-    _sticky_ element) that is always shown. This mode can be combined with either a fixed or
-    revealing header.
+- `fixed`.  _fixed header_ 固定在屏幕的顶部.
+- `reveals`.  _revealing header_ 在向上滚动时出现, 不论当前内部与头部有多远.
+- `condenses`.  _condensing header_ 比通常头部更高, 在向下滚动时垂直收缩. 收缩头部通常有多个工具栏/标签并总是会显示其中的一个 (
+    _sticky_ 组件) . 可以搭配使用fixed 或
+    revealing 头部.
 
 
-### Condensing header
+### 收缩头部
 
-When using a condensing header with multiple toolbars, you can choose two basic techniques:
+当使用收缩头部配合多个工具栏时可以选择2种技术:
 
--   All toolbars stay on screen, but "collapse" on top of one another. The toolbar contents must be
-    staggered so they don't overlap. (In the Material Design guidelines, this pattern is called
-    flexible space, and it's often combined with one or more scroll effects.)
+-   所有的工具栏保持在屏幕上但"折叠"在另一个顶部.工具栏内容必须交错以达到不重叠. (在Material Design指南中, 这个模式称作
+    flexible space, 并常配合一个或多个滚动效果.)
 
     ![screenshot of an expanded, tall, app-toolbar with a menu and shop button, and titled My App](/images/1.0/toolbox/collapsing-headers-open.png)
     ![screenshot of the same toolbar collapsed to a regular, smaller size, with the same title and buttons](/images/1.0/toolbox/collapsing-headers-closed.png)
 
--   The top toolbars go offscreen while the bottom toolbar or toolbars stay on screen. (In the
-    Material Design patterns, this bottom toolbar is usually a tab bar or search bar.)
+-   顶层的工具栏移出屏幕从而让下部的工具栏保持在屏幕上. (在
+    Material Design模式中, 底部的工具栏通常是标签栏或搜索栏t.)
 
     ![screenshot of an expanded, tall app-toolbar with a back and shop buttons, titled Spork. Below it are three tabs, labelled food, drink, life](/images/1.0/toolbox/spork-tabs-tall.png)
     ![screenshot of the same app-toolbar, but with the title and the buttons gone, and only with the 2 tabs visible](/images/1.0/toolbox/spork-tabs-condensed.png)
 
 
-One toolbar in the set is identified as `sticky`. When the page scrolls, any toolbars _above_ the
-sticky toolbar scroll off screen. You can designate a sticky toolbar by setting the `sticky`
-attribute on it. If no toolbar has the `sticky` attribute, the `<app-header>`'s first child is
-sticky.
+其中的一个工具栏被定义为`sticky`. 当页面滚动时,任意在固定工具栏 _之上_ 的工具栏都移出屏幕. 可以使用 `sticky` 标记来配置一个固定工具栏. 如果没有工具栏指定了 `sticky` 标记,  `<app-header>`的第一个子元素被固定.
 
 ```
   <app-header fixed condenses effects="waterfall">
@@ -183,15 +157,11 @@ sticky.
   </app-header>
 ```
 
-Here, the first toolbar (with the icon buttons) is sticky. It stays on screen while other toolbars
-slide up to stack on top of it. The `spacer` attribute on the title adds some left padding to the
-title so it doesn't overlap a menu button on the left side of the toolbar.
+在这里, 第一个工具栏 (带图标按钮) 被固定. 它一直在屏幕上,其它的工具栏则滑上来堆叠在它的顶部. 标题中的 `spacer` 标记添加了左填充让标题不会遮盖了工具栏左边的菜单按钮.
 
-The condensing header starts out its natural height (that is, the height of its contents, unless an
-explicit height is set on it in CSS). It condenses down until it reaches the height of its sticky
-element.
+收缩头部使用它的自然高度 (也就是内容的高度除非在CSS中显式指定了高度). 它会向下收缩直到固定组件的高度.
 
-To retain just a tab bar, place the tab bar last, and mark it as sticky.
+想要保持一个标签栏就把标签栏放到最后并设置为固定.
 
 ```
   <app-header id="header" effects="waterfall" fixed condenses>
@@ -208,14 +178,12 @@ To retain just a tab bar, place the tab bar last, and mark it as sticky.
   </app-header>
 ```
 
-### Scroll effects
+### 滚动效果
 
-Most of the scroll effects are used with _condensing headers_. These effects change the header's
-appearance as it condenses.
+大多数滚动效果和 _收缩头部_ 一起使用. 在头部收缩时改变外观.
 
-One exception is the waterfall effect, which is requires a fixed header, but can be used with or
-without the `condenses` attribute. It makes the header appear to lift up above the the content when
-the user starts scrolling, so the content can scroll underneath it.
+只有一个例外是瀑布效果需要一个固定头部, 但是不论是否有 `condenses` 标记都可以使用. 当用户开始滚动时,它使标题看起来提升到内容的上方
+，因此内容可以在其下滚动.
 
 ```
   <app-header fixed effects="waterfall">
@@ -225,33 +193,29 @@ the user starts scrolling, so the content can scroll underneath it.
   </app-header>
 ```
 
-To try out the various header options including all of the scroll effects, try the demo:
+要尝试各种标题选项，包括所有滚动效果，查看演示:
 
 <a href="https://polymerelements.github.io/app-layout/templates/test-drive/" class="blue-button">
-  Launch Test Drive Demo
+  开始演示
 </a>
 
-For a list of available scroll effects, see [the `<app-header>`
-reference](https://elements.polymer-project.org/elements/app-layout?active=app-header). For
-instructions on creating your own scroll effects, see the [`AppScrollEffectsBehavior`
-reference](https://elements.polymer-project.org/elements/app-layout?active=Polymer.AppScrollEffectsBehavior).
+所有的滚动效果列表, 查看 [ `<app-header>`
+参考](https://elements.polymer-project.org/elements/app-layout?active=app-header). 需要自定义滚动效果, 查看 [`AppScrollEffectsBehavior`
+参考](https://elements.polymer-project.org/elements/app-layout?active=Polymer.AppScrollEffectsBehavior).
 
-For more background, see [Scrolling
-techniques](https://www.google.com/design/spec/patterns/scrolling-techniques.html#) in the material
-design specification for an overview of the different scroll effects.
+想要了解更多, 查看 [Scrolling
+techniques](https://www.google.com/design/spec/patterns/scrolling-techniques.html#) 在material
+design规范中各个滚动效果的概述.
 
-### Document scroller and element scrollers
+### 文档滚动条和组件滚动条
 
-The `<app-header>` element uses the document scroller used by default. On mobile browsers, this
-means the browser can hide the URL bar as you scroll down the page. However, since there's only one
-document scroller, if you switch between pages of content, your app needs to manage the scroll
-position on each page.
+`<app-header>` 组件默认使用文档滚动条. 在移动浏览器上向下滚动时会隐藏URL栏. 然而由于只有一个文档滚动条,当你在不同页面间切换时,应用需要管理各个页面的滚动位置.
 
-If you're using something like `<iron-pages>` to switch views, you can use
+如果使用类似 `<iron-pages>` 来切换视图, 就可以用
 [`<app-scrollpos-control>`](https://elements.polymer-project.org/elements/app-layout?active=app-scrollpos-control)
-to track scroll position for each of the views. See the API docs for sample usage.
+来追踪各个视图的滚动位置. 查看API文档中的示例.
 
-You can use an element scroller by specifying a `scrollTarget` property on `<app-header>`:
+可以在`<app-header>`中指定一个`scrollTarget`属性来使用组件滚动条:
 
 ```
   <div id="scrollingRegion" style="overflow-y: auto;">
@@ -260,16 +224,15 @@ You can use an element scroller by specifying a `scrollTarget` property on `<app
   </div>
 ```
 
-This can be useful if you want to use header scroll effects in a side panel, such as a drawer.
+当你想在边栏中使用头部滚动效果时很有用,比如抽屉.
 
 
-### Header layout
+### 头部布局
 
-The [`<app-header-layout>`](https://elements.polymer-project.org/elements/app-layout?active=app-header-layout)
-element is a simple way to put together a layout with an `<app-header>`. It supplies the necessary
-padding around the content so the content isn't hidden by the header.
+[`<app-header-layout>`](https://elements.polymer-project.org/elements/app-layout?active=app-header-layout)
+组件可以方便地用一个 `<app-header>`配合布局. 它围绕内容提供了必要的填充所以内容不会被头部隐藏.
 
-To use it, just place an `<app-header>` and some content inside an `<app-header-layout>`.
+使用时, 放一个 `<app-header>` 以及 `<app-header-layout>` 内部放一些内容.
 
 ```
   <app-header-layout>
@@ -284,14 +247,13 @@ To use it, just place an `<app-header>` and some content inside an `<app-header-
   </app-header-layout>
 ```
 
-By default the layout uses document scrolling. If you don't want to to scroll the whole page, the
-layout can define its own scrolling region, as shown in the [API
+默认布局使用文档滚动. 如果不想滚动整个页面, 布局可以定义自己的滚动区域, 具体可查看 [API
 docs](https://elements.polymer-project.org/elements/app-layout?active=app-header-layout).
 
-## Drawers
+## 抽屉
 
-The [`<app-drawer>`](https://elements.polymer-project.org/elements/app-layout?active=app-drawer)
-element is a drawer that can be positioned on the left or right side of the screen.
+[`<app-drawer>`](https://elements.polymer-project.org/elements/app-layout?active=app-drawer)
+组件是一个抽屉可置于屏幕的左侧或右侧.
 
 ```
 <app-drawer>
@@ -303,41 +265,35 @@ element is a drawer that can be positioned on the left or right side of the scre
 </app-drawer>
 ```
 
-There are a few ways to open and close the drawer:
+有几种方法可以打开和关闭抽屉:
 
--   Swipe an open drawer closed. Set
+-   滑动打开关闭的抽屉. 设置
     [`swipeOpen`](https://elements.polymer-project.org/elements/app-layout?active=app-drawer#property-swipeOpen)
-    to `true` to detect swipe gestures at the edge of the screen to open the drawer.
+    为 `true` 用来探测屏幕边缘的滑动手势来打开抽屉.
 
--   Drag the drawer more than halfway closed (or open) and it continues on its own. A fast swipe (flick or fling gesture) has the same effect, even if it goes less than halfway.
+-   将抽屉拖动一半以上来关闭 (或打开) 并且它会自己继续关闭. 快速滑动就算没有达到一半以上(轻拂或甩动手势)也拥有相同的效果 .
 
--   Open and close the drawer programmatically by calling
+-   通过编程调用
     [`open`](https://elements.polymer-project.org/elements/app-layout?active=app-drawer#method-open),
     [`close`](https://elements.polymer-project.org/elements/app-layout?active=app-drawer#method-close),
-    or [`toggle`](https://elements.polymer-project.org/elements/app-layout?active=app-drawer#method-toggle).
-    Or bind to the
-    [`opened`](https://elements.polymer-project.org/elements/app-layout?active=app-drawer#property-opened) property.
+    或 [`toggle`](https://elements.polymer-project.org/elements/app-layout?active=app-drawer#method-toggle)来打开和关闭抽屉.
+    或绑定到
+    [`opened`](https://elements.polymer-project.org/elements/app-layout?active=app-drawer#property-opened) 属性.
 
--   A drawer can act as a persistent sidebar by setting the `persistent` property, which disables
-    the swipe/fling gestures.
+-   通过设置`persistent`属性可将抽屉固定在边栏, 同时禁止了滑动/甩动手势.
 
-Because the drawer is a separate component, you can compose it in different ways. For example:
+由于抽屉是一个单独的组件,可以用不同的方式组成它. 例如:
 
--   For a full-height drawer, place the drawer outside of a header layout, or wrap a header layout
-    inside a drawer layout.
--   For a drawer that opens _underneath_ a header, put the drawer or drawer layout inside a header
-    layout.
+-   对于全高抽屉, 将抽屉放在头部布局的外边, 或将头部布局包装到一个抽屉布局的内部.
+-   对于在头部 _以下_ 打开的抽屉, 将抽屉或抽屉布局放到头部布局中.
 
-### Styling the drawer
+### 设计抽屉样式
 
-You can style the drawer using the `--app-drawer-content-container` mixin. For example, you can set
-a background, or add a border or shadow to define the edge of the drawer.
+可以使用 `--app-drawer-content-container` 来设置抽屉样式. 例如可以设置一个背景或添加一个边线,或者用阴影定义抽屉的边界.
 
-When a responsive drawer is open, the rest of the screen is covered with a backdrop or _scrim_. Set
-the scrim background with the `--app-drawer-scrim-background` custom property. The default scrim has
-a semi-transparent grey background.
+当一个响应式抽屉打开时,剩余的屏幕由一个帷幕或 _scrim_ 所覆盖. 通过`--app-drawer-scrim-background`自定义属性来设置scrim背景. 默认的 scrim 是一个半透明灰色背景.
 
-The following CSS adds a border shadow to the drawer and provides a colored scrim.
+以下的CSS为抽屉添加了一个边界阴影并提供了一个彩色scrim.
 
 ```
   app-drawer {
@@ -348,19 +304,14 @@ The following CSS adds a border shadow to the drawer and provides a colored scri
   }
 ```
 
-### Drawer layouts
+### 抽屉布局
 
-The [`<app-drawer-layout>`](https://elements.polymer-project.org/elements/app-layout?active=app-drawer-layout)
-element creates a responsive layout with a single drawer. On
-wider screens, the drawer acts as a persistent sidebar by default; it's always displayed and swipe
-and fling gestures are disabled.
+[`<app-drawer-layout>`](https://elements.polymer-project.org/elements/app-layout?active=app-drawer-layout)
+组件使用单个抽屉创建了一个响应式布局. 在宽屏幕上, 抽屉默认是一个固定的边栏; 总是显示并且禁止了滑动和甩动手势.
 
-To add a drawer toggle button, place an element with the `drawer-toggle` attribute as one of the
-descendants of an `<app-drawer-layout>`. Usually the drawer toggle button is placed inside one of
-the app's toolbars.
+要添加一个抽屉切换按钮, 在`<app-drawer-layout>`的子元素里放一个带有 `drawer-toggle` 标记的组件. 通常抽屉切所按钮放在应用工具栏里.
 
-An `<app-header-layout>` can be nested inside an `<app-drawer-layout>` to create a responsive layout
-with drawer and header.
+`<app-header-layout>` 可以嵌套在一个 `<app-drawer-layout>` 内部来创建一个带有抽屉和头部的响应式布局.
 
 ```
   <app-drawer-layout>
@@ -385,20 +336,18 @@ with drawer and header.
   </app-drawer-layout>
 ```
 
-## Responsive navigation pattern
+## 响应式导航模式
 
-In many cases, you'll want to switch you navigation based on the screen size. One common pattern
-uses navigation tabs on desktop, which are replaced by a navigation drawer on mobile, as in the
+很多情况下, 想要基于屏幕尺寸来切换导航. 一个通用模式是在桌面环境下使用导航标签, 在移动环境下使用一个导航抽屉, 如同
 [Shop app](https://shop.polymer-project.org/).
 
 ![screenshot of a nav menu with 5 tabs, displayed horizontally, labelled "item one" through "item four"](/images/1.0/toolbox/app-layout-responsive-nav-tabs.png)
 ![screenshot of the same menu displayed vertically, after being open from a mobile drawer button ](/images/1.0/toolbox/app-layout-responsive-nav-drawer.png)
 
-You can achieve this with some app layout elements, using data binding to switch between the tab and
-drawer navigation.
+一些应用布局组件可以达到这种效果,使用数据绑定来切换标签和抽屉导航.
 
-The [transform navigation demo](https://polymerelements.github.io/app-layout/patterns/transform-navigation/)
-shows a simple version of this transition.
+[transform navigation demo](https://polymerelements.github.io/app-layout/patterns/transform-navigation/)
+展示了一个这种转换的简单版本.
 
 ```
   <!-- force-narrow prevents the drawer from ever being displayed
@@ -449,6 +398,4 @@ shows a simple version of this transition.
 
 <a href="https://github.com/polymerelements/app-layout/blob/master/patterns/transform-navigation/x-app.html" class="blue-button">View full source</a>
 
-The [Shop app](https://shop.polymer-project.org/). uses a slightly more sophisticated version of this pattern, using conditional templates
-to avoid creating the navigation elements until they're needed. This means that the app doesn't need
-to create the tabs when running on mobile.
+[Shop app](https://shop.polymer-project.org/). 使用了这种模式的一种更复杂版本, 通过条件模板来避免在不需要的时候创建导航组件. 这意味着应用在移动环境中不需要创建标签.

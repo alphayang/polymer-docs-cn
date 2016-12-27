@@ -1,23 +1,21 @@
 ---
-title: "Case study: the Shop app"
+title: "案例学习: Shop应用"
 ---
 
 <!-- toc -->
 
 
-Shop is a full-featured e-commerce Progressive web app demo built using the
-Toolbox. You can try it out here:
+Shop 是一个基于Toolbox打造的全功能渐进式电商web应用示例. 在线体验:
 
-<a href="https://shop.polymer-project.org/" class="blue-button">Launch Shop demo
+<a href="https://shop.polymer-project.org/" class="blue-button">打开 Shop 示例
 </a>
 
-This case studies shows how Shop uses the App Toolbox to deliver a great
-user experience.
+案例学习展示了Shop是如何使用App Toolbox来打打造最好的用户体验.
 
-## App structure
+## 应用结构
 
-The Shop app is made up of several main views: the home view, list view,
-detail view, and shopping cart view:
+ Shop 应用由几个主视图组成: 首页视图, 列表视图,
+详情视图和购物车视图:
 
 <div class="image-container layout horizontal">
   <div class="image-wrapper">
@@ -31,51 +29,37 @@ detail view, and shopping cart view:
   </div>
 </div>
 
-The app uses custom elements as its organizing principle: A top-level
-application element serves as the main controller for the app. App-specific
-elements build views, such as the browse and detail views. The stores for user
-and product data are also implemented as elements. These elements are in turn
-composed of reusable elements, like buttons and tabs. Reusable elements also
-supply other essential functions, including overall layout and routing. The
-[`<iron-pages>`](https://elements.polymer-project.org/elements/iron-pages)
-element controls which view is currently visible.
+应用使用自定义组件作为组织原则: 最顶层的应用组件作为应用的主控制器. 特定应用组件作为视图,例如浏览和详情视图.
+用户和产品数据同样使用组件实现. 这些组件都是由按钮和标签这些可重用组件构成. 可重用组件同样适用于诸如布局和路由这些基本功能.
+由[`<iron-pages>`](https://elements.polymer-project.org/elements/iron-pages)
+组件来控制哪个视图处于可见状态.
 
 ![the high level architecture of the application, as described above](/images/1.0/toolbox/high-level-arch.png)
 
-## Routing
+## 路由
 
-Shop's client-side URL routing is based on the
+Shop的客户端URL路由基于
 [`<app-route>`](https://elements.polymer-project.org/elements/app-route)
-element, a modular routing element. The app element has a top-level
-`<app-route>` element that's bound to the page URL, and selects the top-level
-view by setting the app element's `page` property.
+组件, 是一个模块化的路由组件. 应用组件由一个顶层
+`<app-route>` 组件来绑定到页面的URL, 并使用应用组件的`page`属性来选择顶层视图.
 
-The top-level element delegates the remainder of the route to other instances of
-`<app-route>` that represent sub-routes. For example, when browsing a
-category, the top-level `<app-route>` selects the browse view, and the
-second-level `<app-route>` selects the category to show.
+顶层组件委剩余的路由给其它表示子路由的`<app-route>`实例. 例如当浏览器一个分类时, 顶层 `<app-route>` 选择浏览视图, 第二层的 `<app-route>` 选择要显示的分类.
 
-All navigation is accomplished with links (`<a>` tags) (which ensures that the
-app can be indexed by web crawlers). The routing elements handle the URL changes
-and pass route data to the active view element.
+所有导航都通过链接 (`<a>` 标记) 来实现(这样可以确保应用可被网络爬虫正常索引). 路由组件处理URL变化并转递路由数据给活动视图组件.
 
-For example, the path `/list/Shoes` displays the browse (list) view, and passes
-the category "Shoes" to the browse view.
+例如`/list/Shoes` 路径显示了浏览(列表)视图, 并传递类别 "Shoes" 给浏览视图.
 
-More information:
+查看更多:
 
--   [Encapsulated routing with elements](/1.0/blog/routing)
--   [`<app-route>` API reference](https://elements.polymer-project.org/elements/app-route)
+-   [组件路由封装Encapsulated routing with elements](/1.0/blog/routing)
+-   [`<app-route>` API 参考](https://elements.polymer-project.org/elements/app-route)
 
-## Views
+## 视图
 
-The main views of the element are controlled by an `<iron-pages>` element, which
-displays a single view at a time. When a view is active, it takes over the whole
-content area below the app header.
+组件的主视图由一个 `<iron-pages>` 组件来控制, 它会每次显示单个视图. 当一个视图处于活动时, 它将覆盖应用标题以下的整个内容区域.
 
-The [`<iron-pages>`](https://elements.polymer-project.org/elements/iron-pages)
-element is bound to the app element's `page` property, which is in turn set
-based on the current route. The view switching code looks like this:
+ [`<iron-pages>`](https://elements.polymer-project.org/elements/iron-pages)
+组件绑定到了应用组件的 `page` 属性, 可基于当前路由进行设置. 视图切换代码如下所示:
 
 `shop-app.html` { .caption }
 ```
@@ -93,15 +77,13 @@ based on the current route. The view switching code looks like this:
 </iron-pages>
 ```
 
-When the `page` property is `list`, the list or browse view is active.
+`page` 属性为 `list` 时, 列表或浏览视图处于活动状态.
 
-The views are created lazily on demand by taking advantage of the custom
-element's _upgrade_ feature. The inactive view elements (such as `shop-list`
-above) exist in the DOM as instances of `HTMLElement`.
+视图将被按需进行延迟加载,这利用了自定义组件的 _upgrade_ 功能. 非活动的视图组件 (如 `shop-list`
+) 将以`HTMLElement`的实例存在于DOM中.
 
-When you change pages, the application loads the definition for the active view.
-When the definition loads, the browser _upgrades_ the element to a fully-
-functional custom element.
+当页面发生变化时, 应用加载活动视图的定义.
+当加载定义时, 浏览器 _upgrades_ 组件到一个全功能的自定义组件.
 
 ```
 _pageChanged: function(page, oldPage) {
@@ -122,10 +104,9 @@ _pageChanged: function(page, oldPage) {
 
 ```
 
-In the logic above, the home view is built into the app shell, but the other
-views are demand-loaded fragments.
+以上的逻辑中, 主面视图内嵌于应用shell中, 其它的视图则按需加载片段.
 
-Shop also uses [`dom-if`](/1.0/docs/api/dom-if) templates to lazily create views:
+Shop 还使用了 [`dom-if`](/1.0/docs/api/dom-if) 模板来延迟创建视图:
 
 ```
 <div id="tabContainer" primary$="[[_shouldShowTabs]]" hidden$="[[!_shouldShowTabs]]">
@@ -142,21 +123,16 @@ Shop also uses [`dom-if`](/1.0/docs/api/dom-if) templates to lazily create views
   </template>
 ```
 
-When parsed, the template's content is inert, and not included in the main
-document. If the `_shouldRenderTabs` property is `true`, the template's
-contents are inserted into the DOM, the elements are initialized and their local
-DOM trees created. Since the tabs are only displayed on desktop, mobile users
-never pay the cost to create elements they're not using.
+模板内容在解析后被插入主文档而不是包含在主文档中. 如果 `_shouldRenderTabs` 属性为 `true`, 模板的内容被插入到DOM,
+组件被初始化并且创建组件的本地DOM树. 由于标签只在桌面环境中显示, 移动用户不需要为他们不会用到的组件浪费资源.
 
-## Theming
+## 主题
 
-Shop uses
-[CSS custom properties](/1.0/docs/devguide/styling#custom-css-properties) and
-[mixins](/1.0/docs/devguide/styling#custom-css-mixins) for theming both its
-application-specific elements and the reusable elements it includes.
+Shop 使用
+[CSS 自定义属性](/1.0/docs/devguide/styling#custom-css-properties) 和
+[mixins](/1.0/docs/devguide/styling#custom-css-mixins) 为应用特定的组件和其包含的可重用组件提供主题.
 
-Shop defines a few, top-level custom properties to set basic theme colors, which
-are passed down to other elements.
+Shop 定义了一些顶层自定义属性来设置基本的主题颜色, 这些都会传递给其它组件.
 
 ```
 :host {
@@ -167,15 +143,14 @@ are passed down to other elements.
 }
 ```
 
-These custom properties are special CSS properties defined by the component
-author. The Shop app uses these three properties to define its theme colors.
-These values can be used inside other CSS rules using the `var()` function:
+这些自定义属性是一些由组件作者定义的特殊CSS属性.  Shop 应用使用了其中的三个属性来定义主题颜色.
+这些值可以其它CSS规则内部由`var()`函数使用:
 
 ```
   color: var(--app-accent-color);
 ```
 
-Custom properties can also be used to set _other_ custom properties.
+自定义属性可被应用于设置 _其它_ 自定义属性.
 
 ```
   --paper-button-ink-color: var(--app-primary-color);
@@ -183,59 +158,45 @@ Custom properties can also be used to set _other_ custom properties.
   --paper-spinner-color: var(--app-primary-color);
 ```
 
-Here, the app's theme colors are passed down to several of the reusable elements
-from the paper elements set.
+这里,应用主题颜色由paper组件集合向下传递给了其它可重用组件.
 
-If you add more elements to the app, you can find the custom properties for
-those elements in the element API doc. (For example, in the example above,
-`--app-primary-color` is used to set the `<paper-button>` ink color, as
-documented in the `<paper-button>`
-[API docs](https://elements.polymer-project.org/elements/paper-button#styling).
+如果添加了多个组件到应用中, 可以在组件API文档中查看这些组件的自定义属性. (例如, 在上例中
+`--app-primary-color` 被用来设置 `<paper-button>` 墨水颜色, 在文档中查看 `<paper-button>`
+[API 文档](https://elements.polymer-project.org/elements/paper-button#styling).
 
-For more on custom properties and mixins, see the
-[Polymer docs](/1.0/docs/devguide/styling#xscope-styling-details). Polymer
-provides a _shim_ for custom properties, but there are a number of limitations
-to the shim, especially around dynamic changes to property values. If you want
-to do anything fancy with custom properties, read up on the [shim
-limitations](/1.0/docs/devguide/styling#custom-properties-shim-limitations)
-and the [custom style API](/1.0/docs/devguide/styling.html#style-api).
+关于更多的自定义属性和mixins, 查看
+[Polymer 文档](/1.0/docs/devguide/styling#xscope-styling-details). Polymer
+为自定义属性提供了一个  _隔离_ , 但是隔离有一些限制, 特别是关于动态改变属性值. 如果你想要更好的使用自定义属性, 查看 [隔离限制
+](/1.0/docs/devguide/styling#custom-properties-shim-limitations)
+和  [自定义样式 API](/1.0/docs/devguide/styling.html#style-api).
 
-## Offline caching
+## 离线缓存
 
-To provide a better experience in offline and spotty network situations, Shop
-uses service worker to provide offline caching for its "app shell"—that is, the
-app's UI and business logic. A service worker is a script associated with a
-specific web site that acts as a client-side proxy for network requests. The
-service worker can intercept network requests and access the browser's cache.
+为了在不稳定的网络和离线情况下提供更好的体验, Shop
+使用了 service worker 来提供应用shell的离线缓存—主要是应用UI和业务逻辑.
+Service worker 是一个关联于特定网站的脚本可用来做为客户端网络请求的代理.
+Service worker 可以截获网络请求, 访问浏览器的缓存.
 
-The first time someone opens the site, the browser installs the site's service
-worker, and the service worker ensures that the site's app shell is cached for
-offline use. On subsequent visits, the service worker can load the app shell
-directly from the cache. If the user is completely offline, the service worker
-can still load the app shell, and display cached data or an offline message, as
-appropriate.
+用户首次访问网站时浏览器将安装网站的 service
+worker, service worker 确保网站的应用shell被缓存以便离线使用. 后续访问时, service worker 可以直接从缓存中加载应用shell.
+如果用户完全没有网络, service worker
+仍然可以加载应用shell, 并显示合适的离线数据或一个离线消息.
 
-Shop uses the `sw-precache` [library](https://github.com/GoogleChrome/sw-precache)
-for offline support. This library takes a list of files to cache and generates
-a service worker at build time, so you don't need to write your own service
-worker code. Just create a list of the essential resources and add the precache
-script to your build process. The [Polymer CLI](https://github.com/polymer/polymer-cli)
-supports [this use-case using sw-precache for generating a service
-worker](https://github.com/polymer/polymer-cli#app-shell-structure) to cache
-the dependencies for your application's "shell".
+Shop 使用 `sw-precache` [库](https://github.com/GoogleChrome/sw-precache)
+来提供离线支持. 该库可以接收一个需要被缓存的文件列表并在构建时生成一个service worker,
+所以不需要自己动手编写service worker代码. 只需要创建一个所需资源列表并将precache脚本添加到构建流程中.
+[Polymer CLI](https://github.com/polymer/polymer-cli)
+支持 [使用 sw-precache 来生成一个service worker的案例](https://github.com/polymer/polymer-cli#app-shell-structure) 用来缓存应用shell的依赖资源.
 
-## Application layout using app-layout
+## 使用app-layout进行应用布局
 
-The app layout elements provide a responsive layout for the Shop. The elements
-are modular building blocks designed to be composed together to create different
-layouts. The main UI component across the app is an `<app-header>` that contains
-the title and main navigation controls. The `<app-header>` holds
-`<app-toolbars>`, which are horizontal containers for controls. One toolbar
-contains the title and buttons.
+应用布局组件为Shop提供了响应式布局. 这些组件都是模块化的设计可被用来组件不同的布局.
+应用的主UI组件是一个包含了标题和主导航控制的 `<app-header>`.  `<app-header>` 包含
+`<app-toolbars>`, 是一个水平容器来放置工具. 一个工具栏包含了标题和一些按钮.
 
-On desktop, the browse view uses a second toolbar, with a set of navigation
-tabs.  As you scroll down the page, the header condenses and scrolls away.
-Scrolling up the page at any point reveals the tabs.
+在桌面环境中, 浏览视图使用第二个工具栏来显示导航标签.
+当向下拉动页面时, 标题会缩小并滚动离开.
+从任意点向上拉动页面时显示标签.
 
 <div class="image-container layout horizontal">
   <div class="image-wrapper">
@@ -246,7 +207,7 @@ Scrolling up the page at any point reveals the tabs.
   </div>
 </div>
 
-The tabs don't work as well on mobile devices, so Shop uses an `<app-drawer>` element as a navigation drawer, with a vertical menu.
+标签在移动设备上不能正常使用, 所以 Shop 使用了一个 `<app-drawer>` 组件来作为导航抽屉, 配合一个垂直菜单.
 
 <div class="image-container layout horizontal">
   <div class="image-wrapper">
@@ -257,13 +218,11 @@ The tabs don't work as well on mobile devices, so Shop uses an `<app-drawer>` el
   </div>
 </div>
 
-The app layout element set also includes simple container elements for
-positioning headers and drawers: the `<app-header-layout>` and
-`<app-drawer-layout>` elements.
+应用布局组件集合同样包含了简单容器组件来放置标题和抽屉:  `<app-header-layout>` 和
+`<app-drawer-layout>` 组件.
 
-## More resources
+## 更多内容
 
-If you want to look at the Shop app in more detail, you can find the full source
-on GitHub:
+想要查看 Shop 应用的更多信息, 可以在Github上找到全部代码:
 
 [https://github.com/Polymer/shop](https://github.com/Polymer/shop)

@@ -1,108 +1,84 @@
 ---
-title: Serve your app
+title: 访问应用
 ---
 
 <!-- toc -->
 
-You can  serve an App Toolbox app using any server technology you want. The Polymer CLI build
-process supports fast-loading applications that can take advantage of the latest web technologies by
-producing two builds:
+可以使用任意的服务器来提供 App Toolbox 应用的访问. Polymer CLI 构建过程支持快速应用加载可以利用最新的web技术,会生成2个版本:
 
--   An unbundled build designed for server/browser combinations that support HTTP/2 and
-    HTTP/2 server push to deliver the resources the browser needs for a fast first paint while
-    optimizing caching.
+-   非绑定的构建用来提供支持HTTP/2和HTTP/2服务器器推送的服务器/浏览器组合,浏览器可以使用优化缓存来达到快速首次加载.
 
--   A bundled build designed to minimize the number of round-trips required to get the application
-	running on server/browser combinations that don't support server push.
+-   绑定的构建用来提供在服务器/浏览器组合不支持服务器推送时最小化应用加载所需网络请求数量.
 
-Your server logic can deliver the appropriate build for each browser.
+服务器逻辑可以对每个浏览器提供相应的版本.
 
-## PRPL pattern
+## PRPL 模式
 
-To optimize delivery, the Toolbox uses the _PRPL pattern, which
-stands for:
+为了优化传输,  Toolbox 使用了 _PRPL 模式, 它包含
+:
 
-*  Push critical resources for the initial route.
-*  Render initial route.
-*  Pre-cache remaining routes.
-*  Lazy-load and create remaining routes on demand.
+*  在初始化路由于推送关键资源.
+*  渲染初始化路由.
+*  预缓存剩余路由.
+*  按需加载和创建剩余路由.
 
-To do this, the server needs to be able to identify the resources required by each of the app's
-routes. Instead of bundling the resources into a single unit for download, it uses HTTP2 push to
-deliver the individual resources needed to render the requested route.
+为了达到这个目的,服务器需要识别出每个应用路由所需的资源. 它使用HTTP2推送来发送请求路由所需的资源,而不是将所有资源打包为一个来进行下载.
 
-The server and service worker together work to precache the resources for the inactive routes.
+服务器和 service worker 一起合作来预缓存非活动路由所需的资源.
 
-When the user switches routes, the app lazy-loads any required resources that haven't been cached
-yet, and creates the required views.
+当用户切换路由时, 应用按需加载任意没有缓存的所需资源并创建所请求视图.
 
-## App structure
+## 应用结构
 
-Currently, the Polymer CLI and reference server support a single-page app (SPA) with the
-following structure:
+当前, Polymer CLI 和  服务器支持具有以下结构的单页应用:
 
--   The main _entrypoint_ of the application which is served from every valid route. This
-    file should be very small, since it will be served from different URLs therefore be cached
-    multiple times. All resource URLs in the entrypoint need to be absolute, since it may be served
-    from non-top-level URLs.
+-   应用的主 _入口_ 由每一个有效的路由提供. 这些文件应当很小, 由于它可以不同的URL访问并多次缓存. 所有在入口中的资源URL必须是绝对路径, 由于它也可能在非顶层URL中访问.
 
--   The _shell_ or app-shell, which includes the top-level app logic, router, and so on.
+-    _shell_ 或 app-shell, 包含了顶层应用逻辑,路由等等.
 
--   Lazily loaded _fragments_ of the app. A fragment can represent the code for a particular
-    view, or other code that can be loaded lazily (for example, parts of the main app not required
-    for first paint, like menus that aren't displayed until a user interacts with the app). The
-    shell is responsible for dynamically importing the fragments as needed.
+-   应用中延迟加载的 _片段_ . 片段表示特定的视图代码或其它可被延迟加载的代码(例如主应用中不需要首次渲染的部分,菜单只需在用户与应用交互时才需显示).
+    Shell 负责动态按需导入片段.
 
-The diagram below shows the components of a simple app:
+下图展示了一个简单应用的组件:
 
 ![diagram of an app that has two views, which have both individual and shared dependencies](/images/1.0/toolbox/app-build-components.png)
 
-In this diagram, the solid lines represent _static dependencies_, external resources identified
-in the files using `<link>` and `<script>` tags. Dotted lines represent _dynamic_ or _demand-loaded
-dependencies_: files loaded as needed by the shell.
+图中, 实绩表示 _静态依赖_, 外部资源使用 `<link>` 和 `<script>` 标记来表示. 虚线表示 _动态_ 或 _按需加载的依赖_: 文件在shell需要时被加载.
 
-The build process builds a graph of all of these dependencies, and the server uses this information
-to serve the files efficiently. It also builds a set of vulcanized bundles, for browsers that don't
-support HTTP2 push.
+构建过程生成一个所有依赖的图, 服务器会使用这些信息来更有效的提供文件访问. 同时也为不支持HTTP2推送的浏览器生成了资源.
 
-### App entrypoint
+### 应用入口
 
-The entrypoint must import and instantiate the shell, as well as conditionally load any
-required polyfills.
+入口必须在shell中引入并实例化, 其它所需的polyfills也同样要在此时有条件的加载.
 
-The main considerations for the entrypoint are:
+入口的主要作用是:
 
--   Has minimal static dependencies—not much beyond the app-shell itself.
--   Conditionally loads required polyfills.
--   Uses absolute paths for all dependencies.
+-   最小化静态依赖-除了应用shell自身.
+-   有条件的加载所需polyfills.
+-   所有依赖使用绝对路径.
 
-When you generate an App Toolbox project using Polymer CLI, the new project contains an entrypoint
-`index.html`. For most projects, you shouldn't need to update this file.
+当使用Polymer CLI来生成一个App Toolbox项目时,新项目包含一个`index.html`入口的. 大多数项目中不需要再更新这个文件.
 
-### App shell
+### 应用 shell
 
-The shell is responsible for routing and usually includes the main navigation UI for the app.
+ Shell 负责路由以及包含应用的主导航UI.
 
-The app should call `importHref` to lazy-load fragments as they're required. For example, when the
-user changes to a new route, it imports the fragment(s) associated with that route. This may
-initiate a new request to the server, or simply load the resource from the cache.
+应用必须调用 `importHref` 以更在需要时来延迟加载片段. 例如当用户到新的路由时再导入路由与关联的片段.
+这个可能会生成一个新的服务器请求或者简单从缓存中加载资源.
 
     importHref('list-view.html');
 
-The shell (including its static dependencies) should contain everything needed for first paint.
+shell (以及它的静态依赖) 必须包括它首次渲染所需的一切资源.
 
-## Build output
+## 构建输出
 
-The Polymer CLI build process produces two builds:
+Polymer CLI 构建流程会生成两个版本:
 
--   An unbundled build designed for server/browser combinations that support HTTP/2 and
-    HTTP/2 server push to deliver the resources the browser needs for a fast first paint while
-    optimizing caching.
+-   非绑定的构建用来提供支持HTTP/2和HTTP/2服务器器推送的服务器/浏览器组合,浏览器可以使用优化缓存来达到快速首次加载.
 
--   A bundled build designed to minimize the number of round-trips required to get the application
-	running on server/browser combinations that don't support server push.
+-   绑定的构建用来提供在服务器/浏览器组合不支持服务器推送时最小化应用加载所需网络请求数量.
 
-The `polymer build` command produces the two builds in parallel output folders:
+`polymer build` 命令输出两个版本到各自的目录中:
 
 	build/
 	  unbundled/
@@ -112,56 +88,42 @@ The `polymer build` command produces the two builds in parallel output folders:
 	    index.html
 	    ...
 
-Your server logic should deliver the appropriate build for each browser.
+服务器需要对各个浏览器返回相应的版本.
 
-### Bundled build
+### 绑定构建
 
-For browsers that don't handle HTTP2 Push, the build process produces a set of vulcanized bundles:
-one bundle for the shell, and one bundle for each fragment. The diagram below shows how a simple
-app would be bundled:
+对于不运行HTTP2推送的浏览器, 构建流程生成一组绑定内容:
+shell对应的绑定, 每个片段对应的绑定. 下图所示一个简单的绑定应用:
 
 ![diagram of the same app as before, where there are 3 bundled dependencies](/images/1.0/toolbox/app-build-bundles.png)
 
-Any dependency shared by two or more fragments is bundled in with the shell and its static
-dependencies.
+任意在两个以上片段中共享的依赖都被绑定到shell和它的静态依赖中.
 
-Each fragment and its _unshared_ static dependencies are bundled into a single bundle. The server
-should return the appropriate version of the fragment (bundled or unbundled), depending on the browser.
-This means that the shell code can lazy-load `detail-view.html` _without having to know whether
-it is bundled or unbundled_. It relies on the server and browser to load the dependencies in the
-most efficient way.
+各个片段和它的 _非共享_ 静态依赖添加到一个单独的绑定中. 服务器应当基于浏览器返回片段相应的版本(绑定或非绑定).
+这意味着shell代码可以延迟加载 `detail-view.html` _不论是否知道它是绑定还是非绑定的_. 这取决于服务器与浏览器以最有效的方式来加载依赖.
 
 
-## Background: HTTP/2 and HTTP/2 server push
+## 背景知识: HTTP/2 和 HTTP/2 服务器推送
 
-HTTP/2 allows _multiplexed_ downloads over a single connection, so that multiple small files can be
-downloaded more efficiently.
+HTTP/2 允许在一个链接中 _多路复用_ 下载, 所以多个小文件可以更高效的被下载.
 
-HTTP/2 server push allows the server to preemptively send resources to the browser.
+HTTP/2 服务器推送允许服务器抢先发送资源给浏览器.
 
-For an example of how HTTP/2 server push speeds up downloads, consider how the browser retrieves an
-HTML file with a linked stylesheet.
+例如使用HTTP/2服务器推送来提升下载速度,浏览器请求一个带有链接样式表的HTML文件.
 
-In HTTP/1:
-*   The browser requests the HTML file.
-*   The server returns the HTML file and the browser starts parsing it.
-*   The browser encounters the `<link rel="stylesheet">` tag, and starts a new request for the
-    stylesheet.
-*   The browser receives the stylesheet.
+在 HTTP/1 中:
+*   浏览器请求HTML文件.
+*   浏览器返回HTML文件,浏览器开始解析文件.
+*   浏览器遇到 `<link rel="stylesheet">` 标记然后开始一个新的样式表请求.
+*   浏览器接收样式表.
 
-With HTTP/2 push:
-*   The browser requests the HTML file.
-*   The server returns the HTML file, and pushes the stylesheet at the same time.
-*   The browser starts parsing the HTML. By the time it encounters the `<link rel="stylesheet">`,
-the stylesheet is already in the cache.
+在 HTTP/2 推送中:
+*   浏览器请求HTML文件.
+*   服务器返回HTML文件并同时推送样式表.
+*   浏览器开发解析HTML文件.遇到 `<link rel="stylesheet">` 时样式表已经位于缓存中.
 
-In this simplest case, HTTP/2 server push eliminates a single HTTP request-response.
+在这个简单案例中, HTTP/2 服务器推送server push 减少了一个HTTP请求和返回.
 
-With HTTP/1, developers bundle resources together to reduce the number of HTTP requests required to
-render a page. However, bundling can reduce the efficiency of the browser's cache. if resources for
-each page are combined into a single bundle, each page gets its own bundle, and the browser can't
-identify shared resources.
+在 HTTP/1 中, 开发者需要将资源打包在一起来减少为了渲染一个页面而需要的HTTP请求数. 然后打包也会降低浏览器缓存的效率. 如果每个页面中的资源都合并成一个资源, 那么各个页面都有自己的绑定,浏览器就不会识别共享的资源了.
 
-The combination of HTTP/2 and HTTP/2 server push can provide the _benefits_ of bundling (reduced
-latency) without needing to bundle resources. Keeping resources separate means they can be cached
-efficiently and be shared between pages.
+HTTP/2 和 HTTP/2 服务器推送组合可以提供绑定的 _好处_  (降低延时) 而又不对资源进行绑定. 保持资源的离散意味着更高效的缓存和页面间共享.

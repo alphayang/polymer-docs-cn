@@ -1,39 +1,37 @@
 ---
-title: Localization
+title: 本地化
 ---
 
 <!-- toc -->
 
-**The localization behavior is prerelease.** APIs may be subject to change.
+**本地化处于预发布阶段.** API可能改变.
 {.alert .alert-info}
 
 [`Polymer.AppLocalizeBehavior`](https://elements.polymer-project.org/elements/app-localize-behavior)
-wraps the [format.js](http://formatjs.io/) library to help you internationalize your application.
-Note that if you're on a browser that does not natively support the
-[Intl](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl) object,
-**you must load a polyfill yourself.** An example polyfill can be found at
+封装了 [format.js](http://formatjs.io/) 库来帮助进行应用的国际化.
+注意如果在没有原生支持
+[Intl](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl) 对象的浏览器上,
+**你必须加载一个polyfill.** 示例 polyfill
 [github.com/andyearnshaw/Intl.js](https://github.com/andyearnshaw/Intl.js/).
 
-`Polymer.AppLocalizeBehavior` supports the same
-[message syntax](http://formatjs.io/guides/message-syntax/) as `format.js`, in its entirety; use the
-library docs as reference for the available message formats and options.
+`Polymer.AppLocalizeBehavior` 完全支持与`format.js`相同的
+[消息语法](http://formatjs.io/guides/message-syntax/) ; 可以使用库文档来查看可用的消息格式和选项.
 
-Each element that displays content to be localized should add `Polymer.AppLocalizeBehavior`.
-All of these elements share a common localization cache, so you only need to load translations once.
+需要对显示内容进行本地化的组件都要添加 `Polymer.AppLocalizeBehavior`.
+所有这些组件共享一个通用本地化缓存所以只需要加载一次翻译内容.
 
-## Install AppLocalizeBehavior
+## 安装 AppLocalizeBehavior
 
-Install the `app-localize-behavior` package with Bower:
+使用Bower来安装 `app-localize-behavior` 包:
 
     bower install --save PolymerElements/app-localize-behavior
 
 
-## Add localization to your app
+## 在应用中添加本地化
 
-The main application is usually responsible for loading the localized messages and setting the
-current language.
+主应用通常用来负责加载本地化消息和设置当前语言.
 
-Sample application loading resources from an external file. { .caption.}
+示例应用加载一个外部资源文件. { .caption.}
 
 ```
 <dom-module id="x-app">
@@ -67,8 +65,8 @@ Sample application loading resources from an external file. { .caption.}
 </dom-module>
 ```
 
-The main app is also responsible for loading the `Intl` polyfill
-(not shown above).
+主应用同样负责加载 `Intl` polyfill
+(上边没有用到).
 
-Each element that needs to localize messages should also add the `Polymer.AppLocalizationBehavior`
-and use the `localize` method to translate strings, as shown above.
+每个需要本地化消息的组件都要添加 `Polymer.AppLocalizationBehavior`
+并如上所示使用 `localize` 方法来翻译字符串.

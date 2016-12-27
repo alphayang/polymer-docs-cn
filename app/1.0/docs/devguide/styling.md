@@ -455,9 +455,9 @@ x-foo.b {
 </dom-module>
 ```
 
-#### 不支持分离组件的样式Styling distributed elements not supported
+#### 不支持分离组件的样式
 
-自定义属性隔离不支持对分离组件的样式The custom properties shim doesn't support styling distributed elements.
+自定义属性隔离不支持对分离组件的样式.
 
 ```css
 /* Not supported */
